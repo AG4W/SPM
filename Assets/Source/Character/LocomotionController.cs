@@ -6,8 +6,6 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]Vector3 targetInput;
 
-    [SerializeField]float movementSpeed = 2f;
-
     Animator animator;
 
     void Awake()
