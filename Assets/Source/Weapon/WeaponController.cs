@@ -23,7 +23,7 @@ public class WeaponController : MonoBehaviour
     {
         float t = 0f;
 
-        while (t <= 10f)
+        while (t <= 3f)
         {
             t += Time.deltaTime;
             shot.transform.position += shot.transform.forward * projectileSpeed * Time.deltaTime;

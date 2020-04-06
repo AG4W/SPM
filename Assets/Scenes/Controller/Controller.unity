@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.52005327, g: 0.35638857, b: 0.25885788, a: 1}
+  m_IndirectSpecularColor: {r: 0.52033246, g: 0.35659698, b: 0.25895855, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -459,12 +459,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b54c7d0ab31fd4d899dcb54aecd37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileSpeed: 5
+  projectileSpeed: 100
   shotPrefab: {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b,
     type: 3}
   shotSounds:
-  - {fileID: 8300000, guid: 3c3be865f1b1a8d4ea3c02a3570096db, type: 3}
-  - {fileID: 8300000, guid: 5db9118fe5e314f41a28288d6982ca8f, type: 3}
   - {fileID: 8300000, guid: ed9d743ddbaae784f91aba0873265f40, type: 3}
   - {fileID: 8300000, guid: 4d86b3fda85f0df4caf9df9a7aa99c6c, type: 3}
   - {fileID: 8300000, guid: cf9258650f2f20c418ce7ca7d786d36a, type: 3}
