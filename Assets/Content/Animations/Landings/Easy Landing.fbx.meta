@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 61ee76a20b4639846b64281bc2f5bb01
+guid: dcd08bb3d1000f044976fed94dc45a88
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Jump Land Left
+    second: Easy Landing
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,13 +35,13 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jump Land Left
+      name: Easy Landing
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
+      firstFrame: 19
       lastFrame: 40
       wrapMode: 0
-      orientationOffsetY: 90
+      orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
@@ -49,9 +49,9 @@ ModelImporter:
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 1
       heightFromFeet: 0

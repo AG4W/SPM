@@ -6,31 +6,31 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]Transform jig;
 
     [SerializeField]Vector3 targetInput;
-    [SerializeField]Vector3 correctedInput;
 
     [SerializeField]float targetStance;
-
-    [SerializeField]bool isGrounded;
     [SerializeField]bool isSprinting;
 
     [Header("Movement/Collision Properties")]
     [SerializeField]float characterHeight = 1.8f;
+    [SerializeField]float characterStepOverHeight = .25f;
     [SerializeField]float characterRadius = .25f;
+    [SerializeField]float groundCheckDistance = 1f;
+    [SerializeField]float jumpForce = 2f;
+
+    [SerializeField]float gravitationalConstant = 9.82f;
+    float gravity;
+    float fallDuration;
+
+    [SerializeField]bool isGrounded;
+    bool lastFrameGroundStatus;
+
+    RaycastHit lastGroundHit;
 
     [Header("Combat Mode")]
-    [SerializeField]float explorationInterpolationSpeed = 2.5f;
-    [SerializeField]float explorationRotationSpeed = 5f;
-
-    [Header("Exploration Mode")]
-    [SerializeField]float combatInterpolationSpeed = 10f;
-
-    bool inCombatMode = true; 
+    [SerializeField]float combatInterpolationSpeed = 2.5f;
 
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
-
-    [Header("Collision Management")]
-    [SerializeField]LayerMask collisionLayer;
 
     Animator animator;
 
@@ -40,29 +40,45 @@ public class LocomotionController : MonoBehaviour
     }
     void Update()
     {
-        //UpdateGroundedStatus();
+        UpdateGroundedStatus();
         GatherInput();
 
         UpdateAnimator();
         UpdateRotation();
-    }
 
+        lastFrameGroundStatus = isGrounded;
+    }
     void OnAnimatorMove()
     {
         this.transform.position += this.animator.deltaPosition;
+        //Debug.DrawRay(this.transform.position, this.animator.deltaPosition.normalized * (this.animator.deltaPosition.magnitude + .2f), Color.blue);
 
-        Debug.DrawRay(this.transform.position, this.animator.deltaPosition);
+        Vector3 pointA = this.transform.position + (Vector3.up * characterHeight);
+        Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
 
-        if (Physics.CapsuleCast(this.transform.position, this.transform.position + (Vector3.up * characterHeight), characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .5f))
+        if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
             this.transform.position += this.animator.deltaPosition.GetNormalForce(hit.normal);
+
+        if (isGrounded)
+        {
+            gravity = 0f;
+
+            Vector3 t = this.transform.position;
+            t.y = lastGroundHit.point.y;
+
+            this.transform.position = t;
+        }
+        else
+        {
+            gravity += gravitationalConstant * Time.deltaTime;
+            this.transform.position += Vector3.down * gravity * Time.deltaTime;
+        }
     }
 
     void GatherInput()
     {
         isSprinting = Input.GetKey(KeyCode.LeftShift);
-        
         targetInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-
         targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
 
         if (!isGrounded)
@@ -78,7 +94,7 @@ public class LocomotionController : MonoBehaviour
         if (isSprinting)
             return;
 
-        if (inCombatMode && Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0))
             weapon.Shoot();
     }
 
@@ -88,38 +104,32 @@ public class LocomotionController : MonoBehaviour
     }
     void UpdateAnimator()
     {
-        animator.SetFloat("x", targetInput.x, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
-        animator.SetFloat("z", targetInput.z, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
+        animator.SetFloat("x", targetInput.x, combatInterpolationSpeed, Time.deltaTime);
+        animator.SetFloat("z", targetInput.z, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("velocity", animator.velocity.magnitude);
 
         animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
-        animator.SetFloat("fallHeight", isGrounded ? 0f : animator.GetFloat("fallHeight") + Time.deltaTime);
+        animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
     }
-    //void UpdateGroundedStatus()
-    //{
-    //    //offsetta lite uppåt för att få en mer reliable ground check
-    //    Ray ray = new Ray(this.transform.position + (Vector3.up * .1f), Vector3.down);
-    //    RaycastHit hit;
+    void UpdateGroundedStatus()
+    {
+        fallDuration += isGrounded ? 0f : Time.deltaTime;
 
-    //    isGrounded = Physics.Raycast(ray, out hit, groundedRaycastDistance + .1f);
+        Ray ray = new Ray(this.transform.position + (Vector3.up * characterStepOverHeight), Vector3.down);
+        //offsetta lite uppåt för att få en mer reliable ground check
+        isGrounded = Physics.Raycast(ray, out lastGroundHit, characterStepOverHeight + groundCheckDistance);
 
-    //    if (isGrounded)
-    //    {
-    //        Vector3 np = this.transform.position;
-    //        np.y = hit.point.y;
+        if (lastFrameGroundStatus && !isGrounded)
+            fallDuration = 0f;
 
-    //        this.transform.position = np;
-    //    }
-
-    //    if(displayDebugGizmos)
-    //        Debug.DrawLine(this.transform.position + (Vector3.up * .1f), this.transform.position + (Vector3.down * groundedRaycastDistance), hit.transform == null ? Color.red : Color.green);
-    //}
+        //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
+    }
 
     void Jump()
     {
         animator.SetTrigger("jump");
-        this.transform.position += (this.transform.up + this.transform.forward) * 5f;
+        this.transform.position += (this.transform.up + this.transform.forward) * jumpForce; 
     }
 }
