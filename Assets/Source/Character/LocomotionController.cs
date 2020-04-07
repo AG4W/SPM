@@ -47,12 +47,8 @@ public class LocomotionController : MonoBehaviour
 
         GatherInput();
 
-        Debug.DrawRay(this.transform.position, targetInput, Color.red);
-        Debug.DrawRay(this.transform.position, targetInput.TransformToLocalDirection(this.transform), Color.green);
-
-        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
-
         WallCollision();
+
         UpdateAnimator();
         UpdateRotation();
     }
@@ -62,9 +58,6 @@ public class LocomotionController : MonoBehaviour
         isSprinting = Input.GetKey(KeyCode.LeftShift);
         
         targetInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-
-        if (isSprinting)
-            targetInput *= 2;
 
         targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
 
@@ -135,26 +128,23 @@ public class LocomotionController : MonoBehaviour
     //}
     void WallCollision()
     {
+        Vector3 targetInputInWorldSpace = targetInput.TransformToLocalDirection(this.transform);
         Vector3 Point1Capsule = chestCollider.transform.position + chestCollider.center + Vector3.up * (chestCollider.height / 2 - chestCollider.radius);
         Vector3 Point2Capsule = chestCollider.transform.position + chestCollider.center + Vector3.down * (chestCollider.height / 2 - chestCollider.radius);
-        bool willHitWall = Physics.CapsuleCast(Point1Capsule, Point2Capsule, chestCollider.radius, targetInput.normalized, targetInput.magnitude + .1f, collisionLayer);
+        bool willHitWall = Physics.CapsuleCast(Point1Capsule, Point2Capsule, chestCollider.radius, targetInputInWorldSpace.normalized, out RaycastHit hitInfo, targetInput.magnitude + .1f, collisionLayer);
         if (willHitWall)
         {
-            targetInput = Vector3.zero;
+            targetInputInWorldSpace += animator.velocity.GetNormalForce(hitInfo.normal);
         }
-
-        bool hasHitWall = Physics.CapsuleCast(Point1Capsule, Point2Capsule, chestCollider.radius, animator.velocity.normalized, out RaycastHit hitInfo, animator.velocity.magnitude + .1f, collisionLayer);
-        if (displayDebugGizmos)
-            Debug.DrawRay(Point1Capsule, animator.velocity.normalized, hasHitWall == false ? Color.red : Color.green);
-        if (hasHitWall)
-        {
-            //Vector3 temp = animator.velocity.normalized * (animator.velocity.magnitude - .1f);
-            Vector3 normalForce = animator.velocity.GetNormalForce(hitInfo.normal);
-            //temp += normalForce;
-            //velocity += temp;
-            Debug.Log("Normalforce: " + normalForce);
-            targetInput -= animator.deltaPosition;
-        }
+        targetInput = targetInputInWorldSpace;
+        //bool hasHitWall = Physics.CapsuleCast(Point1Capsule, Point2Capsule, chestCollider.radius, animator.velocity.normalized, animator.velocity.magnitude + .1f, collisionLayer);
+        //if (displayDebugGizmos)
+        //    Debug.DrawRay(Point1Capsule, animator.velocity.normalized, hasHitWall == false ? Color.red : Color.green);
+        //if (hasHitWall)
+        //{
+            
+        //    this.transform.position -= animator.deltaPosition;
+        //}
     }
 
     void Jump()
