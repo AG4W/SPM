@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.52023035, g: 0.35652933, b: 0.25892952, a: 1}
+  m_IndirectSpecularColor: {r: 0.5208757, g: 0.35480097, b: 0.24378508, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -352,10 +352,10 @@ MonoBehaviour:
   sensitivity: 125
   translationSpeed: 15
   target: {fileID: 1920939342}
-  defaultPosition: {x: 0.75, y: 1.75, z: -1.5}
-  ironSightPosition: {x: 0.5, y: 1.75, z: -0.75}
-  defaultFOV: 60
-  ironSightFOV: 40
+  defaultPosition: {x: 0.3, y: 1.75, z: -1.5}
+  ironSightPosition: {x: 0.25, y: 1.75, z: -0.75}
+  defaultFOV: 75
+  ironSightFOV: 75
 --- !u!1 &428169667
 GameObject:
   m_ObjectHideFlags: 0
@@ -983,7 +983,6 @@ MonoBehaviour:
   m_Script: {fileID: 1033683041}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Entries: []
 --- !u!4 &866318171
 Transform:
   m_ObjectHideFlags: 19
