@@ -44,8 +44,8 @@ public class CameraController : MonoBehaviour
 
         cameraRotationY = Mathf.Clamp(cameraRotationY, -maxCameraUpAngle, maxCameraDownAngle);
 
-        this.transform.rotation = Quaternion.Euler(0f, cameraRotationX, 0f);
-        camera.transform.localRotation = Quaternion.Euler(cameraRotationY, 0f, 0f);
+        this.transform.rotation = Quaternion.Euler(cameraRotationY, cameraRotationX, 0f);
+        //camera.transform.localRotation = Quaternion.Euler(cameraRotationY, 0f, 0f); kan ta bort(Christian)
 
         this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
 
