@@ -7,9 +7,11 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]Vector3 targetInput;
 
+    [SerializeField]float targetStance;
+
     [SerializeField]float groundedRaycastDistance = .2f;
-    [SerializeField]float gravity = 9.82f;
     [SerializeField]bool isGrounded;
+    [SerializeField]bool isSprinting;
 
     [Header("Combat Mode")]
     [SerializeField]float explorationInterpolationSpeed = 2.5f;
@@ -18,7 +20,7 @@ public class LocomotionController : MonoBehaviour
     [Header("Exploration Mode")]
     [SerializeField]float combatInterpolationSpeed = 10f;
 
-    [SerializeField]bool inCombatMode; 
+    bool inCombatMode = true; 
 
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
@@ -43,15 +45,30 @@ public class LocomotionController : MonoBehaviour
 
     void GatherInput()
     {
-        if (inCombatMode && Input.GetKey(KeyCode.Mouse0))
-            weapon.Shoot();
+        isSprinting = Input.GetKey(KeyCode.LeftShift);
+        
+        targetInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
-        if (Input.GetKeyDown(KeyCode.Tab))
-            ToggleMovementMode();
+        if (isSprinting)
+            targetInput *= 2;
+
+        targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
+
+        if (!isGrounded)
+            return;
+
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //    ToggleMovementMode();
         if (Input.GetKeyDown(KeyCode.F))
             torch.SetActive(!torch.activeSelf);
+        if (Input.GetKeyDown(KeyCode.Space))
+            animator.SetTrigger("roll");
 
-        targetInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        if (isSprinting)
+            return;
+
+        if (inCombatMode && Input.GetKey(KeyCode.Mouse0))
+            weapon.Shoot();
     }
 
     void UpdateRotation()
@@ -74,6 +91,8 @@ public class LocomotionController : MonoBehaviour
     {
         animator.SetFloat("x", targetInput.x, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("z", targetInput.z, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
+
+        animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("fallHeight", isGrounded ? 0f : animator.GetFloat("fallHeight") + Time.deltaTime);
 
         animator.SetBool("isGrounded", isGrounded);
