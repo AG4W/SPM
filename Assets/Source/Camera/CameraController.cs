@@ -2,7 +2,8 @@
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]float sensitivity = 2f;
+    [SerializeField]float sensitivityX = 2f;
+    [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = 5f;
 
     [SerializeField]GameObject target;
@@ -12,6 +13,12 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]float defaultFOV = 60;
     [SerializeField]float ironSightFOV = 30;
+
+    [SerializeField]float maxCameraUpAngle;
+    [SerializeField]float maxCameraDownAngle;
+
+    float cameraRotationX;
+    float cameraRotationY;
 
     Camera camera;
 
@@ -32,7 +39,14 @@ public class CameraController : MonoBehaviour
 
     void GatherInput()
     {
-        this.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime);
+        cameraRotationX += Input.GetAxis("Mouse X") * sensitivityX * Time.deltaTime;
+        cameraRotationY += -Input.GetAxis("Mouse Y") * sensitivityY * Time.deltaTime;
+
+        cameraRotationY = Mathf.Clamp(cameraRotationY, -maxCameraUpAngle, maxCameraDownAngle);
+
+        this.transform.rotation = Quaternion.Euler(0f, cameraRotationX, 0f);
+        camera.transform.localRotation = Quaternion.Euler(cameraRotationY, 0f, 0f);
+
         this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
 
         inIronSights = Input.GetKey(KeyCode.Mouse1);
