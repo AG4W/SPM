@@ -4,6 +4,7 @@ using UnityEngine;
 public class WeaponController : MonoBehaviour
 {
     [SerializeField]float projectileSpeed;
+    [SerializeField]float fireCooldown;
 
     [SerializeField]GameObject shotPrefab;
     [SerializeField]AudioClip[] shotSounds;
@@ -11,9 +12,26 @@ public class WeaponController : MonoBehaviour
     [SerializeField]Transform exitPoint;
     [SerializeField]AudioSource source;
 
+    bool canFire = true;
+
     public void Shoot()
     {
-        GameObject g = Instantiate(shotPrefab, exitPoint.position, exitPoint.transform.rotation, null);
+        if (!canFire)
+            return;
+
+        StartCoroutine(ResetCooldown());
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Vector3 heading;
+
+        Physics.Raycast(ray, out hit, Mathf.Infinity);
+
+        heading = (hit.transform == null ? ray.direction * 100 : hit.point) - exitPoint.position;
+
+        Debug.DrawRay(exitPoint.position, heading.normalized * 100f, Color.red, 5f);
+
+        GameObject g = Instantiate(shotPrefab, exitPoint.position, Quaternion.LookRotation(heading.normalized), null);
         StartCoroutine(UpdateShotPosition(g));
 
         source.PlayOneShot(shotSounds.Random());
@@ -31,5 +49,11 @@ public class WeaponController : MonoBehaviour
         }
 
         Destroy(shot);
+    }
+    IEnumerator ResetCooldown()
+    {
+        canFire = false;
+        yield return new WaitForSeconds(fireCooldown);
+        canFire = true;
     }
 }
