@@ -25,12 +25,22 @@ public class LocomotionController : MonoBehaviour
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
 
+    [Header("Collision Management")]
+    [SerializeField]LayerMask collisionLayer;
+    CapsuleCollider chestCollider;
+
+    Vector3 velocity;
+    [SerializeField]float airResistance = .4f;
+
     Animator animator;
 
     [SerializeField]bool displayDebugGizmos = true;
 
+
+
     void Awake()
     {
+        chestCollider = GetComponent<CapsuleCollider>();
         animator = this.GetComponentInChildren<Animator>();
     }
     void Update()
@@ -38,9 +48,12 @@ public class LocomotionController : MonoBehaviour
         UpdateGroundedStatus();
 
         GatherInput();
-
+        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
+        WallCollision();
         UpdateAnimator();
         UpdateRotation();
+
+        
     }
 
     void GatherInput()
@@ -91,6 +104,7 @@ public class LocomotionController : MonoBehaviour
     {
         animator.SetFloat("x", targetInput.x, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("z", targetInput.z, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
+        animator.SetFloat("velocity", velocity.magnitude);
 
         animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("fallHeight", isGrounded ? 0f : animator.GetFloat("fallHeight") + Time.deltaTime);
@@ -116,7 +130,41 @@ public class LocomotionController : MonoBehaviour
         if(displayDebugGizmos)
             Debug.DrawLine(this.transform.position + (Vector3.up * .1f), this.transform.position + (Vector3.down * groundedRaycastDistance), hit.transform == null ? Color.red : Color.green);
     }
+    void WallCollision()
+    {
+        Vector3 Point1Capsule = chestCollider.transform.position + chestCollider.center + Vector3.up * (chestCollider.height / 2 - chestCollider.radius);
+        Vector3 Point2Capsule = chestCollider.transform.position + chestCollider.center + Vector3.down * (chestCollider.height / 2 - chestCollider.radius);
+        bool willHitWall = Physics.CapsuleCast(Point1Capsule, Point2Capsule, chestCollider.radius, targetInput.normalized, targetInput.magnitude + .1f, collisionLayer);
+        if (willHitWall)
+        {
+            targetInput = Vector3.zero;
+        }
 
+        bool hasHitWall = Physics.CapsuleCast(Point1Capsule, Point2Capsule, chestCollider.radius, animator.velocity.normalized, out RaycastHit hitInfo, animator.velocity.magnitude + .1f, collisionLayer);
+        if (displayDebugGizmos)
+            Debug.DrawRay(Point1Capsule, animator.velocity.normalized, hasHitWall == false ? Color.red : Color.green);
+        if (hasHitWall)
+        {
+            //Vector3 temp = animator.velocity.normalized * (animator.velocity.magnitude - .1f);
+            Vector3 normalForce = CalculateNormalForce(animator.velocity, hitInfo.normal);
+            //temp += normalForce;
+            //velocity += temp;
+            Debug.Log("Normalforce: " + normalForce);
+            targetInput -= animator.deltaPosition;
+            
+
+        }
+    }
+    Vector3 CalculateNormalForce(Vector3 velocity, Vector3 normal)
+    {
+        // Skalärprodukten mellan vektorn velocity och (normaliserade) vektorn normal
+        float dot = Vector3.Dot(velocity, normal);
+        // Om vår hastighet och normal pekar åt samma håll (dot = positiv), bör det inte finnas någon normalkraft.
+        if (dot > 0f)
+            dot = 0f;
+        Vector3 projection = dot * normal; // (Skalärprodukten mellan vektorn velocity och normaliserade vektorn normal) * normaliserade vektorn normal
+        return -projection; // The normal force returned
+    } // Calculation of the normal force
     void ToggleMovementMode()
     {
         inCombatMode = !inCombatMode;
