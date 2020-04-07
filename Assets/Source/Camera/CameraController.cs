@@ -43,8 +43,8 @@ public class CameraController : MonoBehaviour
         cameraRotationY += -Input.GetAxis("Mouse Y") * sensitivityY * Time.deltaTime;
         cameraRotationY = Mathf.Clamp(cameraRotationY, -maxCameraUpAngle, maxCameraDownAngle);
 
-        this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
         this.transform.rotation = Quaternion.Euler(cameraRotationY, cameraRotationX, 0f);
+        this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
 
         inIronSights = Input.GetKey(KeyCode.Mouse1);
     }
