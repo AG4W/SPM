@@ -1,5 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+
+using System.Collections;
 
 public class WeaponController : MonoBehaviour
 {
