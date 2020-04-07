@@ -18,7 +18,6 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float jumpForce = 2f;
 
     [SerializeField]float gravitationalConstant = 9.82f;
-    float gravity;
     float fallDuration;
 
     [SerializeField]bool isGrounded;
@@ -50,29 +49,25 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
-        this.transform.position += this.animator.deltaPosition;
+        Vector3 movement = Vector3.zero;
+
+        movement += this.animator.deltaPosition;
         //Debug.DrawRay(this.transform.position, this.animator.deltaPosition.normalized * (this.animator.deltaPosition.magnitude + .2f), Color.blue);
 
         Vector3 pointA = this.transform.position + (Vector3.up * characterHeight);
         Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
 
         if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
-            this.transform.position += this.animator.deltaPosition.GetNormalForce(hit.normal);
+            movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
+
+        Vector3 gravity = Vector3.down * gravitationalConstant * Time.deltaTime;
 
         if (isGrounded)
-        {
-            gravity = 0f;
-
-            Vector3 t = this.transform.position;
-            t.y = lastGroundHit.point.y;
-
-            this.transform.position = t;
-        }
+            movement += gravity.GetNormalForce(lastGroundHit.normal);
         else
-        {
-            gravity += gravitationalConstant * Time.deltaTime;
-            this.transform.position += Vector3.down * gravity * Time.deltaTime;
-        }
+            movement += gravity;
+
+        this.transform.position += movement;
     }
 
     void GatherInput()
@@ -130,6 +125,6 @@ public class LocomotionController : MonoBehaviour
     void Jump()
     {
         animator.SetTrigger("jump");
-        this.transform.position += (this.transform.up + this.transform.forward) * jumpForce; 
+        this.transform.position += this.transform.up * jumpForce; 
     }
 }
