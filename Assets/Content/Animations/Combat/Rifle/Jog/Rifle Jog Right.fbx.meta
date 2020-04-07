@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 8d47a60dac65aeb42825a7b957b441b8
+guid: 1bcd5ab79ac6d0e40b3f16a6d9465e04
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Rifle Walk Left
+    second: Rifle Jog Right
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle Walk Left
+      name: Rifle Jog Right
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 85
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

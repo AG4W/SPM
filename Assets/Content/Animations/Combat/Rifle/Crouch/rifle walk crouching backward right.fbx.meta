@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 1014d6b0afca7cd419478ecbb32d7e48
+guid: 1c39973675c4c4445b8d5fce07e1d0e1
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Rifle Idle
+    second: rifle walk crouching backward right
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle Idle
+      name: rifle walk crouching backward right
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 186
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
