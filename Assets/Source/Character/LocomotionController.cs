@@ -29,14 +29,12 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]LayerMask collisionLayer;
     CapsuleCollider chestCollider;
 
-    Vector3 velocity;
+    [SerializeField]Vector3 velocity;
     [SerializeField]float airResistance = .4f;
 
     Animator animator;
 
     [SerializeField]bool displayDebugGizmos = true;
-
-
 
     void Awake()
     {
@@ -45,15 +43,18 @@ public class LocomotionController : MonoBehaviour
     }
     void Update()
     {
-        UpdateGroundedStatus();
+        //UpdateGroundedStatus();
 
         GatherInput();
+
+        Debug.DrawRay(this.transform.position, targetInput, Color.red);
+        Debug.DrawRay(this.transform.position, targetInput.TransformToLocalDirection(this.transform), Color.green);
+
         velocity *= Mathf.Pow(airResistance, Time.deltaTime);
+
         WallCollision();
         UpdateAnimator();
         UpdateRotation();
-
-        
     }
 
     void GatherInput()
@@ -75,6 +76,8 @@ public class LocomotionController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
             torch.SetActive(!torch.activeSelf);
         if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+        if (Input.GetKeyDown(KeyCode.V))
             animator.SetTrigger("roll");
 
         if (isSprinting)
@@ -104,32 +107,32 @@ public class LocomotionController : MonoBehaviour
     {
         animator.SetFloat("x", targetInput.x, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("z", targetInput.z, inCombatMode ? combatInterpolationSpeed : explorationInterpolationSpeed, Time.deltaTime);
-        animator.SetFloat("velocity", velocity.magnitude);
+        animator.SetFloat("velocity", animator.velocity.magnitude);
 
         animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("fallHeight", isGrounded ? 0f : animator.GetFloat("fallHeight") + Time.deltaTime);
 
         animator.SetBool("isGrounded", isGrounded);
     }
-    void UpdateGroundedStatus()
-    {
-        //offsetta lite uppåt för att få en mer reliable ground check
-        Ray ray = new Ray(this.transform.position + (Vector3.up * .1f), Vector3.down);
-        RaycastHit hit;
+    //void UpdateGroundedStatus()
+    //{
+    //    //offsetta lite uppåt för att få en mer reliable ground check
+    //    Ray ray = new Ray(this.transform.position + (Vector3.up * .1f), Vector3.down);
+    //    RaycastHit hit;
 
-        isGrounded = Physics.Raycast(ray, out hit, groundedRaycastDistance + .1f);
+    //    isGrounded = Physics.Raycast(ray, out hit, groundedRaycastDistance + .1f);
 
-        if (isGrounded)
-        {
-            Vector3 np = this.transform.position;
-            np.y = hit.point.y;
+    //    if (isGrounded)
+    //    {
+    //        Vector3 np = this.transform.position;
+    //        np.y = hit.point.y;
 
-            this.transform.position = np;
-        }
+    //        this.transform.position = np;
+    //    }
 
-        if(displayDebugGizmos)
-            Debug.DrawLine(this.transform.position + (Vector3.up * .1f), this.transform.position + (Vector3.down * groundedRaycastDistance), hit.transform == null ? Color.red : Color.green);
-    }
+    //    if(displayDebugGizmos)
+    //        Debug.DrawLine(this.transform.position + (Vector3.up * .1f), this.transform.position + (Vector3.down * groundedRaycastDistance), hit.transform == null ? Color.red : Color.green);
+    //}
     void WallCollision()
     {
         Vector3 Point1Capsule = chestCollider.transform.position + chestCollider.center + Vector3.up * (chestCollider.height / 2 - chestCollider.radius);
@@ -146,32 +149,17 @@ public class LocomotionController : MonoBehaviour
         if (hasHitWall)
         {
             //Vector3 temp = animator.velocity.normalized * (animator.velocity.magnitude - .1f);
-            Vector3 normalForce = CalculateNormalForce(animator.velocity, hitInfo.normal);
+            Vector3 normalForce = animator.velocity.GetNormalForce(hitInfo.normal);
             //temp += normalForce;
             //velocity += temp;
             Debug.Log("Normalforce: " + normalForce);
             targetInput -= animator.deltaPosition;
-            
-
         }
     }
-    Vector3 CalculateNormalForce(Vector3 velocity, Vector3 normal)
-    {
-        // Skalärprodukten mellan vektorn velocity och (normaliserade) vektorn normal
-        float dot = Vector3.Dot(velocity, normal);
-        // Om vår hastighet och normal pekar åt samma håll (dot = positiv), bör det inte finnas någon normalkraft.
-        if (dot > 0f)
-            dot = 0f;
-        Vector3 projection = dot * normal; // (Skalärprodukten mellan vektorn velocity och normaliserade vektorn normal) * normaliserade vektorn normal
-        return -projection; // The normal force returned
-    } // Calculation of the normal force
-    void ToggleMovementMode()
-    {
-        inCombatMode = !inCombatMode;
-        animator.SetBool("inCombat", inCombatMode);
-    }
+
     void Jump()
     {
-
+        animator.SetTrigger("jump");
+        this.transform.position += (this.transform.up + this.transform.forward) * 5f;
     }
 }
