@@ -61,6 +61,8 @@ public class LocomotionController : MonoBehaviour
         //    ToggleMovementMode();
         if (Input.GetKeyDown(KeyCode.F))
             torch.SetActive(!torch.activeSelf);
+        if (Input.GetKeyDown(KeyCode.Space))
+            animator.SetTrigger("roll");
 
         if (isSprinting)
             return;
