@@ -13,8 +13,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: 1509268749362802486}
   - {fileID: 6357384343161445945}
-  m_StateMachineBehaviours:
-  - {fileID: -2602267813396985058}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -54,18 +53,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!114 &-7784288437112719938
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b00b37bebf7bb4088c114e1edcb664, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!206 &-5414208058299939864
 BlendTree:
   m_ObjectHideFlags: 1
@@ -193,18 +180,6 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 3
---- !u!114 &-2602267813396985058
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b00b37bebf7bb4088c114e1edcb664, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!206 &-2402370486277323345
 BlendTree:
   m_ObjectHideFlags: 1
@@ -313,8 +288,7 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2474203628537420230}
-  m_StateMachineBehaviours:
-  - {fileID: 5117136235242599855}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -659,8 +633,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: 2679499070968378303}
   - {fileID: -8015935885703342149}
-  m_StateMachineBehaviours:
-  - {fileID: -7784288437112719938}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -726,18 +699,6 @@ BlendTree:
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 3
---- !u!114 &5117136235242599855
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b00b37bebf7bb4088c114e1edcb664, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!206 &6178479605811896383
 BlendTree:
   m_ObjectHideFlags: 1
