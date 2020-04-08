@@ -16,6 +16,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float characterStepOverHeight = .25f;
     [SerializeField]float characterRadius = .25f;
     [SerializeField]float groundCheckDistance = 1f;
+    [SerializeField]bool canStand = true;
 
     [Header("Jumping")]
     [SerializeField]Vector3 jumpForce = new Vector3(1f, 1f, 0f);
@@ -40,6 +41,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]WeaponController weapon;
 
     Animator animator;
+    
 
     void Awake()
     {
@@ -69,23 +71,35 @@ public class LocomotionController : MonoBehaviour
         Vector3 movement = Vector3.zero;
         movement += this.animator.deltaPosition;
 
-        /* Väggkollision */
-        if (targetStance == 1f) // Stående
+        /****** Vägg-tak-kollision ******/
+        Vector3 pointA;
+        Vector3 pointB;
+        if (targetStance == 1f) // Standing
         {
-            Debug.Log("Stance 1");
-            Vector3 pointA = this.transform.position + (Vector3.up * (characterStandingHeight - characterRadius));
-            Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
-            if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
-                movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
-        }else if(targetStance == 0f)
-        {
-            Debug.Log("Stance 0");
-            Vector3 pointA = this.transform.position + (Vector3.up * (characterCrouchingHeight - characterRadius));
-            Vector3 pointB = this.transform.position + (Vector3.up * characterRadius);
+            pointA = this.transform.position + (Vector3.up * (characterStandingHeight - characterRadius));
+            pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
             if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
                 movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
         }
-        /* Väggkollision */
+        else if(targetStance == 0f) // Crouching
+        {
+            pointA = this.transform.position + (Vector3.up * (characterCrouchingHeight - characterRadius));
+            pointB = this.transform.position + (Vector3.up * characterRadius);
+            if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
+                movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
+        }
+        /***** CanStand? *****/
+        pointA = this.transform.position + (Vector3.up * (characterCrouchingHeight - characterRadius - .2f));
+        pointB = this.transform.position + (Vector3.up * characterRadius);
+        if (Physics.CapsuleCast(pointA, pointB, characterRadius, Vector3.up, characterStandingHeight - characterCrouchingHeight))
+        {
+            animator.SetFloat("stance", 0f, combatInterpolationSpeed, Time.deltaTime);
+            canStand = false;
+        }
+        else
+            canStand = true;
+        /****** Vägg-tak-kollision ******/
+
         Vector3 gravity = Vector3.down * gravitationalConstant * Time.deltaTime;
 
         if (isGrounded)
@@ -140,8 +154,8 @@ public class LocomotionController : MonoBehaviour
         animator.SetFloat("x", targetInput.x, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("z", targetInput.z, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("velocity", animator.velocity.magnitude);
-
-        animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
+        if(canStand)
+            animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
