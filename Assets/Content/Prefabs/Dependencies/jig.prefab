@@ -239,6 +239,7 @@ MonoBehaviour:
   target: {fileID: 0}
   defaultPosition: {x: 0.3, y: 1.75, z: -1.5}
   ironSightPosition: {x: 0.4, y: 1.75, z: -0.75}
+  crouchOffset: {x: 0, y: -0.6, z: 0}
   defaultFOV: 75
   ironSightFOV: 45
   maxCameraUpAngle: 30
@@ -247,4 +248,4 @@ MonoBehaviour:
   actualDoFDistance: 0
   focusSpeed: 2
   defaultDoFStrength: 0.05
-  ironSightDoFStrength: 4
+  ironSightDoFStrength: 2
