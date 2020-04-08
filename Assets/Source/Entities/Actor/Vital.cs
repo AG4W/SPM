@@ -37,6 +37,14 @@ public class Vital
 
     public void Update(float change)
     {
-        this.Current = Mathf.Clamp(this.Current + change, 0f, this.Max);
+        this.Current += change;
+        OnCurrentChanged?.Invoke(this.Current);
     }
+
+    public delegate void OnValueChanged(float change);
+    public OnValueChanged OnCurrentChanged;
+}
+public enum VitalType
+{
+    Health,
 }

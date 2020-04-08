@@ -2,7 +2,7 @@
 
 public class LocomotionController : MonoBehaviour
 {
-    [SerializeField]GameObject torch;
+    [SerializeField]GameObject[] torches;
     [SerializeField]Transform jig;
 
     [SerializeField]Vector3 targetInput;
@@ -11,7 +11,8 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]bool isSprinting;
 
     [Header("Movement/Collision Properties")]
-    [SerializeField]float minimalHeight = 1.25f;
+    [SerializeField]float characterStandingHeight = 1.8f;
+    [SerializeField]float characterCrouchingHeight = 1.4f;
     [SerializeField]float characterStepOverHeight = .25f;
     [SerializeField]float characterRadius = .25f;
     [SerializeField]float groundCheckDistance = 1f;
@@ -66,15 +67,24 @@ public class LocomotionController : MonoBehaviour
     void OnAnimatorMove()
     {
         Vector3 movement = Vector3.zero;
-
         movement += this.animator.deltaPosition;
-        //Debug.DrawRay(this.transform.position, this.animator.deltaPosition.normalized * (this.animator.deltaPosition.magnitude + .2f), Color.blue);
 
         /* Väggkollision */
-        Vector3 pointA = this.transform.position + (Vector3.up * (animator.GetFloat("stance") + minimalHeight));
-        Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
-        if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
-            movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
+        if (targetStance == 1f) // Stående
+        {
+            Debug.Log("Stance 1");
+            Vector3 pointA = this.transform.position + (Vector3.up * (characterStandingHeight - characterRadius));
+            Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
+            if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
+                movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
+        }else if(targetStance == 0f)
+        {
+            Debug.Log("Stance 0");
+            Vector3 pointA = this.transform.position + (Vector3.up * (characterCrouchingHeight - characterRadius));
+            Vector3 pointB = this.transform.position + (Vector3.up * characterRadius);
+            if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
+                movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
+        }
         /* Väggkollision */
         Vector3 gravity = Vector3.down * gravitationalConstant * Time.deltaTime;
 
@@ -111,7 +121,10 @@ public class LocomotionController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             Reload();
         if (Input.GetKeyDown(KeyCode.F))
-            torch.SetActive(!torch.activeSelf);
+        {
+            for (int i = 0; i < torches.Length; i++)
+                torches[i].SetActive(!torches[i].activeSelf);
+        }
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
         if (Input.GetKeyDown(KeyCode.V))

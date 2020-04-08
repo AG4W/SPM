@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]Vector3 defaultPosition;
     [SerializeField]Vector3 ironSightPosition;
+    [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.75f, 0f);
 
     [SerializeField]float defaultFOV = 60;
     [SerializeField]float ironSightFOV = 30;
@@ -66,7 +67,13 @@ public class CameraController : MonoBehaviour
     void UpdateSettings()
     {
         camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, inIronSights ? ironSightFOV : defaultFOV, translationSpeed * Time.deltaTime);
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, inIronSights ? ironSightPosition : defaultPosition, translationSpeed * Time.deltaTime);
+
+        Vector3 finalCameraPos = inIronSights ? ironSightPosition : defaultPosition;
+
+        if (Input.GetKey(KeyCode.C))
+            finalCameraPos += crouchOffset;
+
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, translationSpeed * Time.deltaTime);
 
         Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity);
 
