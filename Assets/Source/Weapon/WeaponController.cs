@@ -31,7 +31,7 @@ public class WeaponController : MonoBehaviour
     List<ProjectilePacket> projectiles = new List<ProjectilePacket>();
 
     bool canFire = true;
-    public bool NeedsReload { get { return shotsLeftInCurrentClip == 0; } }
+    bool needsReload { get { return shotsLeftInCurrentClip == 0; } }
 
     void Start()
     {
@@ -49,7 +49,13 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(Vector3 position)
     {
-        if (!canFire || NeedsReload)
+        if (needsReload)
+        {
+            Reload();
+            return;
+        }
+
+        if (!canFire)
             return;
 
         ShootInternal(position);

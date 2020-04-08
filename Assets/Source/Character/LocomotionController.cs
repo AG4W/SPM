@@ -44,8 +44,6 @@ public class LocomotionController : MonoBehaviour
 
         UpdateAnimator();
         UpdateRotation();
-
-        
     }
     private void LateUpdate()
     {
