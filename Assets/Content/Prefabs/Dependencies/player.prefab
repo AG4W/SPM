@@ -207,9 +207,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   header: REPLACE ME
-  maxHealth: 0
-  healthRegenerationRate: 0
-  healthRegenerationAmount: 0
+  maxHealth: 100
+  healthRegenerationRate: 1
+  healthRegenerationAmount: 15
 --- !u!1 &3837001893890520405
 GameObject:
   m_ObjectHideFlags: 0
