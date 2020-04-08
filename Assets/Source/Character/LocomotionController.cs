@@ -106,6 +106,10 @@ public class LocomotionController : MonoBehaviour
         if (!isGrounded)
             return;
 
+        if (Input.GetKey(KeyCode.Mouse0))
+            AttemptFire();
+        if (Input.GetKeyDown(KeyCode.R))
+            Reload();
         if (Input.GetKeyDown(KeyCode.F))
             torch.SetActive(!torch.activeSelf);
         if (Input.GetKeyDown(KeyCode.Space))
@@ -146,6 +150,16 @@ public class LocomotionController : MonoBehaviour
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
     }
 
+    void AttemptFire()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
+        weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
+    }
+    void Reload()
+    {
+        weapon.Reload();
+    }
     void Jump()
     {
         animator.SetTrigger("jump");
