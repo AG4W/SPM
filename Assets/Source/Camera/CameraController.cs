@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         camera = this.GetComponentInChildren<Camera>();
-        dof = volume.TryGetComponent(out dof);
+        //dof = volume.TryGetComponent(out dof);
     }
     void Update()
     {

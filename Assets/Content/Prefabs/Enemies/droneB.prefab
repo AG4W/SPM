@@ -259,7 +259,7 @@ MonoBehaviour:
   magasineSize: 20
   shotsLeftInCurrentClip: 0
   projectileSpeed: 50
-  projectileLifetime: 2
+  projectileLifetime: 1
   fireTimer: 0
   fireRate: 0.1
   damage: 3
@@ -273,6 +273,7 @@ MonoBehaviour:
   shotSounds: []
   minPitch: 0.75
   maxPitch: 1.25
+  reloadSounds: []
 --- !u!82 &1854513002327712813
 AudioSource:
   m_ObjectHideFlags: 0
