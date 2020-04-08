@@ -19,7 +19,7 @@ public class WeaponController : MonoBehaviour
     [SerializeField]LayerMask mask;
 
     [Header("Visual")]
-    [SerializeField]GameObject shotPrefab;
+    [SerializeField]GameObject[] shotPrefabs;
     [SerializeField]Transform exitPoint;
 
     [Header("Audio")]
@@ -36,6 +36,12 @@ public class WeaponController : MonoBehaviour
     void Start()
     {
         shotsLeftInCurrentClip = magasineSize;
+
+        if (source == null)
+        {
+            source = this.gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+        }
     }
     void Update()
     {
@@ -81,10 +87,13 @@ public class WeaponController : MonoBehaviour
             //hit something else, create hit marker or something
             if (a == null)
             {
-
             }
             else
+            {
                 a.GetVital(VitalType.Health).Update(-damage);
+            }
+
+            Debug.DrawLine(exitPoint.transform.position, hit.point);
         }
 
         CreateSFX();
@@ -104,12 +113,18 @@ public class WeaponController : MonoBehaviour
 
     void CreateSFX()
     {
+        if (shotSounds == null || shotSounds.Length == 0)
+            return;
+
         source.pitch = Random.Range(Mathf.Min(minPitch, maxPitch), Mathf.Max(minPitch, maxPitch));
         source.PlayOneShot(shotSounds.Random());
     }
     void CreateVFX(Vector3 heading)
     {
-        GameObject bullet = Instantiate(shotPrefab, exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
+        if (shotPrefabs == null || shotPrefabs.Length == 0)
+            return;
+
+        GameObject bullet = Instantiate(shotPrefabs.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
         projectiles.Add(new ProjectilePacket(projectileLifetime, projectileSpeed, bullet));
     }
 }
