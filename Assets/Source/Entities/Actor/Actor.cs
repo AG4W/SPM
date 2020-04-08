@@ -41,11 +41,18 @@ public class Actor : Entity
     {
         for (int i = 0; i < vitals.Length; i++)
             vitals[i].Tick();
+
+        if (GetVital(VitalType.Health).Current <= 0f)
+            OnDeath();
     }
 
     public Vital GetVital(VitalType type)
     {
         return vitals[(int)type];
+    }
+    protected virtual void OnDeath()
+    {
+        Destroy(this.transform.root.gameObject);
     }
 }
 public enum VitalType

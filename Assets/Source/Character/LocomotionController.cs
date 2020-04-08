@@ -11,7 +11,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]bool isSprinting;
 
     [Header("Movement/Collision Properties")]
-    [SerializeField]float characterHeight = 1.8f;
+    [SerializeField]float minimalHeight = 1.25f;
     [SerializeField]float characterStepOverHeight = .25f;
     [SerializeField]float characterRadius = .25f;
     [SerializeField]float groundCheckDistance = 1f;
@@ -71,7 +71,7 @@ public class LocomotionController : MonoBehaviour
         //Debug.DrawRay(this.transform.position, this.animator.deltaPosition.normalized * (this.animator.deltaPosition.magnitude + .2f), Color.blue);
 
         /* Väggkollision */
-        Vector3 pointA = this.transform.position + (Vector3.up * characterHeight);
+        Vector3 pointA = this.transform.position + (Vector3.up * (animator.GetFloat("stance") + minimalHeight));
         Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
         if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
             movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
