@@ -21,7 +21,7 @@ public class LocomotionController : MonoBehaviour
     float fallDuration;
 
     [SerializeField]bool isGrounded;
-    bool lastFrameGroundStatus;
+    bool wasGroundedLastFrame;
 
     RaycastHit lastGroundHit;
 
@@ -45,7 +45,11 @@ public class LocomotionController : MonoBehaviour
         UpdateAnimator();
         UpdateRotation();
 
-        lastFrameGroundStatus = isGrounded;
+        
+    }
+    private void LateUpdate()
+    {
+        wasGroundedLastFrame = isGrounded;
     }
     void OnAnimatorMove()
     {
@@ -54,20 +58,30 @@ public class LocomotionController : MonoBehaviour
         movement += this.animator.deltaPosition;
         //Debug.DrawRay(this.transform.position, this.animator.deltaPosition.normalized * (this.animator.deltaPosition.magnitude + .2f), Color.blue);
 
+        /* Väggkollision */
         Vector3 pointA = this.transform.position + (Vector3.up * characterHeight);
         Vector3 pointB = this.transform.position + (Vector3.up * characterStepOverHeight);
-
         if (Physics.CapsuleCast(pointA, pointB, characterRadius, this.animator.deltaPosition.normalized, out RaycastHit hit, this.animator.deltaPosition.magnitude + .2f))
             movement += this.animator.deltaPosition.GetNormalForce(hit.normal);
-
+        /* Väggkollision */
         Vector3 gravity = Vector3.down * gravitationalConstant * Time.deltaTime;
 
         if (isGrounded)
-            movement += gravity.GetNormalForce(lastGroundHit.normal);
+        {
+            movement += movement.GetNormalForce(lastGroundHit.normal);
+
+        }
         else
             movement += gravity;
 
         this.transform.position += movement;
+        if (isGrounded && !wasGroundedLastFrame)
+        {
+            Vector3 temp = this.transform.position;
+            temp.y = lastGroundHit.point.y;
+            this.transform.position = temp;
+
+        }
     }
 
     void GatherInput()
@@ -116,7 +130,7 @@ public class LocomotionController : MonoBehaviour
         //offsetta lite uppåt för att få en mer reliable ground check
         isGrounded = Physics.Raycast(ray, out lastGroundHit, characterStepOverHeight + groundCheckDistance);
 
-        if (lastFrameGroundStatus && !isGrounded)
+        if (wasGroundedLastFrame && !isGrounded)
             fallDuration = 0f;
 
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
