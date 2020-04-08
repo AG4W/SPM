@@ -953,6 +953,76 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350558505}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &401560901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a81bcacc415a1f743bfdf703afc52027, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  rotation:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 360
+  skyIntensityMode:
+    m_OverrideState: 0
+    m_Value: 0
+  exposure:
+    m_OverrideState: 0
+    m_Value: 0
+  multiplier:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  upperHemisphereLuxValue:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  upperHemisphereLuxColor:
+    m_OverrideState: 0
+    m_Value: {x: 0, y: 0, z: 0}
+  desiredLuxValue:
+    m_OverrideState: 0
+    m_Value: 20000
+  updateMode:
+    m_OverrideState: 0
+    m_Value: 0
+  updatePeriod:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  includeSunInBaking:
+    m_OverrideState: 0
+    m_Value: 0
+  top:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 1, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  middle:
+    m_OverrideState: 0
+    m_Value: {r: 0.3, g: 0.7, b: 1, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  bottom:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  gradientDiffusion:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!1 &428169667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,10 +1323,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b54c7d0ab31fd4d899dcb54aecd37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  magasineSize: 20
+  shotsLeftInCurrentClip: 0
   projectileSpeed: 50
-  fireCooldown: 0.25
-  shotPrefab: {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b,
-    type: 3}
+  projectileLifetime: 2
+  fireTimer: 0
+  fireRate: 0.5
+  damage: 3
+  mask:
+    serializedVersion: 2
+    m_Bits: 0
+  shotPrefabs: []
+  exitPoint: {fileID: 1911874602}
+  source: {fileID: 526783481}
   shotSounds:
   - {fileID: 8300000, guid: ed9d743ddbaae784f91aba0873265f40, type: 3}
   - {fileID: 8300000, guid: 4d86b3fda85f0df4caf9df9a7aa99c6c, type: 3}
@@ -1267,8 +1346,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3c17fc7ee1e2447418c286a121ecc8fc, type: 3}
   - {fileID: 8300000, guid: f77826998f8c97448996ad84c121de3d, type: 3}
   - {fileID: 8300000, guid: 2d2176459b13318458fc2925b01a3325, type: 3}
-  exitPoint: {fileID: 1911874602}
-  source: {fileID: 526783481}
+  minPitch: 0.75
+  maxPitch: 1.25
 --- !u!82 &526783481
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2158,76 +2237,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 762210875}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &779876679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a81bcacc415a1f743bfdf703afc52027, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  rotation:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-    max: 360
-  skyIntensityMode:
-    m_OverrideState: 0
-    m_Value: 0
-  exposure:
-    m_OverrideState: 0
-    m_Value: 0
-  multiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  upperHemisphereLuxValue:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  upperHemisphereLuxColor:
-    m_OverrideState: 0
-    m_Value: {x: 0, y: 0, z: 0}
-  desiredLuxValue:
-    m_OverrideState: 0
-    m_Value: 20000
-  updateMode:
-    m_OverrideState: 0
-    m_Value: 0
-  updatePeriod:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-  includeSunInBaking:
-    m_OverrideState: 0
-    m_Value: 0
-  top:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0, b: 1, a: 1}
-    hdr: 1
-    showAlpha: 0
-    showEyeDropper: 1
-  middle:
-    m_OverrideState: 0
-    m_Value: {r: 0.3, g: 0.7, b: 1, a: 1}
-    hdr: 1
-    showAlpha: 0
-    showEyeDropper: 1
-  bottom:
-    m_OverrideState: 0
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
-    hdr: 1
-    showAlpha: 0
-    showEyeDropper: 1
-  gradientDiffusion:
-    m_OverrideState: 0
-    m_Value: 1
 --- !u!1 &810658916
 GameObject:
   m_ObjectHideFlags: 0
@@ -2445,7 +2454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: 503dbe3de67dae34e91ba6c78335e7f0, type: 2}
   m_StaticLightingSkyUniqueID: 3
-  m_SkySettings: {fileID: 779876679}
+  m_SkySettings: {fileID: 401560901}
   m_SkySettingsFromProfile: {fileID: 5158978261472551677, guid: 503dbe3de67dae34e91ba6c78335e7f0,
     type: 2}
 --- !u!4 &856500670
@@ -6839,9 +6848,14 @@ MonoBehaviour:
   characterStepOverHeight: 0.5
   characterRadius: 0.25
   groundCheckDistance: 1
-  jumpForce: 25
+  jumpForce: {x: 1, y: 1, z: 0}
+  jumpDuration: 2
+  jumpTimer: 0
   gravitationalConstant: 9.82
+  fallDuration: 0
   isGrounded: 0
+  wasGroundedLastFrame: 0
+  isJumping: 0
   combatInterpolationSpeed: 0.25
   weapon: {fileID: 526783480}
 --- !u!114 &1920939345
