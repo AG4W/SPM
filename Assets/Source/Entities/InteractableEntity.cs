@@ -49,4 +49,7 @@ public class InteractableEntity : Entity
         if (interactionSoundEffects != null && interactionSoundEffects.Length > 0)
             source.PlayOneShot(interactionSoundEffects.Random());
     }
+
+    //Auto-reset on timer
+    //Timed interact
 }

@@ -2,7 +2,7 @@
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField]string header = "REPLACE ME";
+    [TextArea(3, 10)][SerializeField]string header = "REPLACE ME";
 
     [SerializeField]float maxHealth = 10f;
     [SerializeField]float healthRegenerationRate;
