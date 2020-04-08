@@ -81,20 +81,18 @@ public class WeaponController : MonoBehaviour
 
         Vector3 heading = target - exitPoint.position;
 
-        Physics.Raycast(exitPoint.position, heading, out RaycastHit hit, Mathf.Infinity, mask);
+        Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 
         if(hit.transform != null)
         {
-            Actor a = hit.transform.root.GetComponent<Actor>();
+            Entity e = hit.transform.root.GetComponent<Entity>();
 
             //hit something else, create hit marker or something
-            if (a == null)
+            if (e == null)
             {
             }
             else
-            {
-                a.GetVital(VitalType.Health).Update(-damage);
-            }
+                e.Health.Update(-damage);
 
             Debug.DrawLine(exitPoint.transform.position, hit.point);
         }

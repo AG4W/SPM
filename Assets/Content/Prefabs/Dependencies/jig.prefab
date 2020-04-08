@@ -233,12 +233,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: f3494d946fadd384fa6b99e8f8ac17c2, type: 2}
-  sensitivityX: 125
-  sensitivityY: 125
+  sensitivityX: 80
+  sensitivityY: 80
   translationSpeed: 5
   target: {fileID: 0}
   defaultPosition: {x: 0.3, y: 1.75, z: -1.5}
-  ironSightPosition: {x: 0.4, y: 1.75, z: -0.75}
+  ironSightPosition: {x: 0.6, y: 1.75, z: -0.75}
   crouchOffset: {x: 0, y: -0.6, z: 0}
   defaultFOV: 75
   ironSightFOV: 45

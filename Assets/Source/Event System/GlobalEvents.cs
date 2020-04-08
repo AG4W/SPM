@@ -38,5 +38,5 @@ public static class GlobalEvents
 public enum GlobalEvent
 {
     OpenInteractPrompt,
-    CloseInteractPrompt,
+    CurrentInteractableEntityChanged,
 }
