@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField]Volume volume;
+    [SerializeField]VolumeProfile post;
+
+    DepthOfField dof;
+
     [SerializeField]float sensitivityX = 2f;
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = 5f;
@@ -29,6 +36,7 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         camera = this.GetComponentInChildren<Camera>();
+        dof = volume.TryGetComponent(out dof);
     }
     void Update()
     {

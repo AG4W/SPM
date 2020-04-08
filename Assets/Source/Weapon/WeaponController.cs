@@ -28,6 +28,8 @@ public class WeaponController : MonoBehaviour
     [Range(0f, 2f)][SerializeField]float minPitch = .75f;
     [Range(0f, 2f)][SerializeField]float maxPitch = 1.25f;
 
+    [SerializeField]AudioClip[] reloadSounds;
+
     List<ProjectilePacket> projectiles = new List<ProjectilePacket>();
 
     bool canFire = true;
@@ -69,6 +71,7 @@ public class WeaponController : MonoBehaviour
     public void Reload()
     {
         shotsLeftInCurrentClip = magasineSize;
+        CreateReloadSFX();
     }
 
     void ShootInternal(Vector3 target)
@@ -111,6 +114,13 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    void CreateReloadSFX()
+    {
+        if (reloadSounds == null || reloadSounds.Length == 0)
+            return;
+
+        source.PlayOneShot(reloadSounds.Random());
+    }
     void CreateSFX()
     {
         if (shotSounds == null || shotSounds.Length == 0)

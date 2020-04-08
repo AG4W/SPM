@@ -15,13 +15,20 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float characterStepOverHeight = .25f;
     [SerializeField]float characterRadius = .25f;
     [SerializeField]float groundCheckDistance = 1f;
-    [SerializeField]float jumpForce = 2f;
 
+    [Header("Jumping")]
+    [SerializeField]Vector3 jumpForce = new Vector3(1f, 1f, 0f);
+    [SerializeField]float jumpDuration = 1f;
+    [SerializeField]float jumpTimer;
+
+    [Header("Falling")]
     [SerializeField]float gravitationalConstant = 9.82f;
-    float fallDuration;
+    [SerializeField]float fallDuration;
 
     [SerializeField]bool isGrounded;
-    bool wasGroundedLastFrame;
+    [SerializeField]bool wasGroundedLastFrame;
+
+    [SerializeField]bool isJumping = false;
 
     RaycastHit lastGroundHit;
 
@@ -42,12 +49,19 @@ public class LocomotionController : MonoBehaviour
         UpdateGroundedStatus();
         GatherInput();
 
+        if (isJumping)
+        {
+            jumpTimer += Time.deltaTime;
+
+            if(jumpTimer >= jumpDuration || isGrounded)
+            {
+                jumpTimer = 0f;
+                isJumping = false;
+            }
+        }
+
         UpdateAnimator();
         UpdateRotation();
-    }
-    private void LateUpdate()
-    {
-        wasGroundedLastFrame = isGrounded;
     }
     void OnAnimatorMove()
     {
@@ -65,21 +79,22 @@ public class LocomotionController : MonoBehaviour
         Vector3 gravity = Vector3.down * gravitationalConstant * Time.deltaTime;
 
         if (isGrounded)
-        {
             movement += movement.GetNormalForce(lastGroundHit.normal);
-
-        }
         else
             movement += gravity;
 
         this.transform.position += movement;
-        if (isGrounded && !wasGroundedLastFrame)
+
+        if (isGrounded && !isJumping)
         {
             Vector3 temp = this.transform.position;
             temp.y = lastGroundHit.point.y;
             this.transform.position = temp;
-
         }
+    }
+    void LateUpdate()
+    {
+        wasGroundedLastFrame = isGrounded;
     }
 
     void GatherInput()
@@ -91,6 +106,10 @@ public class LocomotionController : MonoBehaviour
         if (!isGrounded)
             return;
 
+        if (Input.GetKey(KeyCode.Mouse0))
+            AttemptFire();
+        if (Input.GetKeyDown(KeyCode.R))
+            Reload();
         if (Input.GetKeyDown(KeyCode.F))
             torch.SetActive(!torch.activeSelf);
         if (Input.GetKeyDown(KeyCode.Space))
@@ -131,9 +150,19 @@ public class LocomotionController : MonoBehaviour
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
     }
 
+    void AttemptFire()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
+        weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
+    }
+    void Reload()
+    {
+        weapon.Reload();
+    }
     void Jump()
     {
         animator.SetTrigger("jump");
-        this.transform.position += this.transform.up * jumpForce; 
+        isJumping = true;
     }
 }
