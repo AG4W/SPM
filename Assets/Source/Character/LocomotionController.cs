@@ -62,10 +62,10 @@ public class LocomotionController : MonoBehaviour
 
         Vector3 gravity = Vector3.down * gravitationalConstant * Time.deltaTime;
 
-        if (isGrounded)
-            movement += gravity.GetNormalForce(lastGroundHit.normal);
-        else
-            movement += gravity;
+        //if (isGrounded)
+        //    movement += gravity.GetNormalForce(lastGroundHit.normal);
+        //else
+        //    movement += gravity;
 
         this.transform.position += movement;
     }
@@ -88,9 +88,6 @@ public class LocomotionController : MonoBehaviour
 
         if (isSprinting)
             return;
-
-        if (Input.GetKey(KeyCode.Mouse0))
-            weapon.Shoot();
     }
 
     void UpdateRotation()
