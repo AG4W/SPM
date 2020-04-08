@@ -232,8 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c034e4351da84e8cc628d3b2b6cfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: {fileID: 0}
-  post: {fileID: 0}
+  profile: {fileID: 11400000, guid: f3494d946fadd384fa6b99e8f8ac17c2, type: 2}
   sensitivityX: 125
   sensitivityY: 125
   translationSpeed: 5
@@ -244,3 +243,8 @@ MonoBehaviour:
   ironSightFOV: 45
   maxCameraUpAngle: 30
   maxCameraDownAngle: 30
+  lastFocusDistance: 0
+  actualDoFDistance: 0
+  focusSpeed: 2
+  defaultDoFStrength: 0.05
+  ironSightDoFStrength: 4

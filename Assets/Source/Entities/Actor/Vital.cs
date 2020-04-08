@@ -21,6 +21,7 @@ public class Vital
 
         this.Type = type;
         this.Max = maxValue;
+        this.Current = this.Max;
     }
 
     public void Tick()

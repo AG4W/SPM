@@ -4,9 +4,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]Volume volume;
-    [SerializeField]VolumeProfile post;
-
+    [SerializeField]VolumeProfile profile;
     DepthOfField dof;
 
     [SerializeField]float sensitivityX = 2f;
@@ -27,16 +25,23 @@ public class CameraController : MonoBehaviour
     float cameraRotationX;
     float cameraRotationY;
 
+    [SerializeField]float lastFocusDistance;
+    [SerializeField]float actualDoFDistance;
+    [SerializeField]float focusSpeed = 5f;
+    [SerializeField]float defaultDoFStrength = .25f;
+    [SerializeField]float ironSightDoFStrength = 7f;
+
     Camera camera;
 
     bool inIronSights;
 
     void Awake()
     {
+        profile.TryGet(out dof);
+
         Cursor.lockState = CursorLockMode.Locked;
 
         camera = this.GetComponentInChildren<Camera>();
-        dof = volume.TryGetComponent(out dof);
     }
     void Update()
     {
@@ -52,7 +57,9 @@ public class CameraController : MonoBehaviour
         cameraRotationY = Mathf.Clamp(cameraRotationY, -maxCameraUpAngle, maxCameraDownAngle);
 
         this.transform.rotation = Quaternion.Euler(cameraRotationY, cameraRotationX, 0f);
-        this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
+
+        if(target != null)
+            this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
 
         inIronSights = Input.GetKey(KeyCode.Mouse1);
     }
@@ -60,5 +67,17 @@ public class CameraController : MonoBehaviour
     {
         camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, inIronSights ? ironSightFOV : defaultFOV, translationSpeed * Time.deltaTime);
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, inIronSights ? ironSightPosition : defaultPosition, translationSpeed * Time.deltaTime);
+
+        Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity);
+
+        if (hit.transform != null)
+            lastFocusDistance = hit.distance;
+
+        actualDoFDistance = Mathf.Lerp(actualDoFDistance, lastFocusDistance, focusSpeed * Time.deltaTime);
+        dof.farFocusStart.value = actualDoFDistance + 2f;
+        dof.farMaxBlur = inIronSights ? ironSightDoFStrength : defaultDoFStrength;
+
+        dof.nearFocusStart.value = inIronSights ? 1f : 0f;
+        dof.nearFocusEnd.value = inIronSights ? 1.5f : 0f;
     }
 }
