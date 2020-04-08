@@ -1,15 +1,7 @@
 ﻿using UnityEngine;
 
-using System;
-
 public class Actor : Entity
 {
-    [SerializeField]float maxHealth;
-    [SerializeField]float healthRegenerationRate;
-    [SerializeField]float healthRegenerationAmount;
-
-    Vital[] vitals;
-
     public Transform FocusPoint { get; private set; }
 
     // Använd inte Start/Awake i klasser som ärver ifrån Entity!
@@ -18,9 +10,6 @@ public class Actor : Entity
     protected override void Initalize()
     {
         base.Initalize();
-
-        vitals = new Vital[Enum.GetNames(typeof(VitalType)).Length];
-        vitals[(int)VitalType.Health] = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
 
         this.FocusPoint = this.transform.Find("focusPoint");
         if (this.FocusPoint == null)
@@ -31,31 +20,4 @@ public class Actor : Entity
             this.FocusPoint.position = this.transform.position;
         }
     }
-
-    void Update()
-    {
-        UpdateVitals();
-    }
-
-    void UpdateVitals()
-    {
-        for (int i = 0; i < vitals.Length; i++)
-            vitals[i].Tick();
-
-        if (GetVital(VitalType.Health).Current <= 0f)
-            OnDeath();
-    }
-
-    public Vital GetVital(VitalType type)
-    {
-        return vitals[(int)type];
-    }
-    protected virtual void OnDeath()
-    {
-        Destroy(this.transform.root.gameObject);
-    }
-}
-public enum VitalType
-{
-    Health,
 }

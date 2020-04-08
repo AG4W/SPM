@@ -2,12 +2,20 @@
 
 public class InteractableEntity : Entity
 {
-    [SerializeField]float interactionDistance = 2f;
-    [SerializeField]VitalValuePair[] interactionCosts;
+    [SerializeField]float interactionDistance = 5f;
+
+    [SerializeField]bool isRepeatable = true;
 
     [SerializeField]AudioClip[] interactionSoundEffects;
 
+    [SerializeField]GameObject[] connectedEntities;
+    [SerializeField]Vector3 promptOffset;
+
+    [SerializeField]bool activateOnDestruction = false;
+
     AudioSource source;
+
+    public Vector3 PromptOffset { get { return promptOffset; } }
 
     public float InteractionDistance { get { return interactionDistance; } }
 
@@ -17,23 +25,31 @@ public class InteractableEntity : Entity
         source = this.GetComponentInChildren<AudioSource>();
     }
 
-    public virtual void Interact(Actor interactee)
+    protected override void OnHealthZero()
     {
-        ApplyInteractionCosts(interactee);
-        PlayInteractionEffects(interactee);
+        if (activateOnDestruction)
+            Interact();
+
+        base.OnHealthZero();
     }
 
-    void ApplyInteractionCosts(Actor interactee)
+    public virtual void Interact()
     {
-        if (interactionCosts == null)
-            return;
+        PlayInteractionEffects();
 
-        for (int i = 0; i < interactionCosts.Length; i++)
-            interactee.GetVital(interactionCosts[i].Type).Update(interactionCosts[i].Value);
+        for (int i = 0; i < connectedEntities.Length; i++)
+            connectedEntities[i].SetActive(!connectedEntities[i].activeSelf);
+
+        if (!isRepeatable)
+            Destroy(this);
     }
-    void PlayInteractionEffects(Actor interactee)
+
+    void PlayInteractionEffects()
     {
         if (interactionSoundEffects != null && interactionSoundEffects.Length > 0)
             source.PlayOneShot(interactionSoundEffects.Random());
     }
+
+    //Auto-reset on timer
+    //Timed interact
 }

@@ -2,7 +2,7 @@
 
 public class LocomotionController : MonoBehaviour
 {
-    [SerializeField]GameObject torch;
+    [SerializeField]GameObject[] torches;
     [SerializeField]Transform jig;
 
     [SerializeField]Vector3 targetInput;
@@ -135,7 +135,10 @@ public class LocomotionController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             Reload();
         if (Input.GetKeyDown(KeyCode.F))
-            torch.SetActive(!torch.activeSelf);
+        {
+            for (int i = 0; i < torches.Length; i++)
+                torches[i].SetActive(!torches[i].activeSelf);
+        }
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
         if (Input.GetKeyDown(KeyCode.V))
