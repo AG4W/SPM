@@ -6,6 +6,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]Transform jig;
 
     [SerializeField]Vector3 targetInput;
+    [SerializeField]Vector3 actualInput;
 
     [SerializeField]float targetStance;
     [SerializeField]bool isSprinting;
@@ -47,11 +48,8 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]WeaponController weapon;
 
     float currentHeight { get { return topPoint.position.y - this.transform.position.y; } }
-    [SerializeField]float debugHeight;
 
     Animator animator;
-    
-
     void Awake()
     {
         animator = this.GetComponentInChildren<Animator>();
@@ -63,7 +61,7 @@ public class LocomotionController : MonoBehaviour
 
         if (isJumping)
         {
-            jumpTimer += Time.deltaTime;
+            jumpTimer += (Time.deltaTime / Time.timeScale);
 
             if (jumpTimer >= jumpDuration || (isGrounded && jumpTimer >= minimumJumpDuration))
             {
@@ -71,8 +69,6 @@ public class LocomotionController : MonoBehaviour
                 isJumping = false;
             }
         }
-
-        debugHeight = currentHeight;
 
         CorrectStance();
         UpdateAnimator();
@@ -83,11 +79,11 @@ public class LocomotionController : MonoBehaviour
         Vector3 velocity = this.animator.deltaPosition;
 
         //apply gravity
-        velocity += Vector3.down * gravitationalConstant * Time.deltaTime;
+        velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
         //apply force from any ground we're on
         velocity += velocity.GetNormalForce(lastGroundHit.normal);
         //applicera jump
-        velocity += GetJumpVelocity() * jumpAcceleration * Time.deltaTime;
+        velocity += GetJumpVelocity() * jumpAcceleration * (Time.deltaTime / Time.timeScale);
 
         //snapa mot marken ifall vi precis landat så att vi inte flyter groundDistance ovanför
         if (!wasGroundedLastFrame && isGrounded)
@@ -136,7 +132,8 @@ public class LocomotionController : MonoBehaviour
 
     void GatherInput()
     {
-        targetInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        targetInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+        actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         isSprinting = Input.GetKey(KeyCode.LeftShift);
         targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
@@ -178,11 +175,10 @@ public class LocomotionController : MonoBehaviour
     }
     void UpdateAnimator()
     {
-        animator.SetFloat("x", targetInput.x, combatInterpolationSpeed, Time.deltaTime);
-        animator.SetFloat("z", targetInput.z, combatInterpolationSpeed, Time.deltaTime);
+        animator.SetFloat("x", actualInput.x);
+        animator.SetFloat("z", actualInput.z);
         animator.SetFloat("velocity", animator.velocity.magnitude);
         animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
-
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
@@ -194,7 +190,7 @@ public class LocomotionController : MonoBehaviour
 
     void UpdateGroundedStatus()
     {
-        fallDuration += (isGrounded || isJumping) ? 0f : Time.deltaTime;
+        fallDuration += (isGrounded || isJumping) ? 0f : (Time.deltaTime / Time.timeScale);
 
         Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
         //offsetta lite uppåt för att få en mer reliable ground check

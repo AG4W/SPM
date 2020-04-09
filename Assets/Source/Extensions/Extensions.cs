@@ -7,6 +7,12 @@ public static class Extensions
         return array[UnityEngine.Random.Range(0, array.Length)];
     }
 
+    //floats
+    public static float Remap(this float value, float from1, float to1, float from2, float to2)
+    {
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+    }
+
     //Vectors
     public static Vector3 TransformToLocalDirection(this Vector3 worldDirection, Transform origin)
     {

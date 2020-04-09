@@ -1,44 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class SlowTime : MonoBehaviour
+[System.Serializable]
+public class SlowTime : Ability
 {
-    [SerializeField] float timeScale;
-    [SerializeField] float timeSlowDuration = 1;
+    [SerializeField]AnimationCurve curve;
 
-    private bool active = false;
-    private float timer = 0;
-
-    // Start is called before the first frame update
-    void Start()
+    public override void Activate(Context context)
     {
-        
+        base.Activate(context);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Tick()
     {
-        if (!active)
-        {
-            Time.timeScale = 1;
+        base.Tick();
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                active = true;
-            }
-        }
-        else
-        {
-            Time.timeScale = this.timeScale;
-            timer += Time.deltaTime;
-            if (timer > timeSlowDuration * timeScale)
-            {
-                active = false;
-                timer = 0;
-            }
-        }
+        if(base.IsActive)
+            Time.timeScale = curve.Evaluate(base.DurationTimer01);
     }
-
-
 }

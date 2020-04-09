@@ -27,6 +27,9 @@ public class NonPlayerActor : Actor
     // Update is called once per frame
     void Update()
     {
+        if (target == null)
+            return;
+
         targetTimer += Time.deltaTime;
 
         if (targetTimer >= targetUpdatRate)
