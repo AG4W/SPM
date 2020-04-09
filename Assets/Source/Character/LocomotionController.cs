@@ -9,6 +9,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]Vector3 actualInput;
 
     [SerializeField]float targetStance;
+    [SerializeField]float actualStance;
     [SerializeField]bool isSprinting;
 
     [Header("Movement/Collision Properties")]
@@ -38,6 +39,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]bool wasGroundedLastFrame;
 
     [SerializeField]bool isJumping = false;
+    [SerializeField]bool isWalking = false;
 
     RaycastHit lastGroundHit;
 
@@ -54,10 +56,14 @@ public class LocomotionController : MonoBehaviour
     {
         animator = this.GetComponentInChildren<Animator>();
     }
+
     void Update()
     {
-        UpdateGroundedStatus();
         GatherInput();
+    }
+    void FixedUpdate()
+    {
+        UpdateGroundedStatus();
 
         if (isJumping)
         {
@@ -91,39 +97,19 @@ public class LocomotionController : MonoBehaviour
 
         /* Väggkollision */
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
-        Vector3 pointA = this.transform.position + (Vector3.up * currentHeight);
-        Vector3 pointB = this.transform.position + (Vector3.up * stepOverHeight);
+        Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+        Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
 
-        //Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude);
-
-        //while (hit.transform != null)
-        //{
-        //    velocity += velocity.GetNormalForce(hit.normal);
-
-        //    Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
-        //}
+        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude);
 
         //behöver göra detta rekursivt, annars kan vi glitcha under minskande slopes
-        if (Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude))
+        while (hit.transform != null)
         {
-            Debug.Log("checkCollision 1");
-            velocity += checkCollision(velocity.GetNormalForce(hit.normal), pointA, pointB);
+            velocity += velocity.GetNormalForce(hit.normal);
+            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
 
         this.transform.position += velocity;
-    }
-    public Vector3 checkCollision(Vector3 velocity, Vector3 pointA, Vector3 pointB)
-    {
-        if (Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude))
-        {
-            Debug.Log("checkCollision 2");
-            return velocity += checkCollision(velocity.GetNormalForce(hit.normal), pointA, pointB);
-        }
-        else
-        {
-            Debug.Log("checkCollision FINE");
-            return velocity;
-        }
     }
     void LateUpdate()
     {
@@ -132,14 +118,18 @@ public class LocomotionController : MonoBehaviour
 
     void GatherInput()
     {
-        targetInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        if (Input.GetKeyDown(KeyCode.CapsLock))
+            isWalking = !isWalking;
 
         isSprinting = Input.GetKey(KeyCode.LeftShift);
-        targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
 
-        if (!isGrounded)
-            return;
+        targetInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+        targetInput *= isWalking ? .5f : (isSprinting ? 2f : 1f);
+
+        actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+
+        targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
+        actualStance = Mathf.Lerp(actualStance, targetStance, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         if (Input.GetKey(KeyCode.Mouse0))
             AttemptFire();
@@ -150,6 +140,10 @@ public class LocomotionController : MonoBehaviour
             for (int i = 0; i < torches.Length; i++)
                 torches[i].SetActive(!torches[i].activeSelf);
         }
+
+        if (!isGrounded)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
             Jump();
         if (Input.GetKeyDown(KeyCode.V))
@@ -169,8 +163,8 @@ public class LocomotionController : MonoBehaviour
             float stance = Mathf.Lerp(0f, 1f, location);
 
             //skriv bara över targetStance ifall vår stance är lägre, annars låter vi spelaren croucha fritt.
-            if (stance < targetStance)
-                targetStance = stance;
+            if (stance < actualStance)
+                actualStance = stance;
         }
     }
     void UpdateAnimator()
@@ -178,7 +172,7 @@ public class LocomotionController : MonoBehaviour
         animator.SetFloat("x", actualInput.x);
         animator.SetFloat("z", actualInput.z);
         animator.SetFloat("velocity", animator.velocity.magnitude);
-        animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
+        animator.SetFloat("stance", actualStance);
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
@@ -221,6 +215,9 @@ public class LocomotionController : MonoBehaviour
     Vector3 GetJumpVelocity()
     {
         if (!isJumping)
+            return Vector3.zero;
+
+        if (Physics.Raycast(this.topPoint.position, Vector3.up))
             return Vector3.zero;
 
         //använder kurvor för att få bättre feel i hoppet
