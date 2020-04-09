@@ -1,47 +1,50 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DroneActor : NonPlayerActor
 {
-    [SerializeField] float distanceFromTarget;
+    [SerializeField]float distanceFromTarget;
 
-    [SerializeField] Vector3[] idlePath;
-
-    
+    [SerializeField]Vector3[] idlePath;
 
     protected override void Initalize()
     {
+        Vector3[] temp = new Vector3[3];
+        temp[0] = this.transform.position;
+        temp[1] = idlePath[0];
+        temp[2] = idlePath[1];
+
+        idlePath = temp;
+
         base.Initalize();
     }
 
     protected override void UpdateVelocity()
     {
         base.UpdateVelocity();
-        if (Vector3.Distance(this.transform.position, targetPoint) > 0.5f)
-        {
-            base.Velocity = this.transform.forward * speed * Time.deltaTime;
-        }
-    }
 
+        if (Vector3.Distance(this.transform.position, targetPoint) > .1f)
+            base.Velocity = this.transform.forward * speed * Time.deltaTime;
+    }
     protected override void UpdateRotation()
     {
         base.UpdateRotation();
-
         this.transform.LookAt(targetPoint);
     }
 
     protected override void PlotMove()
     {
         base.PlotMove();
-        //if (CanSeeTarget()) {
-        //    targetPoint = (this.transform.position - target.FocusPoint.position).normalized * distanceFromTarget;
-        //}
-        //else
-        //{
-        //}
-        targetPoint = idlePath.Random();
 
+        if (Vector3.Distance(this.transform.position, targetPoint) < .25f)
+            targetPoint = (targetPoint == idlePath[0] ? idlePath[1] : idlePath[0]);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+    }
+    void OnCollisionStay(Collision collision)
+    {
+        base.ModifyVelocity(collision.rigidbody.velocity * Time.deltaTime);
     }
 }
 

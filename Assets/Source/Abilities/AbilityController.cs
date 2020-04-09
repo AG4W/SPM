@@ -3,6 +3,7 @@
 public class AbilityController : MonoBehaviour
 {
     [SerializeField]ForcePush push;
+    [SerializeField]ForcePull pull;
     [SerializeField]SlowTime slow;
 
     Ability[] abilities;
@@ -23,7 +24,7 @@ public class AbilityController : MonoBehaviour
 
     void Start()
     {
-        abilities = new Ability[] { push, slow };
+        abilities = new Ability[] { push, pull, slow };
     }
     void Update()
     {

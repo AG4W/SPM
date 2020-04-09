@@ -2332,6 +2332,7 @@ MonoBehaviour:
   - {fileID: 7754249296040209837}
   jig: {fileID: 0}
   targetInput: {x: 0, y: 0, z: 0}
+  actualInput: {x: 0, y: 0, z: 0}
   targetStance: 1
   isSprinting: 0
   topPoint: {fileID: 1446218176}
@@ -2412,9 +2413,8 @@ MonoBehaviour:
   isGrounded: 1
   wasGroundedLastFrame: 1
   isJumping: 0
-  combatInterpolationSpeed: 0.25
+  combatInterpolationSpeed: 2.5
   weapon: {fileID: 9091239670737582696}
-  debugHeight: 0
 --- !u!95 &5920462848014939654
 Animator:
   serializedVersion: 3
