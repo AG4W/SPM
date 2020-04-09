@@ -1553,7 +1553,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   push:
     cooldown: 5
-    duration: 1
+    duration: 4
+    animationIndex: 0
     radius: 4
     distance: 20
     power:
@@ -1583,7 +1584,8 @@ MonoBehaviour:
     powerMultiplier: 50
   pull:
     cooldown: 5
-    duration: 0.5
+    duration: 4
+    animationIndex: 0
     radius: 4
     distance: 20
     power:
@@ -1613,7 +1615,8 @@ MonoBehaviour:
     powerMultiplier: 40
   slow:
     cooldown: 5
-    duration: 1
+    duration: 4
+    animationIndex: 1
     curve:
       serializedVersion: 2
       m_Curve:
@@ -3525,7 +3528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: 503dbe3de67dae34e91ba6c78335e7f0, type: 2}
   m_StaticLightingSkyUniqueID: 3
-  m_SkySettings: {fileID: 2140232742}
+  m_SkySettings: {fileID: 2116407238}
   m_SkySettingsFromProfile: {fileID: 5158978261472551677, guid: 503dbe3de67dae34e91ba6c78335e7f0,
     type: 2}
 --- !u!4 &856500670
@@ -10216,52 +10219,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100125541}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2139648690
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2139648691}
-  m_Layer: 0
-  m_Name: Motion test area
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2139648691
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2139648690}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2100125542}
-  - {fileID: 819165359}
-  - {fileID: 1641084869}
-  - {fileID: 1888656712}
-  - {fileID: 10949686}
-  - {fileID: 1871287454}
-  - {fileID: 1345032849}
-  - {fileID: 1520832500}
-  - {fileID: 1557864009}
-  - {fileID: 350558506}
-  - {fileID: 1449523269}
-  - {fileID: 2028758146}
-  - {fileID: 626165147}
-  - {fileID: 1269856038}
-  - {fileID: 1217124189}
-  m_Father: {fileID: 55660798}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2140232742
+--- !u!114 &2116407238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10331,6 +10289,51 @@ MonoBehaviour:
   gradientDiffusion:
     m_OverrideState: 0
     m_Value: 1
+--- !u!1 &2139648690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2139648691}
+  m_Layer: 0
+  m_Name: Motion test area
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2139648691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139648690}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2100125542}
+  - {fileID: 819165359}
+  - {fileID: 1641084869}
+  - {fileID: 1888656712}
+  - {fileID: 10949686}
+  - {fileID: 1871287454}
+  - {fileID: 1345032849}
+  - {fileID: 1520832500}
+  - {fileID: 1557864009}
+  - {fileID: 350558506}
+  - {fileID: 1449523269}
+  - {fileID: 2028758146}
+  - {fileID: 626165147}
+  - {fileID: 1269856038}
+  - {fileID: 1217124189}
+  m_Father: {fileID: 55660798}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &438319481834542506
 MonoBehaviour:
   m_ObjectHideFlags: 0

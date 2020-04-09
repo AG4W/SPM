@@ -28,20 +28,16 @@ public class AbilityController : MonoBehaviour
     }
     void Update()
     {
-        for (int i = 0; i < abilityHotkeys.Length; i++)
+        for (int i = 0; i < abilities.Length; i++)
         {
             if (Input.GetKeyDown(abilityHotkeys[i]) && !abilities[i].HasCooldown)
-            {
-                Debug.Log("activating " + abilities[i].GetType().ToString());
-
-                Context c = new Context();
-                c.data.Add("caster", this.transform);
-
-                abilities[i].Activate(c);
-            }
+                abilities[i].Activate();
+            else if (Input.GetKeyUp(abilityHotkeys[i]))
+                abilities[i].Deactivate();
         }
 
         for (int i = 0; i < abilities.Length; i++)
-            abilities[i].Tick();
+            if (abilities[i].IsActive)
+                abilities[i].Tick();
     }
 }

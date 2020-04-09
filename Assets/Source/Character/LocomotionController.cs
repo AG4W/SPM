@@ -55,15 +55,19 @@ public class LocomotionController : MonoBehaviour
     void Awake()
     {
         animator = this.GetComponentInChildren<Animator>();
+
+        GlobalEvents.Subscribe(GlobalEvent.OnAbilityActivated, (object[] args) => 
+        {
+            this.animator.SetFloat("castIndex", (int)((Ability)args[0]).AnimationIndex);
+            this.animator.SetTrigger("cast");
+            this.animator.SetLayerWeight(1, 1f);
+        });
     }
 
     void Update()
     {
-        GatherInput();
-    }
-    void FixedUpdate()
-    {
         UpdateGroundedStatus();
+        GatherInput();
 
         if (isJumping)
         {

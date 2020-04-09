@@ -6,32 +6,36 @@ public abstract class Ability
     [SerializeField]float cooldown;
     [SerializeField]float duration;
 
+    [SerializeField]AbilityAnimationIndex animationIndex;
+
     protected float Duration { get { return duration; } }
     protected float DurationTimer01 { get { return Mathf.InverseLerp(0f, this.Duration, DurationTimer); } }
 
     protected float CooldownTimer { get; private set; }
     protected float DurationTimer { get; private set; }
 
+    public AbilityAnimationIndex AnimationIndex { get { return animationIndex;} }
+
     public bool HasCooldown { get; private set; }
     public bool IsActive { get; private set; }
 
-    public virtual void Activate(Context context)
+    public virtual void Activate()
     {
-        HasCooldown = true;
+        GlobalEvents.Raise(GlobalEvent.OnAbilityActivated, this);
+
         IsActive = true;
     }
 
     public virtual void Tick()
     {
-        if (IsActive)
-        {
-            DurationTimer += Time.deltaTime;
+        DurationTimer += Time.deltaTime;
 
-            if (DurationTimer >= duration)
-            {
-                IsActive = false;
-                DurationTimer = 0f;
-            }
+        //if we've reached max duration
+        if (DurationTimer >= duration)
+        {
+            DurationTimer = 0f;
+            HasCooldown = true;
+            Deactivate();
         }
 
         if (HasCooldown)
@@ -45,4 +49,15 @@ public abstract class Ability
             }
         }
     }
+
+    public virtual void Deactivate()
+    {
+        DurationTimer = 0f;
+        IsActive = false;
+    }
+}
+public enum AbilityAnimationIndex
+{
+    LeftHandAggressive,
+    LeftHandNeutral,
 }
