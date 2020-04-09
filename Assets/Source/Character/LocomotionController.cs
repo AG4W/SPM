@@ -23,6 +23,7 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]float staticFriction = .8f;
     [SerializeField]float dynamicFriction = .5f;
+    [SerializeField]float airResistance = .2f;
 
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .2f;
@@ -57,7 +58,7 @@ public class LocomotionController : MonoBehaviour
 
     // topPoint.position.y - this.transform.position.y;
     //float currentHeight { get { if (actualStance < 0.9) return 1.5f; else return 1.8f; } }
-    float currentHeight { get { return 1.8f; } }
+    float currentHeight { get { if (actualStance < 0.8f) return 1.4f; else return 1.8f; } }
 
     Animator animator;
     void Awake()
@@ -94,7 +95,7 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
-        velocity += this.animator.deltaPosition;
+        velocity = this.animator.velocity;
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
         //apply force from any ground we're on
@@ -116,13 +117,14 @@ public class LocomotionController : MonoBehaviour
         //behöver göra detta rekursivt
         while (hit.transform != null)
         {
+            Debug.Log("KOLLISION");
             Vector3 tnf = velocity.GetNormalForce(hit.normal);
             velocity += tnf;
             ApplyFriction(tnf);
 
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
-
+        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
         this.transform.position += velocity * Time.deltaTime;
     }
     void LateUpdate()
@@ -252,7 +254,7 @@ public class LocomotionController : MonoBehaviour
          * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
          * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
          */
-        Debug.Log(velocity.magnitude);
+        //Debug.Log(velocity.magnitude);
 
         if (velocity.magnitude < (normalForce.magnitude * staticFriction))
         {
