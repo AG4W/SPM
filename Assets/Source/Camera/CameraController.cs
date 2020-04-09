@@ -53,34 +53,34 @@ public class CameraController : MonoBehaviour
 
     void GatherInput()
     {
-        cameraRotationX += Input.GetAxis("Mouse X") * sensitivityX * Time.deltaTime;
-        cameraRotationY += -Input.GetAxis("Mouse Y") * sensitivityY * Time.deltaTime;
+        cameraRotationX += Input.GetAxis("Mouse X") * sensitivityX * (Time.deltaTime / Time.timeScale);
+        cameraRotationY += -Input.GetAxis("Mouse Y") * sensitivityY * (Time.deltaTime / Time.timeScale);
         cameraRotationY = Mathf.Clamp(cameraRotationY, -maxCameraUpAngle, maxCameraDownAngle);
 
         this.transform.rotation = Quaternion.Euler(cameraRotationY, cameraRotationX, 0f);
 
         if(target != null)
-            this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * Time.deltaTime);
+            this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * (Time.deltaTime / Time.timeScale));
 
         inIronSights = Input.GetKey(KeyCode.Mouse1);
     }
     void UpdateSettings()
     {
-        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, inIronSights ? ironSightFOV : defaultFOV, translationSpeed * Time.deltaTime);
+        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, inIronSights ? ironSightFOV : defaultFOV, translationSpeed * (Time.deltaTime / Time.timeScale));
 
         Vector3 finalCameraPos = inIronSights ? ironSightPosition : defaultPosition;
 
         if (Input.GetKey(KeyCode.C))
             finalCameraPos += crouchOffset;
 
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, translationSpeed * Time.deltaTime);
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, translationSpeed * (Time.deltaTime / Time.timeScale));
 
         Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity);
 
         if (hit.transform != null)
             lastFocusDistance = hit.distance;
 
-        actualDoFDistance = Mathf.Lerp(actualDoFDistance, lastFocusDistance, focusSpeed * Time.deltaTime);
+        actualDoFDistance = Mathf.Lerp(actualDoFDistance, lastFocusDistance, focusSpeed * (Time.deltaTime / Time.timeScale));
         dof.farFocusStart.value = actualDoFDistance + 2f;
         dof.farMaxBlur = inIronSights ? ironSightDoFStrength : defaultDoFStrength;
 
