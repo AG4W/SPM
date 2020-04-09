@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class LocomotionController : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float minHeight = 1.1f;
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
+
+    [SerializeField] float StaticFriction = .8f;
+    [SerializeField] float DynamicFriction = .5f;
 
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .2f;
@@ -49,7 +53,12 @@ public class LocomotionController : MonoBehaviour
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
 
-    float currentHeight { get { return topPoint.position.y - this.transform.position.y; } }
+    // topPoint.position.y - this.transform.position.y;
+    //float currentHeight { get { if (actualStance < 0.9) return 1.5f; else return 1.8f; } }
+    float currentHeight { get { return 1.8f; } }
+
+    Vector3 debugPointA;
+    Vector3 debugPointB;
 
     Animator animator;
     void Awake()
@@ -99,10 +108,15 @@ public class LocomotionController : MonoBehaviour
         if (!wasGroundedLastFrame && isGrounded)
             velocity += Vector3.down * groundCheckDistance;
 
-        /* Väggkollision */
+        /**** Väggkollision ****/
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
+        //Debug.Log("topPoint.position.y - this.transform.position.y: " + (topPoint.position.y - this.transform.position.y));
+        Debug.Log("currentHeight: " + currentHeight);
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
+        //debugPointA = pointA + (pointA.normalized * collisionRadius);
+        //Debug.DrawLine((pointA+collisionRadius), pointB, Color.green);
+        
 
         Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude);
 
@@ -112,6 +126,7 @@ public class LocomotionController : MonoBehaviour
             velocity += velocity.GetNormalForce(hit.normal);
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
+        /**** Väggkollision ****/
 
         this.transform.position += velocity;
     }
@@ -221,8 +236,8 @@ public class LocomotionController : MonoBehaviour
         if (!isJumping)
             return Vector3.zero;
 
-        if (Physics.Raycast(this.topPoint.position, Vector3.up))
-            return Vector3.zero;
+        //if (Physics.Raycast(this.topPoint.position, Vector3.up))
+        //    return Vector3.zero;
 
         //använder kurvor för att få bättre feel i hoppet
         //behöver multiplicera med nuvarande velocity på något sätt här
@@ -232,4 +247,22 @@ public class LocomotionController : MonoBehaviour
                 (this.transform.up * jumpY.Evaluate(jumpTimer)) +
                 (this.transform.forward * jumpZ.Evaluate(jumpTimer));
     }
+    Vector3 GetFriction(Vector3 velocity, Vector3 normalForce)
+    {
+        /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
+         * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
+         * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
+         */
+        if (velocity.magnitude < (normalForce.magnitude * StaticFriction))
+        {
+            velocity.x = 0f;
+            velocity.z = 0f;
+        }
+        else
+        {
+            velocity += -velocity.normalized * (normalForce.magnitude * DynamicFriction);
+        }
+
+        return velocity;
+    } // Here is Friction calculated with normalForce and applied to velocity
 }
