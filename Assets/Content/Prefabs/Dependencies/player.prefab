@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1446218175
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1446218176}
+  m_Layer: 0
+  m_Name: topPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1446218176
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446218175}
+  m_LocalRotation: {x: -0.70710695, y: 0.00000002980235, z: -0.00000002980234, w: 0.7071067}
+  m_LocalPosition: {x: 0, y: 0.0338, z: -0.004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3350736698203827101}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
 --- !u!1 &113314307222662399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,8 +1330,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3871267907662861800}
-  m_LocalRotation: {x: 0.57103384, y: 0.47691754, z: 0.46774167, w: 0.4771663}
-  m_LocalPosition: {x: 0.2493, y: -0.0412, z: 0.0291}
+  m_LocalRotation: {x: 0.61446065, y: 0.53629905, z: 0.44949833, w: 0.3643799}
+  m_LocalPosition: {x: 0.25889614, y: -0.036389954, z: -0.010806104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2007705589942594609}
@@ -1311,7 +1341,7 @@ Transform:
   - {fileID: 7221420979547523848}
   m_Father: {fileID: 6610359178157179478}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 5.6710005, y: 96.176, z: 95.173004}
+  m_LocalEulerAnglesHint: {x: -1.968, y: 109.302, z: 99.16701}
 --- !u!114 &9091239670737582696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1329,7 +1359,7 @@ MonoBehaviour:
   projectileSpeed: 200
   projectileLifetime: 2
   fireTimer: 0
-  fireRate: 0.15
+  fireRate: 0.3
   damage: 2.5
   mask:
     serializedVersion: 2
@@ -1338,9 +1368,10 @@ MonoBehaviour:
   - {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b, type: 3}
   exitPoint: {fileID: 4044044307117328408}
   source: {fileID: 4856356636421563321}
-  shotSounds: []
-  minPitch: 0.9
-  maxPitch: 1.1
+  shotSounds:
+  - {fileID: 8300000, guid: 82b0615bc3d80d74896bb2df3db244c4, type: 3}
+  minPitch: 0.8
+  maxPitch: 1.2
   reloadSounds: []
 --- !u!82 &4856356636421563321
 AudioSource:
@@ -2303,14 +2334,78 @@ MonoBehaviour:
   targetInput: {x: 0, y: 0, z: 0}
   targetStance: 1
   isSprinting: 0
-  characterMinimumHeight: 1
-  characterCurrentHeight: 0
-  characterCrouchHeight: 0.45
-  characterStepOverHeight: 0.5
-  characterRadius: 0.25
+  topPoint: {fileID: 1446218176}
+  minHeight: 1.1
+  maxHeight: 1.9
+  collisionRadius: 0.25
+  stepOverHeight: 0.5
   groundCheckDistance: 0.2
-  jumpForce: {x: 1, y: 1, z: 0}
-  jumpDuration: 2
+  jumpAcceleration: 7
+  jumpX:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpY:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0012993144
+      value: 0.50247836
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.22659934
+      value: 0.9922343
+      inSlope: 0.008813797
+      outSlope: 0.008813797
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.108212784
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpZ:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpDuration: 1.5
+  minimumJumpDuration: 0.1
   jumpTimer: 0
   gravitationalConstant: 4
   fallDuration: 0
@@ -2319,6 +2414,7 @@ MonoBehaviour:
   isJumping: 0
   combatInterpolationSpeed: 0.25
   weapon: {fileID: 9091239670737582696}
+  debugHeight: 0
 --- !u!95 &5920462848014939654
 Animator:
   serializedVersion: 3
@@ -3261,7 +3357,8 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0000000065082415, y: 0.17815155, z: 0.025849855}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1446218176}
   m_Father: {fileID: 482991376075577483}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

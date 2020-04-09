@@ -165,8 +165,8 @@ public class LocomotionController : MonoBehaviour
         animator.SetFloat("x", targetInput.x, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("z", targetInput.z, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("velocity", animator.velocity.magnitude);
-        if(canStand)
-            animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
+        animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
+
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
