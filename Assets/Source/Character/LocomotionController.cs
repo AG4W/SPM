@@ -47,11 +47,8 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]WeaponController weapon;
 
     float currentHeight { get { return topPoint.position.y - this.transform.position.y; } }
-    [SerializeField]float debugHeight;
 
     Animator animator;
-    
-
     void Awake()
     {
         animator = this.GetComponentInChildren<Animator>();
@@ -71,8 +68,6 @@ public class LocomotionController : MonoBehaviour
                 isJumping = false;
             }
         }
-
-        debugHeight = currentHeight;
 
         CorrectStance();
         UpdateAnimator();
@@ -166,7 +161,6 @@ public class LocomotionController : MonoBehaviour
         animator.SetFloat("z", targetInput.z, combatInterpolationSpeed, Time.deltaTime);
         animator.SetFloat("velocity", animator.velocity.magnitude);
         animator.SetFloat("stance", targetStance, combatInterpolationSpeed, Time.deltaTime);
-
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
