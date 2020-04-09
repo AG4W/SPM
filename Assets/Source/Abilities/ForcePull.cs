@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class ForcePush : Ability
+public class ForcePull : Ability
 {
     [SerializeField]float radius;
     [SerializeField]float distance;
@@ -35,15 +35,13 @@ public class ForcePush : Ability
                 Rigidbody rb = hits[i].transform.GetComponent<Rigidbody>();
                 NonPlayerActor nap = hits[i].transform.root.GetComponent<NonPlayerActor>();
 
-                Vector3 force = (hits[i].transform.root.position - (caster.transform.position + Vector3.up)).normalized * power.Evaluate(base.DurationTimer01) * powerMultiplier * distanceModifier;
+                Vector3 force = ((caster.transform.position + Vector3.up) - hits[i].transform.root.position).normalized * power.Evaluate(base.DurationTimer01) * powerMultiplier * distanceModifier;
 
                 //för icke-actors som fortfarande ska röra sig
                 if (rb != null)
                     rb.AddForce(force, ForceMode.Impulse);
                 else if (nap != null)
                     nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
-                else if(hits[i].transform.root.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                    caster.transform.position += force.GetNormalForce(hits[i].normal * Time.deltaTime);
             }
         }
     }
