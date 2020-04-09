@@ -5,6 +5,8 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]GameObject[] torches;
     [SerializeField]Transform jig;
 
+    [SerializeField]Vector3 velocity;
+
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
 
@@ -20,6 +22,8 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .2f;
+
+    [SerializeField]float deceleration = 2f;
 
     [Header("Jumping")]
     [SerializeField]float jumpAcceleration = 7f;
@@ -86,8 +90,7 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
-        Vector3 velocity = this.animator.deltaPosition;
-
+        velocity = this.animator.deltaPosition;
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
         //apply force from any ground we're on
@@ -228,8 +231,6 @@ public class LocomotionController : MonoBehaviour
         //behöver multiplicera med nuvarande velocity på något sätt här
         //så att spelaren inte hoppar framåt om hen inte har framåtrörelse
         //men för trött för den matten atm
-        return (this.transform.right * jumpX.Evaluate(jumpTimer)) +
-                (this.transform.up * jumpY.Evaluate(jumpTimer)) +
-                (this.transform.forward * jumpZ.Evaluate(jumpTimer));
+        return new Vector3(jumpX.Evaluate(jumpTimer), jumpY.Evaluate(jumpTimer), jumpZ.Evaluate(jumpTimer));
     }
 }
