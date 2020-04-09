@@ -149,15 +149,17 @@ public struct ProjectilePacket
         this.projectileLifetime = projectileLifetime;
         this.projectileSpeed = projectileSpeed;
         this.bullet = bullet;
-        this.timer = 0f;
+        timer = 0f;
+        Debug.Log("Creating bullet");
     }
 
     public bool Tick(float deltaTime)
     {
         timer += deltaTime;
-        
-        if(timer >= projectileLifetime)
+        //Debug.Log("Bullet timer: " + timer);
+        if (timer >= projectileLifetime)
         {
+            Debug.Log("Destroying bullet");
             Object.Destroy(bullet);
             return true;
         }
