@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NonPlayerActor : Actor
 {
@@ -15,10 +13,10 @@ public class NonPlayerActor : Actor
     private float targetTimer;
     private float smallWidth = 0.1f;
     private float distanceToTarget;
+
     private Vector3 targetPoint;
+
     private bool hasSeenTarget = false;
-
-
 
     protected override void Initalize()
     {
@@ -71,9 +69,8 @@ public class NonPlayerActor : Actor
 
     void AttemptFire()
     {
-
         if (CanSeeTarget())
-        weapon.Shoot(targetPoint);
+            weapon.Shoot(targetPoint);
     }
 
     bool CanSeeTarget()

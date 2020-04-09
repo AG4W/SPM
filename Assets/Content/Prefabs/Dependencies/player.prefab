@@ -2275,7 +2275,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5672575483741118613}
-  m_LocalRotation: {x: -0, y: 0.70710707, z: -0, w: 0.70710653}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.70710677}
   m_LocalPosition: {x: 11.5, y: 0.164, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2303,11 +2303,12 @@ MonoBehaviour:
   targetInput: {x: 0, y: 0, z: 0}
   targetStance: 1
   isSprinting: 0
-  characterStandingHeight: 1.8
-  characterCrouchingHeight: 1.4
+  characterMinimumHeight: 1
+  characterCurrentHeight: 0
+  characterCrouchHeight: 0.45
   characterStepOverHeight: 0.5
   characterRadius: 0.25
-  groundCheckDistance: 1
+  groundCheckDistance: 0.2
   jumpForce: {x: 1, y: 1, z: 0}
   jumpDuration: 2
   jumpTimer: 0
