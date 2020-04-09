@@ -29,9 +29,7 @@ public class LocomotionController : MonoBehaviour
 
     [Header("Jumping")]
     [SerializeField]float jumpAcceleration = 7f;
-    [SerializeField]AnimationCurve jumpX;
-    [SerializeField]AnimationCurve jumpY;
-    [SerializeField]AnimationCurve jumpZ;
+    [SerializeField]AnimationCurve jumpCurve;
 
     [SerializeField]float jumpDuration = 1f;
     [SerializeField]float minimumJumpDuration = .1f;
@@ -94,11 +92,9 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
-        velocity += this.animator.deltaPosition;
+        velocity = isGrounded ? this.animator.deltaPosition : velocity + this.animator.deltaPosition;
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
-        //apply force from any ground we're on
-        //velocity += velocity.GetNormalForce(lastGroundHit.normal);
         //applicera jump
         velocity += GetJumpVelocity() * jumpAcceleration  * (Time.deltaTime / Time.timeScale);
 
@@ -118,12 +114,11 @@ public class LocomotionController : MonoBehaviour
         {
             Vector3 tnf = velocity.GetNormalForce(hit.normal);
             velocity += tnf;
-            ApplyFriction(tnf);
 
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
 
-        this.transform.position += velocity * Time.deltaTime;
+        this.transform.position += velocity;
     }
     void LateUpdate()
     {
@@ -185,9 +180,9 @@ public class LocomotionController : MonoBehaviour
     {
         animator.SetFloat("x", actualInput.x);
         animator.SetFloat("z", actualInput.z);
-        animator.SetFloat("velocity", animator.velocity.magnitude);
+        animator.SetFloat("inputMagnitude", targetInput.magnitude);
 
-        animator.SetFloat("stance", actualStance);
+        animator.SetFloat("actualStance", actualStance);
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
@@ -241,10 +236,7 @@ public class LocomotionController : MonoBehaviour
         //men för trött för den matten atm
 
         //input heading
-        return 
-            (this.transform.right * jumpX.Evaluate(jumpTimer) * Vector3.Dot(velocity, this.transform.forward)) +
-            (this.transform.up * jumpY.Evaluate(jumpTimer)) +
-            (this.transform.forward * jumpZ.Evaluate(jumpTimer) * Vector3.Dot(velocity, this.transform.forward));
+        return this.transform.up * jumpCurve.Evaluate(jumpTimer);
     }
     void ApplyFriction(Vector3 normalForce)
     {
