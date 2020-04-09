@@ -17,12 +17,9 @@ public class ProjectileEntity : MonoBehaviour
     void UpdatePosition()
     {
         timer += Time.deltaTime;
-        Debug.Log("Bullet timer: " + timer);
+
         if (timer >= projectileLifetime)
-        {
-            Debug.Log("Destroying bullet");
             Object.Destroy(this.gameObject);
-        }
 
         this.transform.position += this.transform.forward * projectileSpeed * Time.deltaTime;
         lastFramePos = this.transform.position;

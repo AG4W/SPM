@@ -21,13 +21,11 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
 
-    [SerializeField] float StaticFriction = .8f;
-    [SerializeField] float DynamicFriction = .5f;
+    [SerializeField]float staticFriction = .8f;
+    [SerializeField]float dynamicFriction = .5f;
 
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .2f;
-
-    [SerializeField]float deceleration = 2f;
 
     [Header("Jumping")]
     [SerializeField]float jumpAcceleration = 7f;
@@ -60,9 +58,6 @@ public class LocomotionController : MonoBehaviour
     // topPoint.position.y - this.transform.position.y;
     //float currentHeight { get { if (actualStance < 0.9) return 1.5f; else return 1.8f; } }
     float currentHeight { get { return 1.8f; } }
-
-    Vector3 debugPointA;
-    Vector3 debugPointB;
 
     Animator animator;
     void Awake()
@@ -99,39 +94,36 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
-        velocity = this.animator.deltaPosition;
+        velocity += this.animator.deltaPosition;
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
         //apply force from any ground we're on
-        velocity += velocity.GetNormalForce(lastGroundHit.normal);
+        //velocity += velocity.GetNormalForce(lastGroundHit.normal);
         //applicera jump
-        velocity += GetJumpVelocity() * jumpAcceleration * (Time.deltaTime / Time.timeScale);
+        velocity += GetJumpVelocity() * jumpAcceleration  * (Time.deltaTime / Time.timeScale);
 
         //snapa mot marken ifall vi precis landat så att vi inte flyter groundDistance ovanför
-        if (!wasGroundedLastFrame && isGrounded)
-            velocity += Vector3.down * groundCheckDistance;
+        //if (!wasGroundedLastFrame && isGrounded)
+        //    velocity += Vector3.down * groundCheckDistance;
 
         /**** Väggkollision ****/
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
-        //Debug.Log("topPoint.position.y - this.transform.position.y: " + (topPoint.position.y - this.transform.position.y));
-        Debug.Log("currentHeight: " + currentHeight);
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
-        //debugPointA = pointA + (pointA.normalized * collisionRadius);
-        //Debug.DrawLine((pointA+collisionRadius), pointB, Color.green);
-        
 
         Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude);
 
-        //behöver göra detta rekursivt, annars kan vi glitcha under minskande slopes
+        //behöver göra detta rekursivt
         while (hit.transform != null)
         {
-            velocity += velocity.GetNormalForce(hit.normal);
+            Vector3 tnf = velocity.GetNormalForce(hit.normal);
+            velocity += tnf;
+            ApplyFriction(tnf);
+
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
-        /**** Väggkollision ****/
 
-        this.transform.position += velocity;
+        this.transform.position += velocity * Time.deltaTime;
     }
     void LateUpdate()
     {
@@ -194,6 +186,7 @@ public class LocomotionController : MonoBehaviour
         animator.SetFloat("x", actualInput.x);
         animator.SetFloat("z", actualInput.z);
         animator.SetFloat("velocity", animator.velocity.magnitude);
+
         animator.SetFloat("stance", actualStance);
         animator.SetFloat("fallDuration", fallDuration);
 
@@ -246,24 +239,32 @@ public class LocomotionController : MonoBehaviour
         //behöver multiplicera med nuvarande velocity på något sätt här
         //så att spelaren inte hoppar framåt om hen inte har framåtrörelse
         //men för trött för den matten atm
-        return new Vector3(jumpX.Evaluate(jumpTimer), jumpY.Evaluate(jumpTimer), jumpZ.Evaluate(jumpTimer));
+
+        //input heading
+        return 
+            (this.transform.right * jumpX.Evaluate(jumpTimer) * Vector3.Dot(velocity, this.transform.forward)) +
+            (this.transform.up * jumpY.Evaluate(jumpTimer)) +
+            (this.transform.forward * jumpZ.Evaluate(jumpTimer) * Vector3.Dot(velocity, this.transform.forward));
     }
-    Vector3 GetFriction(Vector3 velocity, Vector3 normalForce)
+    void ApplyFriction(Vector3 normalForce)
     {
         /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
          * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
          * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
          */
-        if (velocity.magnitude < (normalForce.magnitude * StaticFriction))
+        Debug.Log(velocity.magnitude);
+
+        if (velocity.magnitude < (normalForce.magnitude * staticFriction))
         {
+            Debug.Log("I should fucking stop");
+
             velocity.x = 0f;
             velocity.z = 0f;
         }
         else
         {
-            velocity += -velocity.normalized * (normalForce.magnitude * DynamicFriction);
+            velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
         }
 
-        return velocity;
     } // Here is Friction calculated with normalForce and applied to velocity
 }
