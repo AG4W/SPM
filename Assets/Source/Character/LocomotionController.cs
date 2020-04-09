@@ -109,9 +109,25 @@ public class LocomotionController : MonoBehaviour
 
         //behöver göra detta rekursivt, annars kan vi glitcha under minskande slopes
         if (Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude))
-            velocity += velocity.GetNormalForce(hit.normal);
+        {
+            Debug.Log("checkCollision 1");
+            velocity += checkCollision(velocity.GetNormalForce(hit.normal), pointA, pointB);
+        }
 
         this.transform.position += velocity;
+    }
+    public Vector3 checkCollision(Vector3 velocity, Vector3 pointA, Vector3 pointB)
+    {
+        if (Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude))
+        {
+            Debug.Log("checkCollision 2");
+            return velocity += checkCollision(velocity.GetNormalForce(hit.normal), pointA, pointB);
+        }
+        else
+        {
+            Debug.Log("checkCollision FINE");
+            return velocity;
+        }
     }
     void LateUpdate()
     {
