@@ -3,6 +3,7 @@
 public class AbilityController : MonoBehaviour
 {
     [SerializeField]ForcePush push;
+    [SerializeField]SlowTime slow;
 
     Ability[] abilities;
 
@@ -22,13 +23,13 @@ public class AbilityController : MonoBehaviour
 
     void Start()
     {
-        abilities = new Ability[] { push };
+        abilities = new Ability[] { push, slow };
     }
     void Update()
     {
         for (int i = 0; i < abilityHotkeys.Length; i++)
         {
-            if (Input.GetKeyDown(abilityHotkeys[i]) && !abilities[i].hasCooldown)
+            if (Input.GetKeyDown(abilityHotkeys[i]) && !abilities[i].HasCooldown)
             {
                 Debug.Log("activating " + abilities[i].GetType().ToString());
 

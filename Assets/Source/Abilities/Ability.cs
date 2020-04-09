@@ -4,27 +4,45 @@
 public abstract class Ability 
 {
     [SerializeField]float cooldown;
+    [SerializeField]float duration;
 
-    float cooldownTimer;
+    protected float Duration { get { return duration; } }
+    protected float DurationTimer01 { get { return Mathf.InverseLerp(0f, this.Duration, DurationTimer); } }
 
-    public bool hasCooldown { get; private set; }
+    protected float CooldownTimer { get; private set; }
+    protected float DurationTimer { get; private set; }
+
+    public bool HasCooldown { get; private set; }
+    public bool IsActive { get; private set; }
 
     public virtual void Activate(Context context)
     {
-        hasCooldown = true;
+        HasCooldown = true;
+        IsActive = true;
     }
 
     public virtual void Tick()
     {
-        if (!hasCooldown)
-            return;
-
-        cooldownTimer += Time.deltaTime;
-
-        if(cooldownTimer >= cooldown)
+        if (IsActive)
         {
-            hasCooldown = false;
-            cooldownTimer = 0f;
+            DurationTimer += Time.deltaTime;
+
+            if (DurationTimer >= duration)
+            {
+                IsActive = false;
+                DurationTimer = 0f;
+            }
+        }
+
+        if (HasCooldown)
+        {
+            CooldownTimer += Time.deltaTime;
+
+            if (CooldownTimer >= cooldown)
+            {
+                HasCooldown = false;
+                CooldownTimer = 0f;
+            }
         }
     }
 }

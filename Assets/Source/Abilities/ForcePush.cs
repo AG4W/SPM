@@ -5,20 +5,15 @@ public class ForcePush : Ability
 {
     [SerializeField]float radius;
     [SerializeField]float distance;
-    [SerializeField]float duration;
-    float durationTimer;
 
     [SerializeField]AnimationCurve power;
     [SerializeField]float powerMultiplier;
 
     Transform caster;
 
-    bool isActive;
-
     public override void Activate(Context context)
     {
         base.Activate(context);
-        isActive = true;
         caster = (Transform)context.data["caster"];
     }
 
@@ -26,15 +21,7 @@ public class ForcePush : Ability
     {
         base.Tick();
 
-        durationTimer += Time.deltaTime;
-
-        if(durationTimer >= duration)
-        {
-            isActive = false;
-            durationTimer = 0f;
-        }
-
-        if (isActive)
+        if (base.IsActive)
         {
             Vector3 point = caster.transform.position + (Vector3.up * 1f);
             Vector3 direction = caster.transform.forward;
@@ -50,7 +37,7 @@ public class ForcePush : Ability
                 if (rb != null)
                 {
                     float distanceModifier = Mathf.InverseLerp(distance, 0f, hits[i].distance);
-                    rb.AddForce(direction * power.Evaluate(Mathf.InverseLerp(0f, duration, durationTimer)) * powerMultiplier * distanceModifier, ForceMode.Force);
+                    rb.AddForce(direction * power.Evaluate(base.DurationTimer01) * powerMultiplier * distanceModifier, ForceMode.Force);
                 }
             }
         }

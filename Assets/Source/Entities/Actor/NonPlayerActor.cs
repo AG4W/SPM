@@ -21,12 +21,17 @@ public class NonPlayerActor : Actor
     protected override void Initalize()
     {
         base.Initalize();
-        targetPoint = target.FocusPoint.position;
+
+        if(target != null)
+            targetPoint = target.FocusPoint.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (target == null)
+            return;
+
         targetTimer += Time.deltaTime;
 
         if (targetTimer >= targetUpdatRate)
