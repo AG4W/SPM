@@ -2,26 +2,26 @@
 
 public class NonPlayerActor : Actor
 {
-    [SerializeField] float detectionRange;
-    [Range(-0f, 180f)] [SerializeField] float detectionFieldOfView = .25f;
-    [SerializeField] float speed;
-    [SerializeField] float distanceFromTarget;
+    [SerializeField] protected float detectionRange;
+    [Range(-0f, 180f)] [SerializeField] protected float detectionFieldOfView = 45f;
+    [SerializeField] protected float speed;
     [SerializeField] float targetUpdatRate;
-    [SerializeField] Actor target;
+    [SerializeField] protected Actor target;
     [SerializeField] WeaponController weapon;
 
-    private float targetTimer;
-    private float smallWidth = 0.1f;
-    private float distanceToTarget;
+    float targetTimer;
+    protected float smallWidth = 0.1f;
+    protected float distanceToTarget;
 
-    private Vector3 targetPoint;
+    protected Vector3 targetPoint;
 
-    private bool hasSeenTarget = false;
+    public bool HasSeenTarget { get; protected set; }
+
+    public Vector3 Velocity { get; protected set; }
 
     protected override void Initalize()
     {
         base.Initalize();
-        targetPoint = target.FocusPoint.position;
     }
 
     // Update is called once per frame
@@ -36,44 +36,38 @@ public class NonPlayerActor : Actor
             PlotMove();
         }
 
-        if (hasSeenTarget)
-        {
-            Vector3 heading = targetPoint - transform.position;
-            distanceToTarget = Vector3.Distance(transform.position, targetPoint);
-            if (distanceToTarget < detectionRange && distanceToTarget > distanceFromTarget + smallWidth)
-            {
-                transform.position += heading.normalized * speed * Time.deltaTime;
-            }
-            else if (distanceToTarget < distanceFromTarget - smallWidth)
-            {
-                transform.position += -heading.normalized * speed * Time.deltaTime;
-            }
+        UpdateVelocity();
+        UpdateRotation();
+        UpdateTransform();
+    }
 
-            transform.LookAt(target.FocusPoint.position);
+    protected virtual void UpdateVelocity()
+    {
 
-            AttemptFire();
-        }
-        else
-        {
-            if (CanSeeTarget())
-            {
-                hasSeenTarget = true;
-            }
-        }
+    }
+
+    protected virtual void UpdateRotation()
+    {
+
+    }
+
+    void UpdateTransform()
+    {
+        this.transform.position += this.Velocity;
     }
 
     protected virtual void PlotMove()
     {
-        targetPoint = target.FocusPoint.position;
+
     }
 
-    void AttemptFire()
+    protected void AttemptFire()
     {
         if (CanSeeTarget())
             weapon.Shoot(targetPoint);
     }
 
-    bool CanSeeTarget()
+    protected bool CanSeeTarget()
     {
         if (distanceToTarget > detectionRange)
             return false;

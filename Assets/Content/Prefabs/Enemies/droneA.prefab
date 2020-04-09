@@ -311,12 +311,13 @@ MonoBehaviour:
   maxHealth: 10
   healthRegenerationRate: 0
   healthRegenerationAmount: 0
+  isDestructible: 1
   detectionRange: 30
   detectionFieldOfView: 60
   speed: 2
   distanceFromTarget: 10
   targetUpdatRate: 0
-  target: {fileID: 0}
+  target: {fileID: 5672575483741118612, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
   weapon: {fileID: 1103926986870256043}
 --- !u!1 &1103926986043247307
 GameObject:
