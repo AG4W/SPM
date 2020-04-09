@@ -138,7 +138,7 @@ public class WeaponController : MonoBehaviour
 }
 public struct ProjectilePacket
 {
-    static float timer;
+    float timer;
     float projectileLifetime;
     float projectileSpeed;
 
@@ -150,13 +150,16 @@ public struct ProjectilePacket
         this.projectileSpeed = projectileSpeed;
         this.bullet = bullet;
         timer = 0f;
+        Debug.Log("Creating bullet");
     }
 
     public bool Tick(float deltaTime)
     {
         timer += deltaTime;
+        //Debug.Log("Bullet timer: " + timer);
         if (timer >= projectileLifetime)
         {
+            Debug.Log("Destroying bullet");
             Object.Destroy(bullet);
             return true;
         }
