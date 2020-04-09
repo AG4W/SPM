@@ -42,8 +42,6 @@ public class ForcePush : Ability
                     rb.AddForce(force, ForceMode.Impulse);
                 else if (nap != null)
                     nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
-                else if(hits[i].transform.root.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                    caster.transform.position += force.GetNormalForce(hits[i].normal * Time.deltaTime);
             }
         }
     }
