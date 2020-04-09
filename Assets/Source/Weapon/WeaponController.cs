@@ -8,9 +8,6 @@ public class WeaponController : MonoBehaviour
     [SerializeField]int magasineSize = 20;
     [SerializeField]int shotsLeftInCurrentClip;
 
-    [SerializeField]float projectileSpeed = 50f;
-    [SerializeField]float projectileLifetime = 2f;
-
     [SerializeField]float fireTimer;
     [SerializeField]float fireRate = .5f;
 
@@ -30,8 +27,6 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]AudioClip[] reloadSounds;
 
-    List<ProjectilePacket> projectiles = new List<ProjectilePacket>();
-
     bool canFire = true;
     bool needsReload { get { return shotsLeftInCurrentClip == 0; } }
 
@@ -47,9 +42,7 @@ public class WeaponController : MonoBehaviour
     }
     void Update()
     {
-        for (int i = 0; i < projectiles.Count; i++)
-            if (projectiles[i].Tick(Time.deltaTime))
-                projectiles.RemoveAt(i);
+        
 
         if (!canFire)
             TickFireTimer();
@@ -133,38 +126,5 @@ public class WeaponController : MonoBehaviour
             return;
 
         GameObject bullet = Instantiate(shotPrefabs.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
-        projectiles.Add(new ProjectilePacket(projectileLifetime, projectileSpeed, bullet));
-    }
-}
-public struct ProjectilePacket
-{
-    float timer;
-    float projectileLifetime;
-    float projectileSpeed;
-
-    GameObject bullet;
-
-    public ProjectilePacket(float projectileLifetime, float projectileSpeed, GameObject bullet)
-    {
-        this.projectileLifetime = projectileLifetime;
-        this.projectileSpeed = projectileSpeed;
-        this.bullet = bullet;
-        timer = 0f;
-        Debug.Log("Creating bullet");
-    }
-
-    public bool Tick(float deltaTime)
-    {
-        timer += deltaTime;
-        //Debug.Log("Bullet timer: " + timer);
-        if (timer >= projectileLifetime)
-        {
-            Debug.Log("Destroying bullet");
-            Object.Destroy(bullet);
-            return true;
-        }
-        
-        bullet.transform.position += bullet.transform.forward * projectileSpeed * deltaTime;
-        return false;
     }
 }
