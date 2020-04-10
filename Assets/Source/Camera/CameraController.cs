@@ -17,6 +17,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]Vector3 ironSightPosition;
     [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.75f, 0f);
 
+    [SerializeField]float cameraWhiskerDistance = .5f;
+    float cameraZBuffer = 0f;
+
     [SerializeField]float defaultFOV = 60;
     [SerializeField]float ironSightFOV = 30;
 
@@ -66,12 +69,17 @@ public class CameraController : MonoBehaviour
     }
     void UpdateSettings()
     {
+        RaycastBack();
+
         camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, inIronSights ? ironSightFOV : defaultFOV, translationSpeed * (Time.deltaTime / Time.timeScale));
 
         Vector3 finalCameraPos = inIronSights ? ironSightPosition : defaultPosition;
 
         if (Input.GetKey(KeyCode.C))
-            finalCameraPos += crouchOffset;
+            finalCameraPos -= crouchOffset;
+
+        //clampa så att kameran inte kan gå igenom spelaren
+        finalCameraPos.z += Mathf.Clamp(cameraZBuffer, 0f, finalCameraPos.z);
 
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, translationSpeed * (Time.deltaTime / Time.timeScale));
 
@@ -86,5 +94,12 @@ public class CameraController : MonoBehaviour
 
         dof.nearFocusStart.value = inIronSights ? 1f : 0f;
         dof.nearFocusEnd.value = inIronSights ? 1.5f : 0f;
+    }
+
+    void RaycastBack()
+    {
+        Physics.Raycast(camera.transform.position, -camera.transform.forward, out RaycastHit hit, cameraWhiskerDistance);
+
+        cameraZBuffer = Mathf.Lerp(cameraZBuffer, hit.transform != null ? -hit.distance : 0f, translationSpeed * (Time.deltaTime / Time.timeScale));
     }
 }

@@ -45,6 +45,7 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]bool isJumping = false;
     [SerializeField]bool isWalking = false;
+    [SerializeField]bool inIronSights = false;
 
     RaycastHit lastGroundHit;
 
@@ -109,7 +110,7 @@ public class LocomotionController : MonoBehaviour
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
 
         Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude);
-
+        
         //behöver göra detta rekursivt
         while (hit.transform != null)
         {
@@ -119,6 +120,7 @@ public class LocomotionController : MonoBehaviour
 
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
+
         velocity *= Mathf.Pow(airResistance, Time.deltaTime);
         this.transform.position += velocity * Time.deltaTime;
     }
@@ -133,16 +135,17 @@ public class LocomotionController : MonoBehaviour
             isWalking = !isWalking;
 
         isSprinting = Input.GetKey(KeyCode.LeftShift);
+        inIronSights = Input.GetKey(KeyCode.Mouse1);
 
         targetInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        targetInput *= isWalking ? .5f : (isSprinting ? 2f : 1f);
+        targetInput *= (isWalking || inIronSights) ? .5f : (isSprinting ? 2f : 1f);
 
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
         actualStance = Mathf.Lerp(actualStance, targetStance, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0) && !isSprinting)
             AttemptFire();
         if (Input.GetKeyDown(KeyCode.R))
             Reload();
