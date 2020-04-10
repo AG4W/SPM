@@ -1356,8 +1356,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magasineSize: 20
   shotsLeftInCurrentClip: 0
-  projectileSpeed: 200
-  projectileLifetime: 2
   fireTimer: 0
   fireRate: 0.3
   damage: 2.5
@@ -2292,6 +2290,8 @@ GameObject:
   - component: {fileID: 3652763358057608052}
   - component: {fileID: 5920462848014939654}
   - component: {fileID: 5672575483741118612}
+  - component: {fileID: 496242130}
+  - component: {fileID: 496242131}
   m_Layer: 31
   m_Name: player
   m_TagString: Untagged
@@ -2331,71 +2331,36 @@ MonoBehaviour:
   - {fileID: 5608131501683612188}
   - {fileID: 7754249296040209837}
   jig: {fileID: 0}
+  velocity: {x: 0, y: 0, z: 0}
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
   targetStance: 1
+  actualStance: 0
   isSprinting: 0
-  topPoint: {fileID: 1446218176}
   minHeight: 1.1
   maxHeight: 1.9
   collisionRadius: 0.25
+  staticFriction: 0.5
+  dynamicFriction: 0.4
+  airResistance: 0.2
   stepOverHeight: 0.5
   groundCheckDistance: 0.2
-  jumpAcceleration: 7
-  jumpX:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jumpY:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0.0012993144
-      value: 0.50247836
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.22659934
-      value: 0.9922343
-      inSlope: 0.008813797
-      outSlope: 0.008813797
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.108212784
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jumpZ:
+  jumpAcceleration: 2.55
+  jumpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
+      value: 2
+      inSlope: 0.08436378
+      outSlope: 0.08436378
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.048879836
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 0.49920654
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2405,15 +2370,17 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpDuration: 1.5
-  minimumJumpDuration: 0.1
+  jumpDuration: 1
+  minimumJumpDuration: 0.25
   jumpTimer: 0
   gravitationalConstant: 4
   fallDuration: 0
   isGrounded: 1
   wasGroundedLastFrame: 1
   isJumping: 0
-  combatInterpolationSpeed: 2.5
+  isWalking: 0
+  inIronSights: 0
+  combatInterpolationSpeed: 1.5
   weapon: {fileID: 9091239670737582696}
 --- !u!95 &5920462848014939654
 Animator:
@@ -2451,6 +2418,142 @@ MonoBehaviour:
   healthRegenerationRate: 1
   healthRegenerationAmount: 15
   isDestructible: 1
+--- !u!114 &496242130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5672575483741118613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 376087ea05f10214ba857088aeb0d3e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  push:
+    cooldown: 5
+    duration: 4
+    animationIndex: 0
+    radius: 4
+    distance: 20
+    power:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0.08436378
+        outSlope: 0.08436378
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.048879836
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    powerMultiplier: 50
+  pull:
+    cooldown: 5
+    duration: 4
+    animationIndex: 0
+    radius: 4
+    distance: 20
+    power:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0.0062044202
+        outSlope: 0.0062044202
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.07026416
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: -2.7383802
+        outSlope: -2.7383802
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.035840154
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    powerMultiplier: 40
+  slow:
+    cooldown: 5
+    duration: 4
+    animationIndex: 1
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: -7.020573
+        outSlope: -7.020573
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.09368637
+        value: 0.342268
+        inSlope: -2.1015975
+        outSlope: -2.1015975
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.11995316
+      - serializedVersion: 3
+        time: 0.44611692
+        value: 0.042431936
+        inSlope: -0.12968178
+        outSlope: -0.12968178
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.26137704
+        outWeight: 0.106358744
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1.7288271
+        outSlope: 1.7288271
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+--- !u!114 &496242131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5672575483741118613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9368de9f3b629f047ac40bef0d00b557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentEntity: {fileID: 0}
+  mask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &5914922768891536699
 GameObject:
   m_ObjectHideFlags: 0

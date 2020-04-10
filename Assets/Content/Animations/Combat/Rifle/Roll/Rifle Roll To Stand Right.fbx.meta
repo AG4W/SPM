@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 4ecfb4c9f8bcfd84ca7e7abac89d3a98
+guid: 8215b4eb23dd6244b892ff1d543cae41
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Rifle Roll To Crouch Back
+    second: Rifle Roll To Stand Right
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,13 +35,13 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle Roll To Crouch Back
+      name: Rifle Roll To Stand Right
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 112
+      lastFrame: 124
       wrapMode: 0
-      orientationOffsetY: -180
+      orientationOffsetY: -90
       level: 0
       cycleOffset: 0
       loop: 0

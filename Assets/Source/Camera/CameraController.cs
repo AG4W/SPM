@@ -76,10 +76,10 @@ public class CameraController : MonoBehaviour
         Vector3 finalCameraPos = inIronSights ? ironSightPosition : defaultPosition;
 
         if (Input.GetKey(KeyCode.C))
-            finalCameraPos -= crouchOffset;
+            finalCameraPos += crouchOffset;
 
         //clampa så att kameran inte kan gå igenom spelaren
-        finalCameraPos.z += Mathf.Clamp(cameraZBuffer, 0f, finalCameraPos.z);
+        //finalCameraPos.z += cameraZBuffer;
 
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, translationSpeed * (Time.deltaTime / Time.timeScale));
 

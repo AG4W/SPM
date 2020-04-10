@@ -2,7 +2,7 @@
 
 public class SetLayerWeightBehvaiour : StateMachineBehaviour
 {
-    [Range(0, 1)][SerializeField]int onEnterIndex = 1;
+    [SerializeField]int onEnterIndex = 1;
     [Range(0f, 1f)][SerializeField]float onEnterWeight = 1f;
 
     [SerializeField]bool resetOnExit = true;

@@ -37,6 +37,12 @@ public static class GlobalEvents
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
-    OnAbilityActivated,
+    Jump,
+    Roll,
+    Fire,
+    Reload,
+    ToggleTorches,
+
+    ForcePowerActivated,
     CurrentInteractableEntityChanged,
 }

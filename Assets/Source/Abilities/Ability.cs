@@ -21,7 +21,7 @@ public abstract class Ability
 
     public virtual void Activate()
     {
-        GlobalEvents.Raise(GlobalEvent.OnAbilityActivated, this);
+        GlobalEvents.Raise(GlobalEvent.ForcePowerActivated, this);
         IsActive = true;
     }
 

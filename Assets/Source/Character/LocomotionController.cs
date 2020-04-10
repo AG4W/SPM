@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LocomotionController : MonoBehaviour
 {
@@ -16,7 +15,6 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]bool isSprinting;
 
     [Header("Movement/Collision Properties")]
-    [SerializeField]Transform topPoint;
     [SerializeField]float minHeight = 1.1f;
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
@@ -47,28 +45,76 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]bool isWalking = false;
     [SerializeField]bool inIronSights = false;
 
-    RaycastHit lastGroundHit;
-
     [Header("Combat Mode")]
     [SerializeField]float combatInterpolationSpeed = 2.5f;
 
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
+    
+    float currentHeight { 
+        get 
+        {
+            //prova detta, borde ge mjukare övergång
+            return Mathf.Lerp(1.4f, 1.8f, actualStance);
 
-    // topPoint.position.y - this.transform.position.y;
-    //float currentHeight { get { if (actualStance < 0.9) return 1.5f; else return 1.8f; } }
-    float currentHeight { get { if (actualStance < 0.8f) return 1.4f; else return 1.8f; } }
+            //if (actualStance < 0.8f)
+            //    return 1.4f; 
+            //else 
+            //    return 1.8f; 
+        } 
+    }
 
     Animator animator;
     void Awake()
     {
         animator = this.GetComponentInChildren<Animator>();
 
-        GlobalEvents.Subscribe(GlobalEvent.OnAbilityActivated, (object[] args) => 
+        GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
             this.animator.SetFloat("castIndex", (int)((Ability)args[0]).AnimationIndex);
             this.animator.SetTrigger("cast");
-            this.animator.SetLayerWeight(1, 1f);
+            this.animator.SetLayerWeight(2, 1f);
+        });
+        GlobalEvents.Subscribe(GlobalEvent.Fire, (object[] args) =>
+        {
+            if (isSprinting || !isGrounded)
+                return;
+
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+            Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
+
+            weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
+        });
+        GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
+        {
+            if (isSprinting || isJumping || !isGrounded)
+                return;
+
+            weapon.Reload();
+        });
+        GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) =>
+        {
+            if (isJumping || !isGrounded)
+                return;
+
+            animator.SetTrigger("jump");
+            isJumping = true;
+        });
+        GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) =>
+        {
+            if (isJumping || !isGrounded)
+                return;
+
+            if (actualInput.magnitude < .1f)
+                actualInput = Vector3.forward;
+
+            animator.SetTrigger("roll");
+        });
+        //flytta detta till en separat controller sen, borde nog inte vara här
+        GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
+        {
+            for (int i = 0; i < torches.Length; i++)
+                torches[i].SetActive(!torches[i].activeSelf);
         });
     }
 
@@ -137,24 +183,24 @@ public class LocomotionController : MonoBehaviour
         velocity *= Mathf.Pow(airResistance, Time.deltaTime);
         this.transform.position += velocity * Time.deltaTime;
     }
-    Vector3 CollisionTest(Vector3 testVel)
-    {
-        Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
-        Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
-        Physics.CapsuleCast(pointA, pointB, collisionRadius, testVel.normalized, out RaycastHit hit, testVel.magnitude + .03f);
-        if (hit.transform == null)
-            return testVel;
-        else
-        {
-
-        }
-        return testVel;
-    }
     void LateUpdate()
     {
         wasGroundedLastFrame = isGrounded;
     }
 
+    void UpdateGroundedStatus()
+    {
+        fallDuration += (isGrounded || isJumping) ? 0f : (Time.deltaTime / Time.timeScale);
+
+        Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
+        //offsetta lite uppåt för att få en mer reliable ground check
+        isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
+
+        if (wasGroundedLastFrame && !isGrounded)
+            fallDuration = 0f;
+
+        //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
+    }
     void GatherInput()
     {
         if (Input.GetKeyDown(KeyCode.CapsLock))
@@ -165,29 +211,25 @@ public class LocomotionController : MonoBehaviour
 
         targetInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         targetInput *= (isWalking || inIronSights) ? .5f : (isSprinting ? 2f : 1f);
-
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
-        actualStance = Mathf.Lerp(actualStance, targetStance, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualStance = Mathf.Lerp(actualStance, targetStance, (combatInterpolationSpeed * 2f) * (Time.deltaTime / Time.timeScale));
 
-        if (Input.GetKey(KeyCode.Mouse0) && !isSprinting)
-            AttemptFire();
+        if (Input.GetKey(KeyCode.Mouse0))
+            GlobalEvents.Raise(GlobalEvent.Fire);
         if (Input.GetKeyDown(KeyCode.R))
-            Reload();
+            GlobalEvents.Raise(GlobalEvent.Reload);
         if (Input.GetKeyDown(KeyCode.F))
-        {
-            for (int i = 0; i < torches.Length; i++)
-                torches[i].SetActive(!torches[i].activeSelf);
-        }
+            GlobalEvents.Raise(GlobalEvent.ToggleTorches);
 
         if (!isGrounded)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
-            Jump();
+        if (Input.GetKeyDown(KeyCode.Space))
+            GlobalEvents.Raise(GlobalEvent.Jump);
         if (Input.GetKeyDown(KeyCode.V))
-            animator.SetTrigger("roll");
+            GlobalEvents.Raise(GlobalEvent.Roll);
     }
 
     void CorrectStance()
@@ -223,36 +265,7 @@ public class LocomotionController : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f);
     }
 
-    void UpdateGroundedStatus()
-    {
-        fallDuration += (isGrounded || isJumping) ? 0f : (Time.deltaTime / Time.timeScale);
-
-        Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
-        //offsetta lite uppåt för att få en mer reliable ground check
-        isGrounded = Physics.Raycast(ray, out lastGroundHit, stepOverHeight + groundCheckDistance);
-
-        if (wasGroundedLastFrame && !isGrounded)
-            fallDuration = 0f;
-
-        //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
-    }
-
-    void AttemptFire()
-    {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-        Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
-        weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
-    }
-    void Reload()
-    {
-        weapon.Reload();
-    }
-    void Jump()
-    {
-        animator.SetTrigger("jump");
-        isJumping = true;
-    }
-
+    //enkapsulering av småskit
     Vector3 GetJumpVelocity()
     {
         if (!isJumping)
