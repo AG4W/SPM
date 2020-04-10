@@ -113,9 +113,9 @@ public class LocomotionController : MonoBehaviour
         //behöver göra detta rekursivt
         while (hit.transform != null)
         {
-            Debug.Log("KOLLISION");
             Vector3 tnf = velocity.GetNormalForce(hit.normal);
             velocity += tnf;
+            ApplyFriction(tnf);
 
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
         }
@@ -250,8 +250,6 @@ public class LocomotionController : MonoBehaviour
 
         if (velocity.magnitude < (normalForce.magnitude * staticFriction))
         {
-            Debug.Log("I should fucking stop");
-
             velocity.x = 0f;
             velocity.z = 0f;
         }
