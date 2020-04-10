@@ -125,6 +125,7 @@ public class LocomotionController : MonoBehaviour
             //    break;
             //}
             Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
+
             Vector3 tnf = velocity.GetNormalForce(hit.normal);
             velocity += tnf;
             ApplyFriction(tnf);
