@@ -104,25 +104,51 @@ public class LocomotionController : MonoBehaviour
         //if (!wasGroundedLastFrame && isGrounded)
         //    velocity += Vector3.down * groundCheckDistance;
 
-        /**** Väggkollision ****/
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
 
-        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, velocity.magnitude);
-        
-        //behöver göra detta rekursivt
+        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, float.PositiveInfinity);
+
         while (hit.transform != null)
         {
+
+            float allowedMoveDistance = .03f / Vector3.Dot(velocity.normalized, hit.normal); // får negativt avstånd som måste dras av från träffdistance för att hamna på SkinWidth avstånd (faller vi rakt ner, 90 deg, får vi -SkinWidth. Som går i oändlighet till 0)
+            allowedMoveDistance += hit.distance; // distans till träff minus anpassad SkinWidth
+            if (allowedMoveDistance > velocity.magnitude * Time.deltaTime) { break; } // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
+            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi röra oss fram dit och stanna...
+            {                                                                           //DELTA TIME????
+                //this.transform.position += CollisionTestT(velocity.normalized * allowedMoveDistance); // eftersom det vi vill röra oss denna frame är större än allowedMoveDist beöver vi inte köra *Time.deltaTime
+                this.transform.position += velocity.normalized * allowedMoveDistance;
+            }
+            //else if (allowedMoveDistance < 0) // något blev fel
+            //{
+            //    break;
+            //}
+            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
+
             Vector3 tnf = velocity.GetNormalForce(hit.normal);
             velocity += tnf;
             ApplyFriction(tnf);
 
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude);
+            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
         }
 
         velocity *= Mathf.Pow(airResistance, Time.deltaTime);
         this.transform.position += velocity * Time.deltaTime;
+    }
+    Vector3 CollisionTest(Vector3 testVel)
+    {
+        Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+        Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
+        Physics.CapsuleCast(pointA, pointB, collisionRadius, testVel.normalized, out RaycastHit hit, testVel.magnitude + .03f);
+        if (hit.transform == null)
+            return testVel;
+        else
+        {
+
+        }
+        return testVel;
     }
     void LateUpdate()
     {
@@ -249,8 +275,6 @@ public class LocomotionController : MonoBehaviour
          * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
          * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
          */
-        //Debug.Log(velocity.magnitude);
-
         if (velocity.magnitude < (normalForce.magnitude * staticFriction))
         {
             velocity.x = 0f;
@@ -260,6 +284,5 @@ public class LocomotionController : MonoBehaviour
         {
             velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
         }
-
     } // Here is Friction calculated with normalForce and applied to velocity
 }
