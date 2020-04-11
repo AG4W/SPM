@@ -1365,6 +1365,7 @@ MonoBehaviour:
   - {fileID: 1228346417345086382}
   jig: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
+  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
   targetStance: 1
@@ -1373,6 +1374,7 @@ MonoBehaviour:
   minHeight: 1.1
   maxHeight: 1.9
   collisionRadius: 0.25
+  skinWidth: 0.03
   staticFriction: 0.5
   dynamicFriction: 0.4
   airResistance: 0.2
@@ -1404,10 +1406,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   jumpDuration: 1
-  minimumJumpDuration: 0.25
+  minimumJumpDuration: 0.35
   jumpTimer: 0
-  gravitationalConstant: 4
+  gravitationalConstant: 90
   fallDuration: 0
+  fallForwardMomentDeceleration: 0.5
   isGrounded: 1
   wasGroundedLastFrame: 1
   isJumping: 0
@@ -1468,7 +1471,7 @@ MonoBehaviour:
     duration: 4
     animationIndex: 0
     radius: 4
-    distance: 20
+    distance: 10
     power:
       serializedVersion: 2
       m_Curve:
@@ -1499,7 +1502,7 @@ MonoBehaviour:
     duration: 4
     animationIndex: 0
     radius: 4
-    distance: 20
+    distance: 10
     power:
       serializedVersion: 2
       m_Curve:

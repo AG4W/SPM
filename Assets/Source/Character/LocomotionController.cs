@@ -39,6 +39,7 @@ public class LocomotionController : MonoBehaviour
     [Header("Falling")]
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float fallDuration;
+    [SerializeField]float fallForwardMomentDeceleration = .5f;
 
     [SerializeField]bool isGrounded;
     [SerializeField]bool wasGroundedLastFrame;
@@ -143,7 +144,7 @@ public class LocomotionController : MonoBehaviour
         }
 
         if(velocityBeforeLosingGroundContact.magnitude > .01f)
-            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, Time.deltaTime / Time.timeScale);
+            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
 
         CorrectStance();
         UpdateAnimator();
@@ -162,11 +163,7 @@ public class LocomotionController : MonoBehaviour
             velocity += velocityBeforeLosingGroundContact;
 
         // apply air resistance
-        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
-
-        //snapa mot marken ifall vi precis landat så att vi inte flyter groundDistance ovanför
-        //if (!wasGroundedLastFrame && isGrounded)
-        //    velocity += Vector3.down * groundCheckDistance;
+        velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
 
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
@@ -176,22 +173,13 @@ public class LocomotionController : MonoBehaviour
         int counter = 1;
         while (hit.transform != null)
         {
-            //Debug.Log("While Nr: " + counter);
-
             float allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
             allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
-            if (allowedMoveDistance > velocity.magnitude * Time.deltaTime) { break; } // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
+            
+            if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale)) 
+                break;  // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
             else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi flytta karaktären fram dit
-            {
                 this.transform.position += velocity.normalized * allowedMoveDistance;
-                //velocity = velocity.normalized * (velocity.magnitude - allowedMoveDistance);
-            }
-
-            //if (allowedMoveDistance < 0) // något blir fel... vi hamna här... men funkar...
-            //{
-            //    Debug.Log("Något blev fel i kollision");
-            //    //break;
-            //}
 
             if (hit.distance <= velocity.magnitude)
             {
@@ -209,7 +197,7 @@ public class LocomotionController : MonoBehaviour
                 break;
         }
 
-        this.transform.position += velocity * Time.deltaTime;
+        this.transform.position += velocity * (Time.deltaTime / Time.timeScale);
     }
     void LateUpdate()
     {
