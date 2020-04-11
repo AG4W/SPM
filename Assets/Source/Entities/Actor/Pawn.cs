@@ -21,6 +21,8 @@ public class Pawn : Actor
     public Vector3 Velocity { get; protected set; }
     public Vector3 ModifiedVelocity { get; protected set; }
 
+    protected Actor Target { get { return target; } }
+
     public bool HasSeenTarget { get; protected set; }
 
     protected override void Initalize()
@@ -46,6 +48,7 @@ public class Pawn : Actor
         UpdateVelocity();
         UpdateRotation();
         UpdateTransform();
+        UpdateAnimator();
 
         this.ModifiedVelocity = Vector3.zero;
     }
@@ -55,11 +58,14 @@ public class Pawn : Actor
     }
     protected virtual void UpdateRotation()
     {
-
     }
     protected virtual void UpdateTransform()
     {
         //this.transform.position += this.Velocity + modifiedVelocity;
+    }
+    protected virtual void UpdateAnimator()
+    {
+
     }
 
     protected virtual void UpdateTarget()

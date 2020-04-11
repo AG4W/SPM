@@ -14,10 +14,13 @@ public class HumanoidPawn : Pawn
     protected override void UpdateRotation()
     {
         base.UpdateRotation();
+
+        if (base.HasSeenTarget)
+            this.transform.LookAt(base.Target.transform, Vector3.up);
     }
-    protected override void UpdateTransform()
+    protected override void UpdateAnimator()
     {
-        base.UpdateTransform();
+        base.UpdateAnimator();
     }
 
     protected override void UpdateDestination()
@@ -34,9 +37,12 @@ public class HumanoidPawn : Pawn
         base.OnHealthChanged(current);
 
         //todo, add damage sounds etc
+        //hit reactions in animation?
     }
     protected override void OnHealthZero()
     {
         base.OnHealthZero();
+
+        //add ragdoll
     }
 }
