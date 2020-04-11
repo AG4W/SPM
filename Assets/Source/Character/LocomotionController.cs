@@ -120,7 +120,6 @@ public class LocomotionController : MonoBehaviour
                 torches[i].SetActive(!torches[i].activeSelf);
         });
     }
-
     void Update()
     {
         UpdateGroundedStatus();

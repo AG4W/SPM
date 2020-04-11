@@ -23,21 +23,21 @@ public class DroneActor : Pawn
     {
         base.UpdateVelocity();
 
-        if (Vector3.Distance(this.transform.position, targetPoint) > .1f)
+        if (Vector3.Distance(this.transform.position, base.DesiredPosition) > .1f)
             base.Velocity = this.transform.forward * speed * Time.deltaTime;
     }
     protected override void UpdateRotation()
     {
         base.UpdateRotation();
-        this.transform.LookAt(targetPoint);
+        this.transform.LookAt(base.Target.FocusPoint);
     }
 
     protected override void UpdateDestination()
     {
         base.UpdateDestination();
 
-        if (Vector3.Distance(this.transform.position, targetPoint) < .25f)
-            targetPoint = (targetPoint == idlePath[0] ? idlePath[1] : idlePath[0]);
+        if (Vector3.Distance(this.transform.position, base.DesiredPosition) < .25f)
+            base.DesiredPosition = (base.DesiredPosition == idlePath[0] ? idlePath[1] : idlePath[0]);
     }
 
     void OnCollisionEnter(Collision collision)

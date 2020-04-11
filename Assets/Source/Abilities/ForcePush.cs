@@ -30,8 +30,8 @@ public class ForcePush : Ability
             //för icke-actors som fortfarande ska röra sig
             if (rb != null)
                 rb.AddForce(force, ForceMode.Impulse);
-            else if (nap != null)
-                nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
+            //else if (nap != null)
+            //    nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
         }
     }
 }
