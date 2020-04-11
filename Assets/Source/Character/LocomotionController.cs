@@ -90,6 +90,8 @@ public class LocomotionController : MonoBehaviour
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
 
             weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
+
+            GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position);
         });
         GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
         {
