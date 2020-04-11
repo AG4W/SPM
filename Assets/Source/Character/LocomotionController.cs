@@ -19,6 +19,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float minHeight = 1.1f;
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
+    [SerializeField]float skinWidth = .03f;
 
     [SerializeField]float staticFriction = .8f;
     [SerializeField]float dynamicFriction = .5f;
@@ -160,6 +161,9 @@ public class LocomotionController : MonoBehaviour
         if (!isGrounded)
             velocity += velocityBeforeLosingGroundContact;
 
+        // apply air resistance
+        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
+
         //snapa mot marken ifall vi precis landat så att vi inte flyter groundDistance ovanför
         //if (!wasGroundedLastFrame && isGrounded)
         //    velocity += Vector3.down * groundCheckDistance;
@@ -167,33 +171,44 @@ public class LocomotionController : MonoBehaviour
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
-
         Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, float.PositiveInfinity);
 
+        int counter = 1;
         while (hit.transform != null)
         {
-            float allowedMoveDistance = .03f / Vector3.Dot(velocity.normalized, hit.normal); // får negativt avstånd som måste dras av från träffdistance för att hamna på SkinWidth avstånd (faller vi rakt ner, 90 deg, får vi -SkinWidth. Som går i oändlighet till 0)
-            allowedMoveDistance += hit.distance; // distans till träff minus anpassad SkinWidth
+            //Debug.Log("While Nr: " + counter);
+
+            float allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
+            allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
             if (allowedMoveDistance > velocity.magnitude * Time.deltaTime) { break; } // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
-            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi röra oss fram dit och stanna...
-            {                                                                           //DELTA TIME????
-                //this.transform.position += CollisionTestT(velocity.normalized * allowedMoveDistance); // eftersom det vi vill röra oss denna frame är större än allowedMoveDist beöver vi inte köra *Time.deltaTime
+            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi flytta karaktären fram dit
+            {
                 this.transform.position += velocity.normalized * allowedMoveDistance;
+                //velocity = velocity.normalized * (velocity.magnitude - allowedMoveDistance);
             }
-            //else if (allowedMoveDistance < 0) // något blev fel
+
+            //if (allowedMoveDistance < 0) // något blir fel... vi hamna här... men funkar...
             //{
-            //    break;
+            //    Debug.Log("Något blev fel i kollision");
+            //    //break;
             //}
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
 
-            Vector3 tnf = velocity.GetNormalForce(hit.normal);
-            velocity += tnf;
-            ApplyFriction(tnf);
+            if (hit.distance <= velocity.magnitude)
+            {
+                Vector3 tnf = velocity.GetNormalForce(hit.normal);
+                velocity += tnf;
+                //ApplyFriction(tnf); // root motion hanterar vår rörlse i x/z-led
+            }
 
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
+            pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+            pointB = this.transform.position + (Vector3.up * collisionRadius);
+            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + skinWidth);
+
+            counter++;
+            if (counter == 11)
+                break;
         }
 
-        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
         this.transform.position += velocity * Time.deltaTime;
     }
     void LateUpdate()
