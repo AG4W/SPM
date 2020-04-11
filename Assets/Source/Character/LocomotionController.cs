@@ -71,6 +71,9 @@ public class LocomotionController : MonoBehaviour
 
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
+            if (isJumping || !isGrounded)
+                return;
+
             this.animator.SetFloat("castIndex", (int)((Ability)args[0]).AnimationIndex);
             this.animator.SetTrigger("cast");
             this.animator.SetLayerWeight(2, 1f);

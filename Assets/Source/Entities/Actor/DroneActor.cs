@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
-public class DroneActor : NonPlayerActor
+public class DroneActor : Pawn
 {
     [SerializeField]float distanceFromTarget;
+    [SerializeField]float speed;
 
     [SerializeField]Vector3[] idlePath;
 
@@ -31,9 +32,9 @@ public class DroneActor : NonPlayerActor
         this.transform.LookAt(targetPoint);
     }
 
-    protected override void PlotMove()
+    protected override void UpdateDestination()
     {
-        base.PlotMove();
+        base.UpdateDestination();
 
         if (Vector3.Distance(this.transform.position, targetPoint) < .25f)
             targetPoint = (targetPoint == idlePath[0] ? idlePath[1] : idlePath[0]);
