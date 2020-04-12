@@ -21,6 +21,7 @@ public class Pawn : Actor
     [SerializeField]WeaponController weapon;
     [SerializeField]Collider hitbox;
 
+    [SerializeField]bool startAlerted = false;
     [SerializeField]bool displayDebugText = true;
 
     protected string DebugText { get; set; }
@@ -38,6 +39,7 @@ public class Pawn : Actor
     protected NavMeshAgent Agent { get; private set; }
 
     protected SortedDictionary<float, Vector3> Memory { get; } = new SortedDictionary<float, Vector3>();
+    protected bool IsAlert { get; set; }
 
     public float ForceInfluenceModifier { get { return forceInfluenceModifier; } }
     public Vector3 Velocity { get; protected set; }
@@ -49,8 +51,10 @@ public class Pawn : Actor
         base.Initalize();
 
         this.Agent = this.GetComponent<NavMeshAgent>();
-
         GlobalEvents.Subscribe(GlobalEvent.NoiseCreated, OnNoiseCreated);
+
+        if (!startAlerted)
+            this.IsAlert = false;
     }
 
     void Update()
@@ -122,7 +126,7 @@ public class Pawn : Actor
     }
     protected virtual void UpdateAnimator()
     {
-
+        this.Animator.SetBool("isAlert", IsAlert);
     }
 
     protected virtual void UpdateTargetStatus()
@@ -148,6 +152,7 @@ public class Pawn : Actor
 
         DebugText += "<color=green>Can see target!</color>";
         this.CanSeeTarget = true;
+        this.IsAlert = true;
         Memory[this.DistanceToTarget] = this.Target.transform.position;
     }
     protected virtual void UpdateDestination()
@@ -167,8 +172,14 @@ public class Pawn : Actor
 
         Vector3 p = (Vector3)args[0];
         this.Memory.Add(Vector3.Distance(this.transform.position, p), p);
+        this.IsAlert = true;
     }
 
+    protected override void OnHealthChanged(float current)
+    {
+        base.OnHealthChanged(current);
+        this.IsAlert = true;
+    }
     protected override void OnHealthZero()
     {
         base.OnHealthZero();

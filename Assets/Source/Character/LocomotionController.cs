@@ -124,6 +124,9 @@ public class LocomotionController : MonoBehaviour
             for (int i = 0; i < torches.Length; i++)
                 torches[i].SetActive(!torches[i].activeSelf);
         });
+
+        //undvik att låsa spelaren i idle mode
+        this.animator.SetBool("isAlert", true);
     }
     void Update()
     {
