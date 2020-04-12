@@ -40,6 +40,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float fallDuration;
     [SerializeField]float horizontalAirResistance = .8f;
     [SerializeField]float verticalAirResistance = .5f;
+    [SerializeField]float fallForwardMomentDeceleration = .5f;
 
     [SerializeField]bool isGrounded;
     [SerializeField]bool wasGroundedLastFrame;
@@ -90,6 +91,8 @@ public class LocomotionController : MonoBehaviour
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
 
             weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
+
+            GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position);
         });
         GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
         {
@@ -122,6 +125,9 @@ public class LocomotionController : MonoBehaviour
             for (int i = 0; i < torches.Length; i++)
                 torches[i].SetActive(!torches[i].activeSelf);
         });
+
+        //undvik att låsa spelaren i idle mode
+        this.animator.SetBool("isAlert", true);
     }
     void Update()
     {
@@ -145,6 +151,7 @@ public class LocomotionController : MonoBehaviour
 
         if(velocityBeforeLosingGroundContact.magnitude > .01f)
            velocityBeforeLosingGroundContact *= Mathf.Pow(horizontalAirResistance, Time.deltaTime / Time.timeScale);
+
 
         CorrectStance();
         UpdateAnimator();
@@ -187,6 +194,7 @@ public class LocomotionController : MonoBehaviour
 
             float allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
             allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
+
             if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale)) // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
                 break;
             else if (allowedMoveDistance >= 0) // annars så vill vi flytta karaktären fram dit vi kommer kollidera
