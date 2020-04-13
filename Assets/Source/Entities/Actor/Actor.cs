@@ -2,6 +2,7 @@
 
 public class Actor : Entity
 {
+    protected Animator Animator { get; private set; }
     public Transform FocusPoint { get; private set; }
 
     // Använd inte Start/Awake i klasser som ärver ifrån Entity!
@@ -12,6 +13,7 @@ public class Actor : Entity
         base.Initalize();
 
         this.FocusPoint = this.transform.Find("focusPoint");
+        
         if (this.FocusPoint == null)
         {
             Debug.LogWarning(this.name + " is missing a focusPoint, using position of transform");
@@ -19,5 +21,7 @@ public class Actor : Entity
             this.FocusPoint.SetParent(this.transform);
             this.FocusPoint.position = this.transform.position;
         }
+
+        this.Animator = this.GetComponent<Animator>();
     }
 }

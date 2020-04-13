@@ -41,6 +41,6 @@ public class Entity : MonoBehaviour
     protected virtual void OnHealthZero()
     {
         //this.GetComponentInChildren<Animator>()?.SetTrigger("Death");
-        Destroy(this.transform.gameObject);
+        //Destroy(this.transform.gameObject);
     }
 }

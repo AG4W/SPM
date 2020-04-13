@@ -23,15 +23,15 @@ public class ForcePush : Ability
             float distanceModifier = Mathf.InverseLerp(distance, 0f, hits[i].distance);
 
             Rigidbody rb = hits[i].transform.GetComponent<Rigidbody>();
-            NonPlayerActor nap = hits[i].transform.root.GetComponent<NonPlayerActor>();
+            Pawn nap = hits[i].transform.root.GetComponent<Pawn>();
 
             Vector3 force = (hits[i].transform.root.position - ray.origin).normalized * power.Evaluate(base.DurationTimer01) * powerMultiplier * distanceModifier;
 
             //för icke-actors som fortfarande ska röra sig
             if (rb != null)
                 rb.AddForce(force, ForceMode.Impulse);
-            else if (nap != null)
-                nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
+            //else if (nap != null)
+            //    nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
         }
     }
 }

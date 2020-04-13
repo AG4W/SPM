@@ -354,7 +354,7 @@ MonoBehaviour:
     min: 0
   farFocusStart:
     m_OverrideState: 1
-    m_Value: 33.171776
+    m_Value: 12.653315
     min: 0
   farFocusEnd:
     m_OverrideState: 0
@@ -422,10 +422,10 @@ MonoBehaviour:
     min: 0.25
     max: 5
   temporalAccumulation:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   ghostingReduction:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.5
     min: 0
     max: 1

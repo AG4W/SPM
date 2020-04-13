@@ -21,15 +21,24 @@ public static class GlobalEvents
 
         events[(int)e].Add(a);
     }
+    public static void Unsubscribe(GlobalEvent e, Action<object[]> a)
+    {
+        events[(int)e].Remove(a);
+    }
     public static void Raise(GlobalEvent e, params object[] args)
     {
         if (events == null)
             Initialize();
 
-        //notera nullguard (?-operatorn) i mitten
-        //kommer krascha om vi invokar en null action
         for (int i = 0; i < events[(int)e].Count; i++)
-            events[(int)e][i]?.Invoke(args);
+        {
+            //kommer krascha om vi invokar en null action
+            //också dumt om vi har tomma subscribes, så ta bort dem
+            if (events[(int)e][i] == null)
+                events[(int)e].RemoveAt(i);
+
+            events[(int)e][i].Invoke(args);
+        }
     }
 }
 
@@ -37,12 +46,17 @@ public static class GlobalEvents
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
+    //player
     Jump,
     Roll,
     Fire,
     Reload,
     ToggleTorches,
-
     ForcePowerActivated,
+
+    //ui
     CurrentInteractableEntityChanged,
+
+    //ai
+    NoiseCreated,
 }

@@ -29,4 +29,11 @@ public static class Extensions
         Vector3 projection = dot * normal; // (Skalärprodukten mellan vektorn velocity och normaliserade vektorn normal) * normaliserade vektorn normal
         return -projection; // The normal force returned
     } // Calculation of the normal force
+    public static Vector3 ToInput(this Vector3 position, Transform origin)
+    {
+        return new Vector3(
+            Vector3.Dot(origin.transform.right, (position - origin.transform.position)),
+            0f,
+            Vector3.Dot(origin.transform.forward, (position - origin.transform.position)));
+    }
 }

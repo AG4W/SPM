@@ -6,6 +6,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]Transform jig;
 
     [SerializeField]Vector3 velocity;
+    [SerializeField]Vector3 velocityBeforeLosingGroundContact;
 
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
@@ -18,6 +19,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float minHeight = 1.1f;
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
+    [SerializeField]float skinWidth = .03f;
 
     [SerializeField]float staticFriction = .8f;
     [SerializeField]float dynamicFriction = .5f;
@@ -37,6 +39,7 @@ public class LocomotionController : MonoBehaviour
     [Header("Falling")]
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float fallDuration;
+    [SerializeField]float fallForwardMomentDeceleration = .5f;
 
     [SerializeField]bool isGrounded;
     [SerializeField]bool wasGroundedLastFrame;
@@ -71,6 +74,9 @@ public class LocomotionController : MonoBehaviour
 
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
+            if (isJumping || !isGrounded)
+                return;
+
             this.animator.SetFloat("castIndex", (int)((Ability)args[0]).AnimationIndex);
             this.animator.SetTrigger("cast");
             this.animator.SetLayerWeight(2, 1f);
@@ -84,6 +90,8 @@ public class LocomotionController : MonoBehaviour
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
 
             weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
+
+            GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position);
         });
         GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
         {
@@ -116,8 +124,10 @@ public class LocomotionController : MonoBehaviour
             for (int i = 0; i < torches.Length; i++)
                 torches[i].SetActive(!torches[i].activeSelf);
         });
-    }
 
+        //undvik att låsa spelaren i idle mode
+        this.animator.SetBool("isAlert", true);
+    }
     void Update()
     {
         UpdateGroundedStatus();
@@ -127,12 +137,19 @@ public class LocomotionController : MonoBehaviour
         {
             jumpTimer += (Time.deltaTime / Time.timeScale);
 
-            if (jumpTimer >= jumpDuration || (isGrounded && jumpTimer >= minimumJumpDuration))
+            if (jumpTimer >= jumpDuration || jumpTimer >= minimumJumpDuration && isGrounded)
             {
                 jumpTimer = 0f;
                 isJumping = false;
+
+                //om vi inte är grounded när vårt hopp tar slut
+                //spara vår senaste velocity och applicera den för att 
+                //falla korrekt?
             }
         }
+
+        if(velocityBeforeLosingGroundContact.magnitude > .01f)
+            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
 
         CorrectStance();
         UpdateAnimator();
@@ -144,44 +161,48 @@ public class LocomotionController : MonoBehaviour
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
         //applicera jump
-        velocity += GetJumpVelocity() * jumpAcceleration  * (Time.deltaTime / Time.timeScale);
+        if(isJumping)
+            velocity += GetJumpVelocity() * (gravitationalConstant + jumpAcceleration)  * (Time.deltaTime / Time.timeScale);
+        
+        if (!isGrounded)
+            velocity += velocityBeforeLosingGroundContact;
 
-        //snapa mot marken ifall vi precis landat så att vi inte flyter groundDistance ovanför
-        //if (!wasGroundedLastFrame && isGrounded)
-        //    velocity += Vector3.down * groundCheckDistance;
+        // apply air resistance
+        velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
 
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
-
         Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, float.PositiveInfinity);
 
+        int counter = 1;
         while (hit.transform != null)
         {
-
-            float allowedMoveDistance = .03f / Vector3.Dot(velocity.normalized, hit.normal); // får negativt avstånd som måste dras av från träffdistance för att hamna på SkinWidth avstånd (faller vi rakt ner, 90 deg, får vi -SkinWidth. Som går i oändlighet till 0)
-            allowedMoveDistance += hit.distance; // distans till träff minus anpassad SkinWidth
-            if (allowedMoveDistance > velocity.magnitude * Time.deltaTime) { break; } // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
-            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi röra oss fram dit och stanna...
-            {                                                                           //DELTA TIME????
-                //this.transform.position += CollisionTestT(velocity.normalized * allowedMoveDistance); // eftersom det vi vill röra oss denna frame är större än allowedMoveDist beöver vi inte köra *Time.deltaTime
+            float allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
+            allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
+            
+            if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale)) 
+                break;  // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
+            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi flytta karaktären fram dit
                 this.transform.position += velocity.normalized * allowedMoveDistance;
+
+            if (hit.distance <= velocity.magnitude)
+            {
+                Vector3 tnf = velocity.GetNormalForce(hit.normal);
+                velocity += tnf;
+                //ApplyFriction(tnf); // root motion hanterar vår rörlse i x/z-led
             }
-            //else if (allowedMoveDistance < 0) // något blev fel
-            //{
-            //    break;
-            //}
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
 
-            Vector3 tnf = velocity.GetNormalForce(hit.normal);
-            velocity += tnf;
-            ApplyFriction(tnf);
+            pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+            pointB = this.transform.position + (Vector3.up * collisionRadius);
+            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + skinWidth);
 
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out hit, velocity.magnitude + .03f);
+            counter++;
+            if (counter == 11)
+                break;
         }
 
-        velocity *= Mathf.Pow(airResistance, Time.deltaTime);
-        this.transform.position += velocity * Time.deltaTime;
+        this.transform.position += velocity * (Time.deltaTime / Time.timeScale);
     }
     void LateUpdate()
     {
@@ -197,7 +218,10 @@ public class LocomotionController : MonoBehaviour
         isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
 
         if (wasGroundedLastFrame && !isGrounded)
+        {
+            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
             fallDuration = 0f;
+        }
 
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
     }
@@ -280,7 +304,7 @@ public class LocomotionController : MonoBehaviour
         //men för trött för den matten atm
 
         //input heading
-        return this.transform.up * jumpCurve.Evaluate(jumpTimer);
+        return (this.transform.up * jumpCurve.Evaluate(jumpTimer));
     }
     void ApplyFriction(Vector3 normalForce)
     {
