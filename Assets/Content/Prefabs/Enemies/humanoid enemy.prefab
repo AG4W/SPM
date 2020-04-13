@@ -1353,16 +1353,18 @@ MonoBehaviour:
   healthRegenerationAmount: 0
   isDestructible: 1
   inputInterpolationSpeed: 2.5
-  detectionRange: 50
+  detectionRange: 25
   detectionFieldOfView: 0
-  aiRefreshRate: 0.1
+  aiRefreshRate: 0.01
   forceInfluenceModifier: 0.25
   target: {fileID: 0}
   weapon: {fileID: 5381753777502598215}
   hitbox: {fileID: 832565324}
-  displayDebugText: 1
+  startAlerted: 0
+  displayDebugText: 0
   ragdoll: {fileID: 2819088972049707628}
   model: {fileID: 5381753777979177286}
+  preferedCombatDistance: 20
 --- !u!95 &5381753778340850262
 Animator:
   serializedVersion: 3
