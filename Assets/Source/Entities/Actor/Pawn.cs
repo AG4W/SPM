@@ -78,7 +78,7 @@ public class Pawn : Actor
             refreshTimer = 0f;
 
             UpdateTargetStatus();
-            UpdateDestination();
+            UpdateAgentDestination();
         }
 
         UpdateInput();
@@ -105,7 +105,7 @@ public class Pawn : Actor
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Hit pawn for " + collision.relativeVelocity.magnitude + " damage");
+        Debug.Log("Hit " + this.name + " for " + collision.relativeVelocity.magnitude + " damage");
         base.Health.Update(-collision.relativeVelocity.magnitude);
     }
 
@@ -155,7 +155,7 @@ public class Pawn : Actor
         this.IsAlert = true;
         Memory[this.DistanceToTarget] = this.Target.transform.position;
     }
-    protected virtual void UpdateDestination()
+    protected virtual void UpdateAgentDestination()
     {
 
     }

@@ -32,9 +32,9 @@ public class DroneActor : Pawn
         this.transform.LookAt(base.Target.FocusPoint);
     }
 
-    protected override void UpdateDestination()
+    protected override void UpdateAgentDestination()
     {
-        base.UpdateDestination();
+        base.UpdateAgentDestination();
 
         if (Vector3.Distance(this.transform.position, base.DesiredPosition) < .25f)
             base.DesiredPosition = (base.DesiredPosition == idlePath[0] ? idlePath[1] : idlePath[0]);

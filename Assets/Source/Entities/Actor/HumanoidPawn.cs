@@ -53,9 +53,9 @@ public class HumanoidPawn : Pawn
     //detta händer konstant vid varje refresh
     //ett bättre sätt är att göra det rekursivt när AI'n är complete
     //så att AIn går mot ett mål, och först när vi når målet så kallar vi denna metod igen
-    protected override void UpdateDestination()
+    protected override void UpdateAgentDestination()
     {
-        base.UpdateDestination();
+        base.UpdateAgentDestination();
 
         if (CanSeeTarget)
         {
