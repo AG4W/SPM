@@ -113,6 +113,7 @@ public class LocomotionController : MonoBehaviour
                 return;
 
             velocityBeforeLosingGroundContact = this.velocity;
+            velocityBeforeLosingGroundContact.y = 0f;
             isJumping = true;
         });
         GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) =>
