@@ -1375,16 +1375,16 @@ MonoBehaviour:
   skinWidth: 0.03
   staticFriction: 0.5
   dynamicFriction: 0.4
-  airResistance: 0.2
+  airResistance: 0.5
   stepOverHeight: 0.5
-  groundCheckDistance: 0.2
-  jumpAcceleration: 2.55
+  groundCheckDistance: 1
+  jumpAcceleration: 7
   jumpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 2
+      value: 1
       inSlope: 0.08436378
       outSlope: 0.08436378
       tangentMode: 0
@@ -1393,22 +1393,23 @@ MonoBehaviour:
       outWeight: 0.048879836
     - serializedVersion: 3
       time: 1
-      value: 0.49920654
-      inSlope: 0
-      outSlope: 0
+      value: 0
+      inSlope: -1.9181119
+      outSlope: -1.9181119
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.023397624
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   jumpDuration: 1
-  minimumJumpDuration: 0.35
+  minimumJumpDuration: 0.5
   jumpTimer: 0
-  gravitationalConstant: 250
+  gravitationalConstant: 9.82
   fallDuration: 0
   fallForwardMomentDeceleration: 0.5
+  fallForwardVelocityDivider: 1.5
   isGrounded: 1
   wasGroundedLastFrame: 1
   isJumping: 0
