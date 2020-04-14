@@ -39,6 +39,7 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float fallDuration;
     [SerializeField]float fallForwardMomentDeceleration = .5f;
+    [SerializeField]float fallForwardVelocityDivider = 1.8f;
 
     [SerializeField]bool isGrounded;
     [SerializeField]bool wasGroundedLastFrame;
@@ -111,7 +112,8 @@ public class LocomotionController : MonoBehaviour
             if (isJumping || !isGrounded)
                 return;
 
-            animator.SetTrigger("jump");
+            velocityBeforeLosingGroundContact = this.velocity;
+            velocityBeforeLosingGroundContact.y = 0f;
             isJumping = true;
         });
         GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) =>
@@ -163,18 +165,21 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
+        Vector3 tempV = velocity;
         velocity = this.animator.velocity;
+        velocity.y = tempV.y;
+        
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
         //applicera jump
         if(isJumping)
             velocity += GetJumpVelocity() * (gravitationalConstant + jumpAcceleration)  * (Time.deltaTime / Time.timeScale);
         
-        if (!isGrounded)
-            velocity += velocityBeforeLosingGroundContact;
-
-        // apply air resistance
-        velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
+        if (isJumping || !isGrounded)
+        {
+            velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
+            velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
+        }
 
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
@@ -217,18 +222,23 @@ public class LocomotionController : MonoBehaviour
 
     void UpdateGroundedStatus()
     {
-        fallDuration += (isGrounded || isJumping) ? 0f : (Time.deltaTime / Time.timeScale);
-
-        Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
-        //offsetta lite uppåt för att få en mer reliable ground check
-        isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
-
-        if (wasGroundedLastFrame && !isGrounded)
+        if(isJumping)
+            isGrounded = false;
+        else
         {
-            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
-            fallDuration = 0f;
+            Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
+
+            //offsetta lite uppåt för att få en mer reliable ground check
+            isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
+
+            if (wasGroundedLastFrame && !isGrounded)
+            {
+                velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
+                fallDuration = 0f;
+            }
         }
 
+        fallDuration += (isGrounded || isJumping) ? 0f : (Time.deltaTime / Time.timeScale);
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
     }
     void GatherInput()
@@ -289,6 +299,7 @@ public class LocomotionController : MonoBehaviour
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isJumping", isJumping);
     }
     void UpdateRotation()
     {
@@ -310,7 +321,7 @@ public class LocomotionController : MonoBehaviour
         //men för trött för den matten atm
 
         //input heading
-        return (this.transform.up * jumpCurve.Evaluate(jumpTimer));
+        return Vector3.up * jumpCurve.Evaluate(jumpTimer);
     }
     void ApplyFriction(Vector3 normalForce)
     {
