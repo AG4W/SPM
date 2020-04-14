@@ -22,6 +22,7 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]float staticFriction = .8f;
     [SerializeField]float dynamicFriction = .5f;
+    [SerializeField]float airResistance = .2f;
 
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .2f;
@@ -37,8 +38,6 @@ public class LocomotionController : MonoBehaviour
     [Header("Falling")]
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float fallDuration;
-    [SerializeField]float horizontalAirResistance = .8f;
-    [SerializeField]float verticalAirResistance = .5f;
     [SerializeField]float fallForwardMomentDeceleration = .5f;
 
     [SerializeField]bool isGrounded;
@@ -156,8 +155,7 @@ public class LocomotionController : MonoBehaviour
         }
 
         if(velocityBeforeLosingGroundContact.magnitude > .01f)
-           velocityBeforeLosingGroundContact *= Mathf.Pow(horizontalAirResistance, Time.deltaTime / Time.timeScale);
-
+            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
 
         CorrectStance();
         UpdateAnimator();
@@ -165,52 +163,40 @@ public class LocomotionController : MonoBehaviour
     }
     void OnAnimatorMove()
     {
-        // Ackumulera gravity och använd animatorns rörelse i x&z-led
-        Vector3 tempV = velocity; 
         velocity = this.animator.velocity;
-        velocity.y = tempV.y;
-
         //apply gravity
         velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
-
         //applicera jump
-        if (isJumping)
-        {
-            velocity += GetJumpVelocity() * (gravitationalConstant + jumpAcceleration) * (Time.deltaTime / Time.timeScale);
-        }
-
-        // Bibehåll velocity i x&z-led, innan vi lämnade marken. airResistance appliceras
+        if(isJumping)
+            velocity += GetJumpVelocity() * (gravitationalConstant + jumpAcceleration)  * (Time.deltaTime / Time.timeScale);
+        
         if (!isGrounded)
-        {
             velocity += velocityBeforeLosingGroundContact;
-            tempV = velocity;
-            velocity *= Mathf.Pow(verticalAirResistance, Time.deltaTime / Time.timeScale);
-            velocity.x = tempV.x;
-            velocity.z = tempV.z;
-        }
+
+        // apply air resistance
+        velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
 
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
-        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, Mathf.Infinity);
+        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, float.PositiveInfinity);
 
         int counter = 1;
         while (hit.transform != null)
         {
-
             float allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
             allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
+            
+            if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale)) 
+                break;  // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
+            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi flytta karaktären fram dit
+                this.transform.position += velocity.normalized * allowedMoveDistance;
 
-            if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale)) // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
-                break;
-            else if (allowedMoveDistance >= 0) // annars så vill vi flytta karaktären fram dit vi kommer kollidera
-                    this.transform.position += velocity.normalized * allowedMoveDistance;
-
-            if (hit.distance <= velocity.magnitude) // Om vi kommer träffa marken appliceras normalkraft
+            if (hit.distance <= velocity.magnitude)
             {
                 Vector3 tnf = velocity.GetNormalForce(hit.normal);
                 velocity += tnf;
-                //ApplyFriction(tnf); // Behövs kanske för att motverka sliding på slopes
+                //ApplyFriction(tnf); // root motion hanterar vår rörlse i x/z-led
             }
 
             pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
