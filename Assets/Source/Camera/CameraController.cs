@@ -11,8 +11,6 @@ public class CameraController : MonoBehaviour
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = 5f;
 
-    [SerializeField]GameObject target;
-
     [SerializeField]Vector3 defaultPosition;
     [SerializeField]Vector3 ironSightPosition;
     [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.75f, 0f);
@@ -36,21 +34,24 @@ public class CameraController : MonoBehaviour
     [SerializeField]float ironSightDoFStrength = 7f;
 
     Camera camera;
+    GameObject target;
 
     bool inIronSights;
 
     void Awake()
     {
-        profile.TryGet(out dof);
-
         Cursor.lockState = CursorLockMode.Locked;
 
+        profile.TryGet(out dof);
         camera = this.GetComponentInChildren<Camera>();
+        target = FindObjectOfType<LocomotionController>().gameObject;
+
+        if (target == null)
+            Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
     }
     void Update()
     {
         GatherInput();
-
         UpdateSettings();
     }
 
@@ -99,7 +100,6 @@ public class CameraController : MonoBehaviour
     void RaycastBack()
     {
         Physics.Raycast(camera.transform.position, -camera.transform.forward, out RaycastHit hit, cameraWhiskerDistance);
-
         cameraZBuffer = Mathf.Lerp(cameraZBuffer, hit.transform != null ? -hit.distance : 0f, translationSpeed * (Time.deltaTime / Time.timeScale));
     }
 }

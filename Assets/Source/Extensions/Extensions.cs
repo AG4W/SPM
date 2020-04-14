@@ -36,4 +36,19 @@ public static class Extensions
             0f,
             Vector3.Dot(origin.transform.forward, (position - origin.transform.position)));
     }
+
+    //transform
+    public static Transform FindRecursively(this Transform origin, string name)
+    {
+        if (origin.Find(name) != null)
+            return origin.Find(name);
+
+        foreach (Transform child in origin)
+        {
+            if (child.FindRecursively(name) != null)
+                return child.FindRecursively(name);
+        }
+
+        return null;
+    }
 }

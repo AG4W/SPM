@@ -32,17 +32,12 @@ public class DroneActor : Pawn
         this.transform.LookAt(base.Target.FocusPoint);
     }
 
-    protected override void UpdateDestination()
+    protected override void OnDesiredPositionReached()
     {
-        base.UpdateDestination();
-
-        if (Vector3.Distance(this.transform.position, base.DesiredPosition) < .25f)
-            base.DesiredPosition = (base.DesiredPosition == idlePath[0] ? idlePath[1] : idlePath[0]);
+        base.OnDesiredPositionReached();
+        base.SetDesiredPosition(base.DesiredPosition == idlePath[0] ? idlePath[1] : idlePath[0]);
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-    }
     void OnCollisionStay(Collision collision)
     {
         base.ModifyVelocity(collision.rigidbody.velocity * Time.deltaTime);
