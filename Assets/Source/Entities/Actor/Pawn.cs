@@ -181,7 +181,7 @@ public class Pawn : Actor
     protected void SetDesiredPosition(Vector3 position)
     {
         this.DesiredPosition = position;
-        this.Agent.SetDestination(this.DesiredPosition);
+        this.Agent.SetDestination(position);
     }
 
     protected virtual void Attack()
