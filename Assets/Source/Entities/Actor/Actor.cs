@@ -11,8 +11,7 @@ public class Actor : Entity
     protected override void Initalize()
     {
         base.Initalize();
-
-        this.FocusPoint = this.transform.Find("focusPoint");
+        this.FocusPoint = this.transform.FindRecursively("focusPoint");
         
         if (this.FocusPoint == null)
         {

@@ -862,11 +862,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2174008459269845899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 9199550058994552007}
-  m_RootOrder: 1
+  m_Father: {fileID: 8509715866008494786}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2202741384370852039
 GameObject:
@@ -1344,7 +1344,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1652584252332481996}
-  - {fileID: 3043556384347304534}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
@@ -1363,7 +1362,6 @@ MonoBehaviour:
   torches:
   - {fileID: 4329522906030489120}
   - {fileID: 1228346417345086382}
-  jig: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
   targetInput: {x: 0, y: 0, z: 0}
@@ -1408,7 +1406,7 @@ MonoBehaviour:
   jumpDuration: 1
   minimumJumpDuration: 0.35
   jumpTimer: 0
-  gravitationalConstant: 90
+  gravitationalConstant: 250
   fallDuration: 0
   fallForwardMomentDeceleration: 0.5
   isGrounded: 1
@@ -1621,6 +1619,7 @@ Transform:
   - {fileID: 3555664608887655735}
   - {fileID: 873147441911806649}
   - {fileID: 1182371414509270095}
+  - {fileID: 3043556384347304534}
   m_Father: {fileID: 4916164633409010349}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

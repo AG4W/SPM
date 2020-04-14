@@ -18,8 +18,6 @@ public class InteractionController : MonoBehaviour
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
         Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, mask);
 
-        Debug.Log(hit.transform.name);
-
         if (hit.transform != null)
         {
             InteractableEntity entity = hit.transform.GetComponent<InteractableEntity>();

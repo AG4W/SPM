@@ -18,20 +18,17 @@ public class HumanoidPawn : Pawn
 
         base.Agent.updatePosition = false;
         base.Agent.updateRotation = false;
-
-        base.DesiredPosition = this.transform.position;
     }
 
     void OnAnimatorMove()
     {
-        Debug.DrawLine(this.transform.position, base.Agent.destination, Color.blue);
         base.Velocity = base.Animator.deltaPosition;
     }
 
     protected override void UpdateRotation()
     {
         base.UpdateRotation();
-        this.transform.LookAt(CanSeeTarget ? base.Target.transform.position : base.DesiredPosition, Vector3.up);
+        this.transform.rotation = Quaternion.LookRotation(base.HasSeenTarget ? base.HeadingToTarget.normalized : (base.DesiredPosition - this.transform.position).normalized, Vector3.up);
     }
     protected override void UpdateAnimator()
     {
@@ -45,81 +42,82 @@ public class HumanoidPawn : Pawn
         base.Animator.SetBool("isGrounded", true);
     }
 
-    protected override void UpdateTargetStatus()
+    protected override void OnDesiredPositionReached()
     {
-        base.UpdateTargetStatus();
-    }
+        base.OnDesiredPositionReached();
 
-    //detta händer konstant vid varje refresh
-    //ett bättre sätt är att göra det rekursivt när AI'n är complete
-    //så att AIn går mot ett mål, och först när vi når målet så kallar vi denna metod igen
-    protected override void UpdateAgentDestination()
-    {
-        base.UpdateAgentDestination();
+        Vector3 newPos;
 
         if (CanSeeTarget)
         {
-            if(base.DistanceToTarget > (preferedCombatDistance * 2))
+            if (base.DistanceToTarget > (preferedCombatDistance * 2))
             {
-                base.DesiredPosition = base.Target.transform.position + (base.HeadingFromTarget.normalized * preferedCombatDistance);
-                inputModifier = 2f;
+                base.ActionDebugStatus = "Charging to prefered combat distance.";
 
-                base.DebugText += "\nCharging to prefered combat distance.";
+                newPos = base.Target.transform.position + (base.HeadingFromTarget.normalized * preferedCombatDistance);
+                inputModifier = 2f;
             }
             else
             {
-                Vector3 optimalPos = this.transform.position + (Random.insideUnitSphere * (preferedCombatDistance / 2));
+                Vector3 optimalPos = this.transform.position;
                 float optimalNormal = 1f;
 
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     NavMesh.FindClosestEdge(this.transform.position + (Random.insideUnitSphere * (preferedCombatDistance / 2)), out NavMeshHit hit, -1);
                     float d = Vector3.Dot(hit.normal, base.HeadingToTarget);
 
-                    if(d < optimalNormal)
+                    Debug.DrawLine(this.transform.position, hit.position, Color.yellow, 1f);
+
+                    if (d < optimalNormal)
                     {
                         d = optimalNormal;
                         optimalPos = hit.position;
                     }
                 }
 
-                base.DebugText += "\nLooking for cover.";
-                base.DesiredPosition = optimalPos;
+                base.ActionDebugStatus = "Looking for cover.";
+
+                newPos = optimalPos;
                 inputModifier = 1f;
             }
         }
         else
         {
-            if (Vector3.Distance(base.DesiredPosition, this.transform.position) < .5f)
+            if (HasSeenTarget)
             {
-                Vector3 newDesiredPosition;
+                base.ActionDebugStatus = "Hunting player.";
 
-                //ifall vi har hört något
-                if (base.Memory.Count > 0)
-                {
-                    base.DebugText += "\nInvestigating noise.";
-                    newDesiredPosition = base.Memory[base.Memory.Keys.Min()];
-                    base.Memory.Remove(base.Memory.Keys.Min());
-                    inputModifier = 1f;
-                }
-                else
-                {
-                    //fallbackbeteende är att vandra runt randomly
-                    base.DebugText += "\nIdling.";
-                    NavMesh.SamplePosition(this.transform.position + (Random.insideUnitSphere * 10f), out NavMeshHit hit, 10f, -1);
-                    newDesiredPosition = hit.position;
-                    inputModifier = .5f;
-                }
+                newPos = base.Target.transform.position;
+                inputModifier = 1f;
+            }
+            //ifall vi har hört något
+            else if (base.Memory.Count > 0)
+            {
+                base.ActionDebugStatus = "Investigating noise.";
 
-                base.DesiredPosition = newDesiredPosition;
+                newPos = base.Memory[base.Memory.Keys.Min()];
+                base.Memory.Remove(base.Memory.Keys.Min());
+                inputModifier = 1f;
             }
             else
-                base.DebugText += "\nMoving to new position.";
+            {
+                //fallbackbeteende är att vandra runt randomly
+                base.ActionDebugStatus = "Idling.";
+
+                NavMesh.SamplePosition(this.transform.position + (Random.insideUnitSphere * 10f), out NavMeshHit hit, 10f, -1);
+                newPos = hit.position;
+                inputModifier = .5f;
+            }
         }
 
-        base.Agent.SetDestination(base.DesiredPosition);
-        base.TargetInput = base.Agent.nextPosition.ToInput(this.transform).normalized;
+        base.SetDesiredPosition(newPos);
         base.TargetInput *= inputModifier;
+    }
+    protected override void OnNoiseCreated(object[] args)
+    {
+        base.OnNoiseCreated(args);
+        OnDesiredPositionReached();
     }
 
     protected override void OnHealthChanged(float current)

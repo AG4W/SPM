@@ -3,7 +3,6 @@
 public class LocomotionController : MonoBehaviour
 {
     [SerializeField]GameObject[] torches;
-    [SerializeField]Transform jig;
 
     [SerializeField]Vector3 velocity;
     [SerializeField]Vector3 velocityBeforeLosingGroundContact;
@@ -53,7 +52,10 @@ public class LocomotionController : MonoBehaviour
 
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
-    
+
+    Transform jig;
+    Animator animator;
+
     float currentHeight { 
         get 
         {
@@ -67,9 +69,13 @@ public class LocomotionController : MonoBehaviour
         } 
     }
 
-    Animator animator;
     void Awake()
     {
+        jig = FindObjectOfType<CameraController>().transform;
+
+        if (jig == null)
+            Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
+
         animator = this.GetComponentInChildren<Animator>();
 
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Pawn : Actor
 {
+    string debugText;
 
     [SerializeField]float inputInterpolationSpeed = 2.5f;
 
@@ -16,30 +17,31 @@ public class Pawn : Actor
     [SerializeField]float forceInfluenceModifier = .25f;
     float refreshTimer;
 
-    [SerializeField]Actor target;
-
     [SerializeField]WeaponController weapon;
     [SerializeField]Collider hitbox;
 
     [SerializeField]bool startAlerted = false;
     [SerializeField]bool displayDebugText = true;
 
-    protected string DebugText { get; set; }
+    protected string TargetDebugStatus { get; set; }
+    protected string ActionDebugStatus { get; set; }
 
-    protected float DistanceToTarget { get { return Vector3.Distance(this.transform.position, target.transform.position); } }
+    protected float DistanceToTarget { get { return Vector3.Distance(this.transform.position, this.Target.transform.position); } }
+    protected float DistanceToDesiredPosition { get { return Vector3.Distance(this.transform.position, this.DesiredPosition); } }
     protected float AngleToTarget { get { return Vector3.Dot(this.HeadingToTarget.normalized, this.transform.forward); } }
 
-    protected Vector3 HeadingToTarget { get { return target.transform.position - this.transform.position; } }
-    protected Vector3 HeadingFromTarget { get { return this.transform.position - target.transform.position; } }
-    protected Vector3 DesiredPosition { get; set; }
+    protected Vector3 HeadingToTarget { get { return this.Target.transform.position - this.transform.position; } }
+    protected Vector3 HeadingFromTarget { get { return this.transform.position - this.Target.transform.position; } }
+    protected Vector3 DesiredPosition { get; private set; }
     protected Vector3 TargetInput { get; set; }
     protected Vector3 ActualInput { get; private set; }
 
-    protected Actor Target { get { return target; } }
+    protected Actor Target { get; private set; }
     protected NavMeshAgent Agent { get; private set; }
 
     protected SortedDictionary<float, Vector3> Memory { get; } = new SortedDictionary<float, Vector3>();
     protected bool IsAlert { get; set; }
+    protected bool HasSeenTarget { get; private set; }
 
     public float ForceInfluenceModifier { get { return forceInfluenceModifier; } }
     public Vector3 Velocity { get; protected set; }
@@ -49,26 +51,35 @@ public class Pawn : Actor
     protected override void Initalize()
     {
         base.Initalize();
-
         this.Agent = this.GetComponent<NavMeshAgent>();
+        this.Target = FindObjectOfType<LocomotionController>().GetComponent<Actor>();
+
+        if (this.Target == null)
+            Debug.LogError(this.name + " could not find player character, did you forget to drag and drop the prefab into your scene?", this.gameObject);
+
         GlobalEvents.Subscribe(GlobalEvent.NoiseCreated, OnNoiseCreated);
 
         if (!startAlerted)
             this.IsAlert = false;
+
+        SetDesiredPosition(this.transform.position);
     }
 
     void Update()
     {
-        if (target == null)
+        if (this.Target == null)
             return;
 
         if (displayDebugText)
         {
-            DebugText =
+            debugText =
             "Distance: " + this.DistanceToTarget + "\n" +
-            "Angle: " + this.AngleToTarget + "\n";
+            "Angle: " + this.AngleToTarget + "\n" +
+            TargetDebugStatus + "\n" +
+            ActionDebugStatus;
 
-            Debug.DrawLine(this.transform.position + Vector3.up, target.transform.position + Vector3.up, CanSeeTarget ? Color.green : Color.red);
+            Debug.DrawLine(base.FocusPoint.position, this.Target.FocusPoint.position, CanSeeTarget ? Color.green : Color.red);
+            Debug.DrawLine(base.FocusPoint.position, this.DesiredPosition, Color.blue);
         }
 
         refreshTimer += Time.deltaTime;
@@ -76,10 +87,11 @@ public class Pawn : Actor
         if (refreshTimer >= aiRefreshRate)
         {
             refreshTimer = 0f;
-
             UpdateTargetStatus();
-            UpdateAgentDestination();
         }
+
+        if (this.DistanceToDesiredPosition < 1f)
+            OnDesiredPositionReached();
 
         UpdateInput();
         UpdateVelocity();
@@ -99,18 +111,19 @@ public class Pawn : Actor
             return;
 
         var position = Camera.main.WorldToScreenPoint(this.transform.position + (Vector3.up * 3f));
-        var textSize = GUI.skin.label.CalcSize(new GUIContent(DebugText));
-        GUI.Label(new Rect(position.x, Screen.height - position.y, textSize.x, textSize.y), DebugText);
+        var textSize = GUI.skin.label.CalcSize(new GUIContent(debugText));
+        GUI.Label(new Rect(position.x, Screen.height - position.y, textSize.x, textSize.y), debugText);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Hit " + this.name + " for " + collision.relativeVelocity.magnitude + " damage");
+        //Debug.Log("Hit " + this.name + " for " + collision.relativeVelocity.magnitude + " damage");
         base.Health.Update(-collision.relativeVelocity.magnitude);
     }
 
     protected virtual void UpdateInput()
     {
+        this.TargetInput = this.Agent.nextPosition.ToInput(this.transform).normalized;
         this.ActualInput = Vector3.Lerp(this.ActualInput, this.TargetInput, inputInterpolationSpeed * Time.deltaTime);
     }
     protected virtual void UpdateVelocity()
@@ -133,39 +146,54 @@ public class Pawn : Actor
     {
         if (this.DistanceToTarget > detectionRange)
         {
-            DebugText += "<color=red>Target outside of detection range</color>\n";
+            TargetDebugStatus = "<color=red>Target outside of detection range</color>";
             this.CanSeeTarget = false;
             return;
         }
         if (this.AngleToTarget < detectionFieldOfView)
         {
-            DebugText += "<color=red>Target outside of field of view</color>\n";
+            TargetDebugStatus = "<color=red>Target outside of field of view</color>";
             this.CanSeeTarget = false;
             return;
         }
-        //if (Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position))
-        //{
-        //    debugText += "<color=red>Cant see target due to line of sight obstruction</color>\n";
-        //    this.CanSeeTarget = false;
-        //    return;
-        //}
+        if (Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position, out RaycastHit hit, 1 << LayerMask.GetMask("Player", "Enemy")))
+        {
+            Debug.DrawLine(base.FocusPoint.position, hit.point, Color.magenta);
 
-        DebugText += "<color=green>Can see target!</color>";
+            TargetDebugStatus = "<color=red>Cant see target due to line of sight obstruction</color>";
+            this.CanSeeTarget = false;
+            return;
+        }
+
+        if (!this.HasSeenTarget)
+            this.HasSeenTarget = true;
+
+        TargetDebugStatus = "<color=green>Can see target!</color>";
         this.CanSeeTarget = true;
         this.IsAlert = true;
         Memory[this.DistanceToTarget] = this.Target.transform.position;
     }
-    protected virtual void UpdateAgentDestination()
+    /// <summary>
+    /// Set desired position of pawn.
+    /// NavMeshAgent will attempt to navigate to this point as close as possible.
+    /// </summary>
+    /// <param name="position"></param>
+    protected void SetDesiredPosition(Vector3 position)
     {
-
+        this.DesiredPosition = position;
+        this.Agent.SetDestination(this.DesiredPosition);
     }
 
     protected virtual void Attack()
     {
-        weapon.Shoot(this.target.FocusPoint.position);
+        weapon.Shoot(this.Target.FocusPoint.position);
     }
 
-    void OnNoiseCreated(object[] args)
+    protected virtual void OnDesiredPositionReached()
+    {
+
+    }
+    protected virtual void OnNoiseCreated(object[] args)
     {
         if (this.Memory.Count > 10)
             this.Memory.Clear();
