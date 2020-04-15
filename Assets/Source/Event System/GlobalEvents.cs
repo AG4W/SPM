@@ -49,18 +49,21 @@ public enum GlobalEvent
     //player input
     SetTargetInput,
     SetTargetStance,
-    SetMovementSpeed,
+    SetMovementMode,
 
     //player locomotion
-    UpdatePlayerRotation,
     UpdatePlayerGroundedStatus,
 
     //velocity
     ModifyPlayerVelocity,
 
+    //IK
+    SetPlayerLookAtPosition,
+    SetPlayerLookAtWeights,
+
     Jump,
     Roll,
-    Fire,
+    FireWeapon,
     Reload,
     ToggleTorches,
     ForcePowerActivated,

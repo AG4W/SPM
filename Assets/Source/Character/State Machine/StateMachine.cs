@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class StateMachine
@@ -59,7 +60,7 @@ public class StateMachine
         // Känns som att det är bättre om vi kastar exceptions i loggen
         // ifall något viktigt saknar states så att vi märker felet innan build
         //currentState?.Enter(); // Om jag fick ett state, starta den
-        current = states.Last();
+        current = states.FirstOrDefault(s => s.GetType() == typeof(IdleState));
         current.Enter();
     }
 

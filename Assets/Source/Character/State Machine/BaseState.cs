@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
 
-public class BaseState : State
+public abstract class BaseState : State
 {
+    [Range(0f, 1f)][SerializeField]float total = 1f;
+    [Range(0f, 1f)][SerializeField]float body = .25f;
+    [Range(0f, 1f)][SerializeField]float head = 1f;
+    [Range(0f, 1f)][SerializeField]float eyes = 1f;
+    [Range(0f, 1f)][SerializeField]float clamp = .5f;
+
     [SerializeField]float rotationSpeed = 5f;
 
     [SerializeField]float gravitationalConstant = 9.82f;
@@ -18,6 +24,8 @@ public class BaseState : State
     }
     public override void Tick()
     {
+        UpdateAnimatorIK();
+
         ((Animator)base.Context["animator"]).SetFloat("x", base.Controller.ActualInput.x);
         ((Animator)base.Context["animator"]).SetFloat("z", base.Controller.ActualInput.z);
 
@@ -31,7 +39,17 @@ public class BaseState : State
         //rotation
         base.Controller.transform.rotation = Quaternion.Slerp(base.Controller.transform.rotation, Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f), rotationSpeed * (Time.deltaTime / Time.timeScale));
     }
-    public override void Exit()
+
+    void UpdateAnimatorIK()
     {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+            GlobalEvents.Raise(GlobalEvent.SetPlayerLookAtPosition, hit.point);
+        else
+            GlobalEvents.Raise(GlobalEvent.SetPlayerLookAtPosition, ray.GetPoint(10f));
+
+        Debug.DrawLine(((Actor)base.Context["actor"]).FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
+        GlobalEvents.Raise(GlobalEvent.SetPlayerLookAtWeights, new float[] { total, body, head, eyes, clamp });
     }
 }

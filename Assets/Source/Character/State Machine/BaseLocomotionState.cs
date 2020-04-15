@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
 
-public class BaseLocomotionState : BaseState
+public abstract class BaseLocomotionState : BaseState
 {
-    public override void Enter()
+    protected override void OnInitialize()
     {
-        base.Enter();
+        base.OnInitialize();
+
+        GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) => base.TransitionTo<JumpState>());
+        GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) => base.TransitionTo<RollState>());
     }
     public override void Tick()
     {
         base.Tick();
-        
+
+        if (!base.Controller.IsGrounded)
+            base.TransitionTo<FallState>();
+
         ((Animator)base.Context["animator"]).SetFloat("actualStance", base.Controller.ActualStance);
 
         GlobalEvents.Raise(GlobalEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
-    }
-    public override void Exit()
-    {
-        base.Exit();
     }
 }

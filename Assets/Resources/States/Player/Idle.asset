@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed0fdbf11e2019848a3abb5d13c73690, type: 3}
   m_Name: Idle
   m_EditorClassIdentifier: 
+  total: 1
+  body: 0.5
+  head: 1
+  eyes: 1
+  clamp: 1
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5

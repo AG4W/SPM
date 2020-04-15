@@ -12,6 +12,9 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]Vector3 actualInput;
 
     [SerializeField]Vector3 lookAtPosition;
+    [SerializeField]float[] targetLookAtWeights;
+    [SerializeField]float[] actualLookAtWeights;
+    [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
     [SerializeField]MovementMode mode = MovementMode.Jog;
     [SerializeField]float inputModifier = 1f;
@@ -82,20 +85,22 @@ public class LocomotionController : MonoBehaviour
             Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
 
         animator = this.GetComponentInChildren<Animator>();
+        actualLookAtWeights = new float[5];
 
         //Input
         GlobalEvents.Subscribe(GlobalEvent.SetTargetInput, SetTargetInput);
-        GlobalEvents.Subscribe(GlobalEvent.SetMovementSpeed, SetMovementSpeed);
+        GlobalEvents.Subscribe(GlobalEvent.SetMovementMode, SetMovementSpeed);
         GlobalEvents.Subscribe(GlobalEvent.SetTargetStance, SetTargetStance);
-
-        //Locomotion
-        GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerRotation, UpdateRotation);
 
         //velocity
         GlobalEvents.Subscribe(GlobalEvent.ModifyPlayerVelocity, ModifyVelocity);
 
         //GroundCheck
         GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerGroundedStatus, (object[] args) => UpdateGroundedStatus());
+
+        //IK
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerLookAtPosition, SetLookAtPosition);
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerLookAtWeights, SetLookAtWeights);
 
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
@@ -106,34 +111,12 @@ public class LocomotionController : MonoBehaviour
             this.animator.SetTrigger("cast");
             this.animator.SetLayerWeight(2, 1f);
         });
-        GlobalEvents.Subscribe(GlobalEvent.Fire, (object[] args) =>
-        {
-            if (!isGrounded)
-                return;
-
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-            Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
-
-            weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
-
-            GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position);
-        });
         GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
         {
             if (!isGrounded)
                 return;
 
             weapon.Reload();
-        });
-        GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) =>
-        {
-            if (!isGrounded)
-                return;
-
-            if (actualInput.magnitude < .1f)
-                actualInput = Vector3.forward;
-
-            animator.SetTrigger("roll");
         });
         //flytta detta till en separat controller sen, borde nog inte vara här
         GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
@@ -151,6 +134,8 @@ public class LocomotionController : MonoBehaviour
                 ["controller"] = this,
                 ["jig"] = FindObjectOfType<CameraController>(),
                 ["animator"] = this.GetComponent<Animator>(),
+                ["actor"] = this.GetComponent<Actor>(),
+                ["weapon"] = this.weapon,
             });
     }
     void Update()
@@ -213,6 +198,8 @@ public class LocomotionController : MonoBehaviour
     void OnAnimatorIK(int layerIndex)
     {
         //kommer lookatgrejs här sen
+        animator.SetLookAtPosition(lookAtPosition);
+        animator.SetLookAtWeight(actualLookAtWeights[0], actualLookAtWeights[1], actualLookAtWeights[2], actualLookAtWeights[3], actualLookAtWeights[4]);
     }
     void LateUpdate()
     {
@@ -224,22 +211,19 @@ public class LocomotionController : MonoBehaviour
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualStance = Mathf.Lerp(actualStance, targetStance, (combatInterpolationSpeed * 2f) * (Time.deltaTime / Time.timeScale));
 
+        for (int i = 0; i < targetLookAtWeights.Length; i++)
+            actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+
         inIronSights = Input.GetKey(KeyCode.Mouse1);
 
-        if (Input.GetKey(KeyCode.Mouse0))
-            GlobalEvents.Raise(GlobalEvent.Fire);
+        if (Input.GetKeyDown(KeyCode.Space))
+            GlobalEvents.Raise(GlobalEvent.Jump); 
+        if (Input.GetKeyDown(KeyCode.V))
+            GlobalEvents.Raise(GlobalEvent.Roll);
         if (Input.GetKeyDown(KeyCode.R))
             GlobalEvents.Raise(GlobalEvent.Reload);
         if (Input.GetKeyDown(KeyCode.F))
             GlobalEvents.Raise(GlobalEvent.ToggleTorches);
-
-        if (!isGrounded)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            GlobalEvents.Raise(GlobalEvent.Jump);
-        if (Input.GetKeyDown(KeyCode.V))
-            GlobalEvents.Raise(GlobalEvent.Roll);
     }
 
     void UpdateAnimator()
@@ -315,32 +299,19 @@ public class LocomotionController : MonoBehaviour
         }
     }
 
-    void UpdateRotation(object[] args)
+    void SetLookAtPosition(object[] args)
     {
-        
+        lookAtPosition = (Vector3)args[0];
+    }
+    void SetLookAtWeights(object[] args)
+    {
+        targetLookAtWeights = (float[])args[0];
     }
 
     void ModifyVelocity(object[] args)
     {
         this.velocity += (Vector3)args[0];
     }
-
-    void ApplyFriction(Vector3 normalForce)
-    {
-        /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
-         * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
-         * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
-         */
-        if (velocity.magnitude < (normalForce.magnitude * staticFriction))
-        {
-            velocity.x = 0f;
-            velocity.z = 0f;
-        }
-        else
-        {
-            velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
-        }
-    } // Here is Friction calculated with normalForce and applied to velocity
 }
 public enum MovementMode
 {
