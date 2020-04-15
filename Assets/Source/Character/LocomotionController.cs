@@ -155,6 +155,7 @@ public class LocomotionController : MonoBehaviour
         CorrectStance();
         UpdateAnimator();
     }
+
     void OnAnimatorMove()
     {
         velocity.x = this.animator.velocity.x;
@@ -164,34 +165,35 @@ public class LocomotionController : MonoBehaviour
         //måste ske i sync med animatorn
         machine.Tick();
 
-        //if (!isGrounded)
-        //{
-        //    velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
-        //    velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
-        //}
-
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
+        CheckCollision();
+
+        this.transform.position += velocity * (Time.deltaTime / Time.timeScale);
+    }
+    void CheckCollision()
+    {
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
-        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, float.PositiveInfinity);
+        Physics.CapsuleCast(pointA, pointB, collisionRadius, velocity.normalized, out RaycastHit hit, Mathf.Infinity);
+
+        float allowedMoveDistance;
 
         int counter = 1;
         while (hit.transform != null)
         {
-            float allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
+            allowedMoveDistance = skinWidth / Vector3.Dot(velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
             allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
-            
-            if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale)) 
+
+            if (allowedMoveDistance > velocity.magnitude * (Time.deltaTime / Time.timeScale))
                 break;  // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
+
             else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi flytta karaktären fram dit
                 this.transform.position += velocity.normalized * allowedMoveDistance;
 
             if (hit.distance <= velocity.magnitude)
-            {
-                Vector3 tnf = velocity.GetNormalForce(hit.normal);
-                velocity += tnf;
-                //ApplyFriction(tnf); // root motion hanterar vår rörlse i x/z-led
-            }
+                velocity += velocity.GetNormalForce(hit.normal);
+
+            CheckOverlap();
 
             pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
             pointB = this.transform.position + (Vector3.up * collisionRadius);
@@ -201,8 +203,65 @@ public class LocomotionController : MonoBehaviour
             if (counter == 11)
                 break;
         }
+    }
+    void CheckOverlap()
+    {
+        Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+        Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
 
-        this.transform.position += velocity * (Time.deltaTime / Time.timeScale);
+        Vector3 closestPoint;
+        Vector3 hitDirection;
+        float hitDist;
+
+        bool overlapCheckA = Physics.CheckSphere(pointA, collisionRadius);
+        bool overlapCheckB = Physics.CheckSphere(pointB, collisionRadius);
+
+        int counter = 0;
+        while (overlapCheckA == true || overlapCheckB == true)
+        {
+            Collider[] overlapCollidersA = Physics.OverlapSphere(pointA, collisionRadius);
+            if (overlapCollidersA.Length > 0)
+                for (int i = 0; i < overlapCollidersA.Length; i++)
+                {
+                    closestPoint = overlapCollidersA[i].ClosestPoint(pointA); // punkt i den överlappande collidern som är närmast centrum på sfären
+
+                    hitDist = Vector3.Distance(pointA, closestPoint);
+                    hitDirection = closestPoint - pointA;
+
+                    this.transform.position += -hitDirection.normalized * (collisionRadius - hitDist + skinWidth); // Vi vill flytta oss bakåt: radien på sfären minus distans
+
+                    velocity += velocity.GetNormalForce(-hitDirection.normalized); // Applicera normalkraft 
+
+                    // Uppdatera pointA/B
+                    pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+                    pointB = this.transform.position + (Vector3.up * collisionRadius);
+                }
+
+            Collider[] overlapCollidersB = Physics.OverlapSphere(pointB, collisionRadius);
+            if (overlapCollidersB.Length > 0)
+                for (int i = 0; i < overlapCollidersB.Length; i++)
+                {
+                    closestPoint = overlapCollidersB[i].ClosestPoint(pointB);
+
+                    hitDist = Vector3.Distance(pointB, closestPoint);
+                    hitDirection = closestPoint - pointB;
+
+                    this.transform.position += -hitDirection.normalized * (collisionRadius - hitDist + skinWidth);
+
+                    velocity += velocity.GetNormalForce(-hitDirection.normalized);
+
+                    pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
+                    pointB = this.transform.position + (Vector3.up * collisionRadius);
+                }
+
+            // Kolla overlap igen
+            overlapCheckA = Physics.CheckSphere(pointA, collisionRadius);
+            overlapCheckB = Physics.CheckSphere(pointB, collisionRadius);
+
+            if (counter >= 100)
+                break;
+            counter++;
+        }
     }
     void LateUpdate()
     {
