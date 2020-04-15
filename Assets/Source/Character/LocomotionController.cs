@@ -141,7 +141,7 @@ public class LocomotionController : MonoBehaviour
                 ["controller"] = this,
                 ["jig"] = FindObjectOfType<CameraController>(),
                 ["animator"] = this.GetComponent<Animator>(),
-            }); ;
+            });
     }
     void Update()
     {

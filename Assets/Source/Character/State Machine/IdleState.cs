@@ -16,8 +16,6 @@ public class IdleState : BaseState
     {
         base.Tick();
 
-        GlobalEvents.Raise(GlobalEvent.UpdatePlayerRotation);
-
         if (base.Controller.TargetInput.magnitude > .1f)
             base.TransitionTo<MoveState>();
     }
