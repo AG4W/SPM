@@ -6,8 +6,14 @@ public abstract class BaseLocomotionState : BaseState
     {
         base.OnInitialize();
 
-        GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) => base.TransitionTo<JumpState>());
-        GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) => base.TransitionTo<RollState>());
+        GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) => {
+            if (base.IsActiveState)
+                base.TransitionTo<JumpState>();
+        });
+        GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) => {
+            if (base.IsActiveState)
+                base.TransitionTo<RollState>();
+        });
     }
     public override void Tick()
     {
