@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 public static class GlobalEvents
 {
@@ -46,7 +46,17 @@ public static class GlobalEvents
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
-    //player
+    //player input
+    SetTargetInput,
+    SetTargetStance,
+    SetMovementSpeed,
+
+    //player locomotion
+    UpdatePlayerRotation,
+
+    //velocity
+    ModifyPlayerVelocity,
+
     Jump,
     Roll,
     Fire,
