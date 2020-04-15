@@ -20,6 +20,8 @@ public class BaseState : State
         GlobalEvents.Raise(GlobalEvent.UpdatePlayerRotation);
         GlobalEvents.Raise(GlobalEvent.SetTargetInput, new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")));
         GlobalEvents.Raise(GlobalEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
+        // Ground Check
+        GlobalEvents.Raise(GlobalEvent.UpdatePlayerGroundedStatus);
 
         //Gravity
         GlobalEvents.Raise(GlobalEvent.ModifyPlayerVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));

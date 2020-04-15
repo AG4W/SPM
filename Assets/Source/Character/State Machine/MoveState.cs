@@ -19,6 +19,8 @@ public class MoveState : BaseState
 
         if (base.Controller.TargetInput.magnitude < .1f)
             base.TransitionTo<IdleState>();
+        if (!base.Controller.IsGrounded)
+            base.TransitionTo<FallState>();
     }
     public override void Exit()
     {

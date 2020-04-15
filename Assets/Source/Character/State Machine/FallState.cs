@@ -24,7 +24,6 @@ public class FallState : BaseState
             velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
 
         GlobalEvents.Raise(GlobalEvent.ModifyPlayerVelocity, velocityBeforeLosingGroundContact / fallForwardVelocityDivider);
-        GlobalEvents.Raise(GlobalEvent.UpdatePlayerGroundedStatus);
         
         if (((Animator)base.Context["animator"]).GetBool("isJumping") == false && base.Controller.IsGrounded)
         {
