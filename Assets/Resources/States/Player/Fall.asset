@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 526157f8a3ccc524aa42240744f9b8ee, type: 3}
   m_Name: Fall
   m_EditorClassIdentifier: 
+  total: 1
+  body: 0.25
+  head: 0.75
+  eyes: 1
+  clamp: 0.5
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
+  velocityBeforeLosingGroundContact: {x: 0.27526736, y: 0, z: 0.19988723}
   fallForwardVelocityDivider: 1.8
   fallForwardMomentDeceleration: 0.5

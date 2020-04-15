@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Sprint
   m_EditorClassIdentifier: 
   total: 1
-  body: 0.25
-  head: 1
+  body: 0.125
+  head: 0.75
   eyes: 1
-  clamp: 0.5
+  clamp: 1
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5

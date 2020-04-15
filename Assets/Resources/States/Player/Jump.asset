@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   total: 1
   body: 0.25
-  head: 1
+  head: 0.75
   eyes: 1
-  clamp: 0.5
+  clamp: 1
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: -0.48669344, y: 0, z: -4.2852097}
+  velocityBeforeLosingGroundContact: {x: 0.12086215, y: 0, z: 0.12990482}
   fallForwardVelocityDivider: 1.8
   fallForwardMomentDeceleration: 0.25
   jumpInputModifier: 1
