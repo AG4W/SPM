@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "PlayerState/RunState")]
-public class RunState : BaseState
+[CreateAssetMenu(menuName = "PlayerState/SprintState")]
+public class SprintState : BaseState
 {
     public override void Enter() 
     {

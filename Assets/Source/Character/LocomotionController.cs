@@ -67,6 +67,7 @@ public class LocomotionController : MonoBehaviour
     public Vector3 Velocity { get { return velocity; } }
     public Vector3 TargetInput { get { return targetInput; } }
     public Vector3 ActualInput { get { return actualInput; } }
+    public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
 
     void Awake()
     {
@@ -87,6 +88,9 @@ public class LocomotionController : MonoBehaviour
 
         //velocity
         GlobalEvents.Subscribe(GlobalEvent.ModifyPlayerVelocity, ModifyVelocity);
+
+        //GroundCheck
+        GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerGroundedStatus, (object[] args) => UpdateGroundedStatus());
 
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
@@ -145,7 +149,7 @@ public class LocomotionController : MonoBehaviour
     }
     void Update()
     {
-        UpdateGroundedStatus();
+        //UpdateGroundedStatus();
         GatherInput();
 
         CorrectStance();
@@ -205,22 +209,7 @@ public class LocomotionController : MonoBehaviour
         wasGroundedLastFrame = isGrounded;
     }
 
-    void UpdateGroundedStatus()
-    {
-        Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
 
-        //offsetta lite uppåt för att få en mer reliable ground check
-        isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
-
-        if (wasGroundedLastFrame && !isGrounded)
-        {
-            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
-            fallDuration = 0f;
-        }
-
-        fallDuration += (isGrounded) ? 0f : (Time.deltaTime / Time.timeScale);
-        //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
-    }
     void GatherInput()
     {
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
@@ -255,7 +244,25 @@ public class LocomotionController : MonoBehaviour
 
         animator.SetBool("isGrounded", isGrounded);
     }
+    void UpdateGroundedStatus()
+    {
+        
+        
+        //Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
 
+        //offsetta lite uppåt för att få en mer reliable ground check
+        //isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
+        isGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * (stepOverHeight + collisionRadius)), collisionRadius, Vector3.down, out RaycastHit hit, stepOverHeight + groundCheckDistance);
+
+        if (wasGroundedLastFrame && !isGrounded)
+        {
+            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
+            fallDuration = 0f;
+        }
+
+        fallDuration += (isGrounded) ? 0f : (Time.deltaTime / Time.timeScale);
+        //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
+    }
     void SetTargetInput(object[] args)
     {
         targetInput = (Vector3)args[0];

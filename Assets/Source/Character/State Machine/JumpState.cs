@@ -15,7 +15,7 @@ public class JumpState : FallState
     {
         base.Enter();
         ((Animator)base.Context["animator"]).SetBool("isJumping", true);
-
+        base.Controller.IsGrounded = false;
         jumpTimer = 0f;
     }
     public override void Tick()
@@ -26,13 +26,15 @@ public class JumpState : FallState
 
         if (jumpTimer >= jumpDuration)
         {
-            //if(isGrounded)
+            if (base.Controller.IsGrounded)
+            {
                 if (base.Controller.TargetInput.magnitude > .1f)
                     base.TransitionTo<MoveState>();
                 else
                     base.TransitionTo<IdleState>();
-            //else
-                //base.TransitionTo<FallState>();
+            }
+            else
+                base.TransitionTo<FallState>();
         }
 
         Vector3 velocity = Vector3.zero;

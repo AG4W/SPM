@@ -53,6 +53,7 @@ public enum GlobalEvent
 
     //player locomotion
     UpdatePlayerRotation,
+    UpdatePlayerGroundedStatus,
 
     //velocity
     ModifyPlayerVelocity,

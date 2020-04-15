@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+[CreateAssetMenu(menuName = "State/Fall")]
+
 public class FallState : BaseState
 {
     [SerializeField]Vector3 velocityBeforeLosingGroundContact;
@@ -22,5 +24,18 @@ public class FallState : BaseState
             velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
 
         GlobalEvents.Raise(GlobalEvent.ModifyPlayerVelocity, velocityBeforeLosingGroundContact / fallForwardVelocityDivider);
+        GlobalEvents.Raise(GlobalEvent.UpdatePlayerGroundedStatus);
+        
+        if (((Animator)base.Context["animator"]).GetBool("isJumping") == false && base.Controller.IsGrounded)
+        {
+            if (base.Controller.TargetInput.magnitude > .1f)
+                base.TransitionTo<MoveState>();
+            else
+                base.TransitionTo<IdleState>();
+        }
+    }
+    public override void Exit()
+    {
+        base.Exit();
     }
 }
