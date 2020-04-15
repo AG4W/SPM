@@ -29,7 +29,7 @@ public abstract class State : ScriptableObject
 
     public virtual void Enter()
     {
-        Debug.Log("Entering " + this.GetType());
+        //Debug.Log("Entering " + this.GetType());
     }
     public abstract void Tick();
     public abstract void Exit();
