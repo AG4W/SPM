@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "State/Move")]
-public class MoveState : BaseState
+public class MoveState : BaseLocomotionState
 {
-    public override void Initialize()
+    protected override void OnInitialize()
     {
-        base.Initialize();
+        base.OnInitialize();
         GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) => base.TransitionTo<JumpState>());
     }
     public override void Enter()

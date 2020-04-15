@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+using System.Collections.Generic;
 
 public class LocomotionController : MonoBehaviour
 {
     [SerializeField]GameObject[] torches;
 
     [SerializeField]Vector3 velocity;
-    [SerializeField]Vector3 velocityBeforeLosingGroundContact;
 
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
+
+    [SerializeField]Vector3 lookAtPosition;
 
     [SerializeField]MovementMode mode = MovementMode.Jog;
     [SerializeField]float inputModifier = 1f;
@@ -49,7 +51,7 @@ public class LocomotionController : MonoBehaviour
     Transform jig;
     Animator animator;
 
-    [SerializeField]StateMachine machine;
+    StateMachine machine;
 
     float currentHeight { 
         get 
@@ -67,6 +69,9 @@ public class LocomotionController : MonoBehaviour
     public Vector3 Velocity { get { return velocity; } }
     public Vector3 TargetInput { get { return targetInput; } }
     public Vector3 ActualInput { get { return actualInput; } }
+
+    public float ActualStance { get { return actualStance; } }
+
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
 
     void Awake()
@@ -84,7 +89,7 @@ public class LocomotionController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.SetTargetStance, SetTargetStance);
 
         //Locomotion
-        GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerRotation, (object[] args) => UpdateRotation());
+        GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerRotation, UpdateRotation);
 
         //velocity
         GlobalEvents.Subscribe(GlobalEvent.ModifyPlayerVelocity, ModifyVelocity);
@@ -139,7 +144,8 @@ public class LocomotionController : MonoBehaviour
 
         //undvik att låsa spelaren i idle mode
         this.animator.SetBool("isAlert", true);
-        this.machine.Initialize(this,
+        this.machine = new StateMachine(this,
+            Resources.LoadAll<State>("States/Player"),
             new Dictionary<string, object>
             {
                 ["controller"] = this,
@@ -204,11 +210,14 @@ public class LocomotionController : MonoBehaviour
 
         this.transform.position += velocity * (Time.deltaTime / Time.timeScale);
     }
+    void OnAnimatorIK(int layerIndex)
+    {
+        //kommer lookatgrejs här sen
+    }
     void LateUpdate()
     {
         wasGroundedLastFrame = isGrounded;
     }
-
 
     void GatherInput()
     {
@@ -235,19 +244,13 @@ public class LocomotionController : MonoBehaviour
 
     void UpdateAnimator()
     {
-        animator.SetFloat("x", actualInput.x);
-        animator.SetFloat("z", actualInput.z);
         animator.SetFloat("inputMagnitude", targetInput.magnitude);
-
-        animator.SetFloat("actualStance", actualStance);
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
     }
     void UpdateGroundedStatus()
     {
-        
-        
         //Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
 
         //offsetta lite uppåt för att få en mer reliable ground check
@@ -255,10 +258,7 @@ public class LocomotionController : MonoBehaviour
         isGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * (stepOverHeight + collisionRadius)), collisionRadius, Vector3.down, out RaycastHit hit, stepOverHeight + groundCheckDistance);
 
         if (wasGroundedLastFrame && !isGrounded)
-        {
-            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
             fallDuration = 0f;
-        }
 
         fallDuration += (isGrounded) ? 0f : (Time.deltaTime / Time.timeScale);
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
@@ -315,9 +315,9 @@ public class LocomotionController : MonoBehaviour
         }
     }
 
-    void UpdateRotation()
+    void UpdateRotation(object[] args)
     {
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f), combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        
     }
 
     void ModifyVelocity(object[] args)

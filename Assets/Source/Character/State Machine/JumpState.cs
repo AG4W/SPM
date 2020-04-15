@@ -15,6 +15,7 @@ public class JumpState : FallState
     {
         base.Enter();
         ((Animator)base.Context["animator"]).SetBool("isJumping", true);
+
         base.Controller.IsGrounded = false;
         jumpTimer = 0f;
     }
@@ -40,7 +41,7 @@ public class JumpState : FallState
         Vector3 velocity = Vector3.zero;
         velocity += Vector3.up * jumpCurve.Evaluate(jumpTimer) * (base.GravitationalConstant + jumpAcceleration) * (Time.deltaTime / Time.timeScale);
         //lägg till väldigt lite styrfart för spelaren i luften
-        velocity += ((base.Controller.transform.right * base.Controller.TargetInput.x) + (base.Controller.transform.forward * base.Controller.TargetInput.z)) * jumpInputModifier;
+        velocity += ((base.Controller.transform.right * base.Controller.TargetInput.x) + (base.Controller.transform.forward * base.Controller.TargetInput.z)) * (jumpInputModifier * (jumpDuration - jumpTimer)); //minska inputpåverkan längre in i hoppet
         //velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
         velocity *= Mathf.Pow(base.AirResistance, (Time.deltaTime / Time.timeScale));
 

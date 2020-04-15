@@ -2,9 +2,18 @@
 
 public static class Extensions
 {
+    //arrays
     public static T Random<T>(this T[] array)
     {
         return array[UnityEngine.Random.Range(0, array.Length)];
+    }
+    public static T First<T>(this T[] array)
+    {
+        return array[0];
+    }
+    public static T Last<T>(this T[] array)
+    {
+        return array[array.Length - 1];
     }
 
     //floats
