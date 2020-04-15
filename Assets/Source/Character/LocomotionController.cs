@@ -1,15 +1,20 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+using System.Collections.Generic;
 
 public class LocomotionController : MonoBehaviour
 {
     [SerializeField]GameObject[] torches;
 
     [SerializeField]Vector3 velocity;
-    [SerializeField]Vector3 velocityBeforeLosingGroundContact;
 
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
+
+    [SerializeField]Vector3 lookAtPosition;
+    [SerializeField]float[] targetLookAtWeights;
+    [SerializeField]float[] actualLookAtWeights;
+    [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
     [SerializeField]MovementMode mode = MovementMode.Jog;
     [SerializeField]float inputModifier = 1f;
@@ -49,7 +54,7 @@ public class LocomotionController : MonoBehaviour
     Transform jig;
     Animator animator;
 
-    [SerializeField]StateMachine machine;
+    StateMachine machine;
 
     float currentHeight { 
         get 
@@ -67,6 +72,9 @@ public class LocomotionController : MonoBehaviour
     public Vector3 Velocity { get { return velocity; } }
     public Vector3 TargetInput { get { return targetInput; } }
     public Vector3 ActualInput { get { return actualInput; } }
+
+    public float ActualStance { get { return actualStance; } }
+
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
 
     void Awake()
@@ -77,20 +85,22 @@ public class LocomotionController : MonoBehaviour
             Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
 
         animator = this.GetComponentInChildren<Animator>();
+        actualLookAtWeights = new float[5];
 
         //Input
         GlobalEvents.Subscribe(GlobalEvent.SetTargetInput, SetTargetInput);
-        GlobalEvents.Subscribe(GlobalEvent.SetMovementSpeed, SetMovementSpeed);
+        GlobalEvents.Subscribe(GlobalEvent.SetMovementMode, SetMovementSpeed);
         GlobalEvents.Subscribe(GlobalEvent.SetTargetStance, SetTargetStance);
-
-        //Locomotion
-        GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerRotation, (object[] args) => UpdateRotation());
 
         //velocity
         GlobalEvents.Subscribe(GlobalEvent.ModifyPlayerVelocity, ModifyVelocity);
 
         //GroundCheck
         GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerGroundedStatus, (object[] args) => UpdateGroundedStatus());
+
+        //IK
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerLookAtPosition, SetLookAtPosition);
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerLookAtWeights, SetLookAtWeights);
 
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
@@ -101,34 +111,12 @@ public class LocomotionController : MonoBehaviour
             this.animator.SetTrigger("cast");
             this.animator.SetLayerWeight(2, 1f);
         });
-        GlobalEvents.Subscribe(GlobalEvent.Fire, (object[] args) =>
-        {
-            if (!isGrounded)
-                return;
-
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-            Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
-
-            weapon.Shoot(hit.transform != null ? hit.point : ray.GetPoint(300f));
-
-            GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position);
-        });
         GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
         {
             if (!isGrounded)
                 return;
 
             weapon.Reload();
-        });
-        GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) =>
-        {
-            if (!isGrounded)
-                return;
-
-            if (actualInput.magnitude < .1f)
-                actualInput = Vector3.forward;
-
-            animator.SetTrigger("roll");
         });
         //flytta detta till en separat controller sen, borde nog inte vara här
         GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
@@ -139,13 +127,16 @@ public class LocomotionController : MonoBehaviour
 
         //undvik att låsa spelaren i idle mode
         this.animator.SetBool("isAlert", true);
-        this.machine.Initialize(this,
+        this.machine = new StateMachine(this,
+            Resources.LoadAll<State>("States/Player"),
             new Dictionary<string, object>
             {
                 ["controller"] = this,
                 ["jig"] = FindObjectOfType<CameraController>(),
                 ["animator"] = this.GetComponent<Animator>(),
-            }); ;
+                ["actor"] = this.GetComponent<Actor>(),
+                ["weapon"] = this.weapon,
+            });
     }
     void Update()
     {
@@ -263,50 +254,46 @@ public class LocomotionController : MonoBehaviour
             counter++;
         }
     }
+    void OnAnimatorIK(int layerIndex)
+    {
+        //kommer lookatgrejs här sen
+        animator.SetLookAtPosition(lookAtPosition);
+        animator.SetLookAtWeight(actualLookAtWeights[0], actualLookAtWeights[1], actualLookAtWeights[2], actualLookAtWeights[3], actualLookAtWeights[4]);
+    }
     void LateUpdate()
     {
         wasGroundedLastFrame = isGrounded;
     }
-
 
     void GatherInput()
     {
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualStance = Mathf.Lerp(actualStance, targetStance, (combatInterpolationSpeed * 2f) * (Time.deltaTime / Time.timeScale));
 
+        for (int i = 0; i < targetLookAtWeights.Length; i++)
+            actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+
         inIronSights = Input.GetKey(KeyCode.Mouse1);
 
-        if (Input.GetKey(KeyCode.Mouse0))
-            GlobalEvents.Raise(GlobalEvent.Fire);
+        if (Input.GetKeyDown(KeyCode.Space))
+            GlobalEvents.Raise(GlobalEvent.Jump); 
+        if (Input.GetKeyDown(KeyCode.V))
+            GlobalEvents.Raise(GlobalEvent.Roll);
         if (Input.GetKeyDown(KeyCode.R))
             GlobalEvents.Raise(GlobalEvent.Reload);
         if (Input.GetKeyDown(KeyCode.F))
             GlobalEvents.Raise(GlobalEvent.ToggleTorches);
-
-        if (!isGrounded)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            GlobalEvents.Raise(GlobalEvent.Jump);
-        if (Input.GetKeyDown(KeyCode.V))
-            GlobalEvents.Raise(GlobalEvent.Roll);
     }
 
     void UpdateAnimator()
     {
-        animator.SetFloat("x", actualInput.x);
-        animator.SetFloat("z", actualInput.z);
         animator.SetFloat("inputMagnitude", targetInput.magnitude);
-
-        animator.SetFloat("actualStance", actualStance);
         animator.SetFloat("fallDuration", fallDuration);
 
         animator.SetBool("isGrounded", isGrounded);
     }
     void UpdateGroundedStatus()
     {
-        
-        
         //Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
 
         //offsetta lite uppåt för att få en mer reliable ground check
@@ -314,10 +301,7 @@ public class LocomotionController : MonoBehaviour
         isGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * (stepOverHeight + collisionRadius)), collisionRadius, Vector3.down, out RaycastHit hit, stepOverHeight + groundCheckDistance);
 
         if (wasGroundedLastFrame && !isGrounded)
-        {
-            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
             fallDuration = 0f;
-        }
 
         fallDuration += (isGrounded) ? 0f : (Time.deltaTime / Time.timeScale);
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
@@ -374,32 +358,19 @@ public class LocomotionController : MonoBehaviour
         }
     }
 
-    void UpdateRotation()
+    void SetLookAtPosition(object[] args)
     {
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f), combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        lookAtPosition = (Vector3)args[0];
+    }
+    void SetLookAtWeights(object[] args)
+    {
+        targetLookAtWeights = (float[])args[0];
     }
 
     void ModifyVelocity(object[] args)
     {
         this.velocity += (Vector3)args[0];
     }
-
-    void ApplyFriction(Vector3 normalForce)
-    {
-        /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
-         * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
-         * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
-         */
-        if (velocity.magnitude < (normalForce.magnitude * staticFriction))
-        {
-            velocity.x = 0f;
-            velocity.z = 0f;
-        }
-        else
-        {
-            velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
-        }
-    } // Here is Friction calculated with normalForce and applied to velocity
 }
 public enum MovementMode
 {

@@ -2,47 +2,71 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class StateMachine
 {
-    [SerializeField]State[] states;
-
-    State currentState;
-    State queuedState;
+    State current;
+    State next;
 
     //private Stack<State> automaton;
-    Dictionary<Type, State> stateDictionary = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
+    readonly Dictionary<Type, State> states = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
 
-    public void Initialize(object controller, Dictionary<string, object> context)
+    public StateMachine(object controller, State[] states, Dictionary<string, object> context)
     {
-        currentState = null;
-        queuedState = null;
+        //onödig initialisering, de defaultar till null ovan
+        //currentState = null;
+        //queuedState = null;
 
-        foreach (State state in states)
+        //glorious fori superier
+        //fuck foreach
+        //syntaktiskt socker för scriptkiddies
+        for (int i = 0; i < states.Length; i++)
         {
-            State instance = UnityEngine.Object.Instantiate(state); // Vi skapar en kopia av staten i runtime
+            //kombinerade tre metodanrop till intialize istället
+            states[i].Initialize(this, context);
 
-            instance.SetStateMachine(this);
-            instance.SetContext(context);
+            if (this.states.ContainsKey(states[i].GetType()))
+                Debug.LogError("Multiple states of the same type in " + controller.ToString() + ", check Resources/States/* and remove duplicates");
 
-            instance.Initialize();
-
-            stateDictionary.Add(instance.GetType(), instance); // Här läggs kopian till i Dictionary, ett state-typ kopplas till en faktisk state
-
-            if (currentState == null)
-            {
-                Debug.Log("Current state blir instance.");
-                currentState = instance;
-            }
+            this.states.Add(states[i].GetType(), states[i]);
         }
+        //foreach (State state in states)
+        //{
+        //State instance = UnityEngine.Object.Instantiate(state); // Vi skapar en kopia av staten i runtime
+        //Undviker att kopiera, nu kan vi ändra världen i realtid istället.
+        //state.SetStateMachine(this);
+        //state.SetContext(context);
 
-        currentState?.Enter(); // Om jag fick ett state, starta den
+        //state.Initialize();
+
+        //stateDictionary.Add(state.GetType(), state); // ett state-typ kopplas till en faktisk state
+
+        // Detta borde alltid ske, eller?
+        // Vi kan väl inte manuellt assignea ett state i början,
+        // Så känns weird att guarda för det
+        // also, detta sker för varje state? Så de skriver över varandra??
+        // Oklart
+        //if (currentState == null)
+        //{
+        //    Debug.Log("Current state blir instance.");
+        //    currentState = state;
+        //}
+        //}
+
+
+        // Varför behövs denna nullguard?
+        // Känns som att det är bättre om vi kastar exceptions i loggen
+        // ifall något viktigt saknar states så att vi märker felet innan build
+        //currentState?.Enter(); // Om jag fick ett state, starta den
+        current = states.FirstOrDefault(s => s.GetType() == typeof(IdleState));
+        current.Enter();
     }
 
     public void TransitionTo<T>() where T : State // T måste vara ett State
     {
-        queuedState = stateDictionary[typeof(T)];
+        next = states[typeof(T)];
     }
     public void TransitionBack()
     {
@@ -55,20 +79,20 @@ public class StateMachine
 
     public void Tick()
     {
-        currentState.Tick();
+        current.Tick();
 
         UpdateState();
     }
 
     void UpdateState()
     {
-        if (queuedState != null && queuedState != currentState)
+        if (next != null && next != current)
         {
-            currentState?.Exit();
+            current?.Exit();
             //: Pushdown automaton
             //automaton.Push(currentState);
-            currentState = queuedState;
-            currentState.Enter();
+            current = next;
+            current.Enter();
         }
     }
 }

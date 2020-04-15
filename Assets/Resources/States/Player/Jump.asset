@@ -10,21 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4aaf233ac8346254494e5be6c50bfe32, type: 3}
-  m_Name: JumpState
+  m_Name: Jump
   m_EditorClassIdentifier: 
+  total: 1
+  body: 0.25
+  head: 1
+  eyes: 1
+  clamp: 0.5
+  rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
+  velocityBeforeLosingGroundContact: {x: -0.48669344, y: 0, z: -4.2852097}
   fallForwardVelocityDivider: 1.8
-  fallForwardMomentDeceleration: 0.5
-  jumpInputModifier: 0.1
-  jumpAcceleration: 7
+  fallForwardMomentDeceleration: 0.25
+  jumpInputModifier: 1
+  jumpAcceleration: 8
   jumpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.002710816
-      value: 1.3038412
+      time: 0
+      value: 1
       inSlope: 0.08436378
       outSlope: 0.08436378
       tangentMode: 0
@@ -32,22 +38,13 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.048879836
     - serializedVersion: 3
-      time: 0.027066179
-      value: 1.4979714
-      inSlope: -1.532
-      outSlope: -1.532
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.051315285
-      outWeight: 0.07744618
-    - serializedVersion: 3
-      time: 0.99754333
-      value: 0.0025482178
-      inSlope: -1.3113426
-      outSlope: -1.3113426
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.089412816
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

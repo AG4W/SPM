@@ -12,7 +12,19 @@ public abstract class State : ScriptableObject
 
     public StateMachine StateMachine { get; private set; }
 
-    public abstract void Initialize();
+    public void Initialize(StateMachine stateMachine, Dictionary<string, object> context)
+    {
+        this.StateMachine = stateMachine;
+        this.Context = context;
+
+        //stoppa något retarded ifrån att inte kalla init-funktionen i subklasser
+        //mha stäng init och sen overrideable OnInit-funktion istället.
+        OnInitialize();
+    }
+    protected virtual void OnInitialize()
+    {
+
+    }
 
     public virtual void Enter()
     {
@@ -20,9 +32,6 @@ public abstract class State : ScriptableObject
     }
     public abstract void Tick();
     public abstract void Exit();
-
-    public void SetStateMachine(StateMachine sm) => this.StateMachine = sm;
-    public void SetContext(Dictionary<string, object> context) => this.Context = context;
 
     public void TransitionTo<T>() where T : State
     {

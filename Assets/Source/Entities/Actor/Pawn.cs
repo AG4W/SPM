@@ -186,7 +186,7 @@ public class Pawn : Actor
 
     protected virtual void Attack()
     {
-        weapon.Shoot(this.Target.FocusPoint.position);
+        GlobalEvents.Raise(GlobalEvent.FireWeapon, this.weapon, this.Target.FocusPoint.position);
     }
 
     protected virtual void OnDesiredPositionReached()

@@ -28,13 +28,17 @@ public class FallState : BaseState
         if (((Animator)base.Context["animator"]).GetBool("isJumping") == false && base.Controller.IsGrounded)
         {
             if (base.Controller.TargetInput.magnitude > .1f)
-                base.TransitionTo<MoveState>();
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                    base.TransitionTo<SprintState>();
+                else
+                    base.TransitionTo<MoveState>();
+            }
             else
                 base.TransitionTo<IdleState>();
         }
     }
     public override void Exit()
     {
-        base.Exit();
     }
 }

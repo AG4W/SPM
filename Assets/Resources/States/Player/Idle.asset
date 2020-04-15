@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 526157f8a3ccc524aa42240744f9b8ee, type: 3}
-  m_Name: FallState
+  m_Script: {fileID: 11500000, guid: ed0fdbf11e2019848a3abb5d13c73690, type: 3}
+  m_Name: Idle
   m_EditorClassIdentifier: 
+  total: 1
+  body: 0.5
+  head: 1
+  eyes: 1
+  clamp: 1
+  rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
-  fallForwardVelocityDivider: 1.8
-  fallForwardMomentDeceleration: 0.5

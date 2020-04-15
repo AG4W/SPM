@@ -1,28 +1,21 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "State/Idle")]
-public class IdleState : BaseState
+public class IdleState : ActState
 {
-    public override void Initialize()
-    {
-        base.Initialize();
-        GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) => base.TransitionTo<JumpState>());
-    }
-    public override void Enter() 
-    {
-        base.Enter();
-    }
     public override void Tick()
     {
         base.Tick();
 
-        GlobalEvents.Raise(GlobalEvent.UpdatePlayerRotation);
-
         if (base.Controller.TargetInput.magnitude > .1f)
-            base.TransitionTo<MoveState>();
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+                base.TransitionTo<SprintState>();
+            else
+                base.TransitionTo<MoveState>();
+        }
     }
-    public override void Exit() 
+    public override void Exit()
     {
-        base.Exit();
     }
 }

@@ -13,6 +13,8 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]float damage = 3f;
 
+    [SerializeField]float noiseValue = 50f;
+
     [SerializeField]LayerMask mask;
 
     [Header("Visual")]
@@ -39,6 +41,8 @@ public class WeaponController : MonoBehaviour
             source = this.gameObject.AddComponent<AudioSource>();
             source.playOnAwake = false;
         }
+
+        GlobalEvents.Subscribe(GlobalEvent.FireWeapon, OnFireWeapon);
     }
     void Update()
     {
@@ -48,25 +52,25 @@ public class WeaponController : MonoBehaviour
             TickFireTimer();
     }
 
-    public void Shoot(Vector3 position)
-    {
-        if (needsReload)
-        {
-            Reload();
-            return;
-        }
-
-        if (!canFire)
-            return;
-
-        ShootInternal(position);
-    }
     public void Reload()
     {
         shotsLeftInCurrentClip = magasineSize;
         CreateReloadSFX();
     }
 
+    void OnFireWeapon(object[] args)
+    {
+        if (this != (WeaponController)args[0])
+            return;
+
+        if (!canFire)
+            return;
+
+        ShootInternal((Vector3)args[1]);
+
+        //lägg till noisevalue fhär
+        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
+    }
     void ShootInternal(Vector3 target)
     {
         canFire = false;
