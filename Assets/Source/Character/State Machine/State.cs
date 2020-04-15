@@ -11,6 +11,7 @@ public abstract class State : ScriptableObject
     public Transform Transform { get { return this.Controller.transform; } }
 
     public StateMachine StateMachine { get; private set; }
+    public bool IsActiveState { get { return this.StateMachine.Current == this; } }
 
     public void Initialize(StateMachine stateMachine, Dictionary<string, object> context)
     {

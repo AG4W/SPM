@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
-using System.Collections.Generic;
+using System.Collections;
 
 public class WeaponController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class WeaponController : MonoBehaviour
     [SerializeField]float fireRate = .5f;
 
     [SerializeField]float damage = 3f;
+    [SerializeField]float reloadTime = 2f;
 
     [SerializeField]float noiseValue = 50f;
 
@@ -29,8 +31,17 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]AudioClip[] reloadSounds;
 
-    bool canFire = true;
-    bool needsReload { get { return shotsLeftInCurrentClip == 0; } }
+    [Header("World UI")]
+    [SerializeField]Color low = Color.red;
+    [SerializeField]Color high = Color.green;
+
+    [SerializeField]Text[] texts;
+    [SerializeField]Image[] images;
+
+    [SerializeField]Light[] lights;
+
+    public bool CanFire { get; private set; }
+    public bool IsReloading { get; private set; }
 
     void Start()
     {
@@ -42,20 +53,34 @@ public class WeaponController : MonoBehaviour
             source.playOnAwake = false;
         }
 
+        UpdateWorldUI();
         GlobalEvents.Subscribe(GlobalEvent.FireWeapon, OnFireWeapon);
     }
     void Update()
     {
-        
-
-        if (!canFire)
+        if (!CanFire && !IsReloading)
             TickFireTimer();
     }
 
     public void Reload()
     {
-        shotsLeftInCurrentClip = magasineSize;
+        StartCoroutine(ReloadAsync());
+    }
+    IEnumerator ReloadAsync()
+    {
+        this.IsReloading = true;
+
         CreateReloadSFX();
+
+        for (int i = 0; i < texts.Length; i++)
+            texts[i].text = "Ø";
+
+        yield return new WaitForSeconds(reloadTime);
+
+        shotsLeftInCurrentClip = magasineSize;
+        UpdateWorldUI();
+
+        this.IsReloading = false;
     }
 
     void OnFireWeapon(object[] args)
@@ -63,17 +88,12 @@ public class WeaponController : MonoBehaviour
         if (this != (WeaponController)args[0])
             return;
 
-        if (!canFire)
-            return;
-
-        ShootInternal((Vector3)args[1]);
-
-        //lägg till noisevalue fhär
-        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
+        if (CanFire && !IsReloading)
+            FireWeapon((Vector3)args[1]);
     }
-    void ShootInternal(Vector3 target)
+    void FireWeapon(Vector3 target)
     {
-        canFire = false;
+        CanFire = false;
         shotsLeftInCurrentClip--;
 
         Vector3 heading = target - exitPoint.position;
@@ -96,6 +116,12 @@ public class WeaponController : MonoBehaviour
 
         CreateSFX();
         CreateVFX(heading);
+
+        UpdateWorldUI();
+        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
+
+        if (shotsLeftInCurrentClip == 0)
+            Reload();
     }
 
     void TickFireTimer()
@@ -105,16 +131,42 @@ public class WeaponController : MonoBehaviour
         if (fireTimer >= fireRate)
         {
             fireTimer = 0f;
-            canFire = true;
+            CanFire = true;
         }
     }
 
-    void CreateReloadSFX()
+    void UpdateWorldUI()
     {
-        if (reloadSounds == null || reloadSounds.Length == 0)
+        float t = shotsLeftInCurrentClip / (float)magasineSize;
+        Color c = Color.Lerp(low, high, t);
+
+        for (int i = 0; i < texts.Length; i++)
+        {
+            texts[i].material.SetColor("_Color", c);
+            texts[i].material.SetColor("_Emission", c * 8f);
+            texts[i].color = c;
+
+            texts[i].text = shotsLeftInCurrentClip.ToString();
+        }
+
+        for (int i = 0; i < images.Length; i++)
+        {
+            images[i].material.SetColor("_Color", c);
+            images[i].material.SetColor("_Emission", c * 8f);
+            images[i].color = c;
+            images[i].fillAmount = t;
+        }
+
+        for (int i = 0; i < lights.Length; i++)
+            lights[i].color = c;
+    }
+
+    void CreateVFX(Vector3 heading)
+    {
+        if (shotPrefabs == null || shotPrefabs.Length == 0)
             return;
 
-        source.PlayOneShot(reloadSounds.Random());
+        GameObject bullet = Instantiate(shotPrefabs.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
     }
     void CreateSFX()
     {
@@ -124,11 +176,14 @@ public class WeaponController : MonoBehaviour
         source.pitch = Random.Range(Mathf.Min(minPitch, maxPitch), Mathf.Max(minPitch, maxPitch));
         source.PlayOneShot(shotSounds.Random());
     }
-    void CreateVFX(Vector3 heading)
+
+    void CreateReloadSFX()
     {
-        if (shotPrefabs == null || shotPrefabs.Length == 0)
+        if (reloadSounds == null || reloadSounds.Length == 0)
             return;
 
-        GameObject bullet = Instantiate(shotPrefabs.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
+        source.PlayOneShot(reloadSounds.Random());
     }
+
+    
 }
