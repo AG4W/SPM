@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaf233ac8346254494e5be6c50bfe32, type: 3}
+  m_Name: JumpState
+  m_EditorClassIdentifier: 
+  gravitationalConstant: 9.82
+  airResistance: 0.5
+  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
+  fallForwardVelocityDivider: 1.8
+  fallForwardMomentDeceleration: 0.5
+  jumpInputModifier: 0.1
+  jumpAcceleration: 7
+  jumpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.002710816
+      value: 1.3038412
+      inSlope: 0.08436378
+      outSlope: 0.08436378
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.048879836
+    - serializedVersion: 3
+      time: 0.027066179
+      value: 1.4979714
+      inSlope: -1.532
+      outSlope: -1.532
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.051315285
+      outWeight: 0.07744618
+    - serializedVersion: 3
+      time: 0.99754333
+      value: 0.0025482178
+      inSlope: -1.3113426
+      outSlope: -1.3113426
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.089412816
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpDuration: 1

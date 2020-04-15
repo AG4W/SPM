@@ -18,7 +18,9 @@ public class MoveState : BaseState
         GlobalEvents.Raise(GlobalEvent.SetMovementSpeed, Input.GetKey(KeyCode.LeftShift) ? MovementMode.Sprint : (Input.GetKey(KeyCode.CapsLock) ? MovementMode.Walk : MovementMode.Jog));
 
         if (base.Controller.TargetInput.magnitude < .1f)
-            base.TransitionTo<MoveState>();
+            base.TransitionTo<IdleState>();
+        if (!base.Controller.IsGrounded)
+            base.TransitionTo<FallState>();
     }
     public override void Exit()
     {
