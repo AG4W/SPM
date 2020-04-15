@@ -5,6 +5,7 @@ public class EditorCameraFollow : MonoBehaviour
 {
     [SerializeField]GameObject target;
 
+#if UNITY_EDITOR
     void Update()
     {
         Vector3 pos = target.transform.position;
@@ -14,4 +15,5 @@ public class EditorCameraFollow : MonoBehaviour
         SceneView.lastActiveSceneView.pivot = pos;
         SceneView.lastActiveSceneView.Repaint();
     }
+#endif
 }

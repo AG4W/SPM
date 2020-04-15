@@ -1,24 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System; // För att använda Type
+﻿using UnityEngine;
 
+using System;
+using System.Collections.Generic;
+
+[Serializable]
 public class StateMachine
 {
-    private State currentState;
-    private State queuedState;
-    //private Stack<State> automaton;
-    private Dictionary<Type, State> stateDictionary = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
+    [SerializeField]State[] states;
 
-    public StateMachine(object controller, State[] states)
+    State currentState;
+    State queuedState;
+
+    //private Stack<State> automaton;
+    Dictionary<Type, State> stateDictionary = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
+
+    public void Initialize(object controller, Dictionary<string, object> context)
     {
         currentState = null;
         queuedState = null;
+
         foreach (State state in states)
         {
             State instance = UnityEngine.Object.Instantiate(state); // Vi skapar en kopia av staten i runtime
-            instance.owner = controller;
-            instance.stateMachine = this;
+
+            instance.SetStateMachine(this);
+            instance.SetContext(context);
+
+            instance.Initialize();
+
             stateDictionary.Add(instance.GetType(), instance); // Här läggs kopian till i Dictionary, ett state-typ kopplas till en faktisk state
 
             if (currentState == null)
@@ -27,6 +36,7 @@ public class StateMachine
                 currentState = instance;
             }
         }
+
         currentState?.Enter(); // Om jag fick ett state, starta den
     }
 
@@ -34,7 +44,6 @@ public class StateMachine
     {
         queuedState = stateDictionary[typeof(T)];
     }
-
     public void TransitionBack()
     {
         // NOTE(Fors): Pushdown automaton
@@ -44,13 +53,14 @@ public class StateMachine
             */
     }
 
-    public void Run()
+    public void Tick()
     {
-        currentState.Run();
+        currentState.Tick();
+
         UpdateState();
     }
 
-    private void UpdateState()
+    void UpdateState()
     {
         if (queuedState != null && queuedState != currentState)
         {
