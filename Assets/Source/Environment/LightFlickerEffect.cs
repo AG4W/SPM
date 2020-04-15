@@ -29,10 +29,12 @@ public class LightFlickerEffect : MonoBehaviour
         if (lights.Length == 0)
             Debug.LogError(this.name + " with light flicker effect does not have lights assigned, did you forget to assign them?", this.gameObject);
 
+#if UNITY_EDITOR
         for (int i = 0; i < lights.Length; i++)
             if(lights[i].lightmapBakeType != LightmapBakeType.Realtime)
                 Debug.LogError("Warning, applying flicker effect to baked light(s) [" + lights[i].name + "] " +
                     "will produce weird artifacts, use realtime lights with LightFlickerEffect.cs >:(", this.gameObject);
+#endif
     }
     void Update()
     {

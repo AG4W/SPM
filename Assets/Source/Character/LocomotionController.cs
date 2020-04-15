@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class LocomotionController : MonoBehaviour
 {
@@ -10,9 +11,13 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
 
+    [SerializeField]MovementMode mode = MovementMode.Jog;
+    [SerializeField]float inputModifier = 1f;
+
+    [SerializeField]Stance stance = Stance.Standing;
+
     [SerializeField]float targetStance;
     [SerializeField]float actualStance;
-    [SerializeField]bool isSprinting;
 
     [Header("Movement/Collision Properties")]
     [SerializeField]float minHeight = 1.1f;
@@ -27,25 +32,12 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .2f;
 
-    [Header("Jumping")]
-    [SerializeField]float jumpAcceleration = 7f;
-    [SerializeField]AnimationCurve jumpCurve;
-
-    [SerializeField]float jumpDuration = 1f;
-    [SerializeField]float minimumJumpDuration = .1f;
-    [SerializeField]float jumpTimer;
-
     [Header("Falling")]
-    [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float fallDuration;
-    [SerializeField]float fallForwardMomentDeceleration = .5f;
-    [SerializeField]float fallForwardVelocityDivider = 1.8f;
 
     [SerializeField]bool isGrounded;
     [SerializeField]bool wasGroundedLastFrame;
 
-    [SerializeField]bool isJumping = false;
-    [SerializeField]bool isWalking = false;
     [SerializeField]bool inIronSights = false;
 
     [Header("Combat Mode")]
@@ -56,6 +48,8 @@ public class LocomotionController : MonoBehaviour
 
     Transform jig;
     Animator animator;
+
+    [SerializeField]StateMachine machine;
 
     float currentHeight { 
         get 
@@ -70,6 +64,10 @@ public class LocomotionController : MonoBehaviour
         } 
     }
 
+    public Vector3 Velocity { get { return velocity; } }
+    public Vector3 TargetInput { get { return targetInput; } }
+    public Vector3 ActualInput { get { return actualInput; } }
+
     void Awake()
     {
         jig = FindObjectOfType<CameraController>().transform;
@@ -79,9 +77,20 @@ public class LocomotionController : MonoBehaviour
 
         animator = this.GetComponentInChildren<Animator>();
 
+        //Input
+        GlobalEvents.Subscribe(GlobalEvent.SetTargetInput, SetTargetInput);
+        GlobalEvents.Subscribe(GlobalEvent.SetMovementSpeed, SetMovementSpeed);
+        GlobalEvents.Subscribe(GlobalEvent.SetTargetStance, SetTargetStance);
+
+        //Locomotion
+        GlobalEvents.Subscribe(GlobalEvent.UpdatePlayerRotation, (object[] args) => UpdateRotation());
+
+        //velocity
+        GlobalEvents.Subscribe(GlobalEvent.ModifyPlayerVelocity, ModifyVelocity);
+
         GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) => 
         {
-            if (isJumping || !isGrounded)
+            if (!isGrounded)
                 return;
 
             this.animator.SetFloat("castIndex", (int)((Ability)args[0]).AnimationIndex);
@@ -90,7 +99,7 @@ public class LocomotionController : MonoBehaviour
         });
         GlobalEvents.Subscribe(GlobalEvent.Fire, (object[] args) =>
         {
-            if (isSprinting || !isGrounded)
+            if (!isGrounded)
                 return;
 
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
@@ -102,23 +111,14 @@ public class LocomotionController : MonoBehaviour
         });
         GlobalEvents.Subscribe(GlobalEvent.Reload, (object[] args) =>
         {
-            if (isSprinting || isJumping || !isGrounded)
+            if (!isGrounded)
                 return;
 
             weapon.Reload();
         });
-        GlobalEvents.Subscribe(GlobalEvent.Jump, (object[] args) =>
-        {
-            if (isJumping || !isGrounded)
-                return;
-
-            velocityBeforeLosingGroundContact = this.velocity;
-            velocityBeforeLosingGroundContact.y = 0f;
-            isJumping = true;
-        });
         GlobalEvents.Subscribe(GlobalEvent.Roll, (object[] args) =>
         {
-            if (isJumping || !isGrounded)
+            if (!isGrounded)
                 return;
 
             if (actualInput.magnitude < .1f)
@@ -135,51 +135,36 @@ public class LocomotionController : MonoBehaviour
 
         //undvik att låsa spelaren i idle mode
         this.animator.SetBool("isAlert", true);
+        this.machine.Initialize(this,
+            new Dictionary<string, object>
+            {
+                ["controller"] = this,
+                ["jig"] = FindObjectOfType<CameraController>(),
+                ["animator"] = this.GetComponent<Animator>(),
+            }); ;
     }
     void Update()
     {
         UpdateGroundedStatus();
         GatherInput();
 
-        if (isJumping)
-        {
-            jumpTimer += (Time.deltaTime / Time.timeScale);
-
-            if (jumpTimer >= jumpDuration || jumpTimer >= minimumJumpDuration && isGrounded)
-            {
-                jumpTimer = 0f;
-                isJumping = false;
-
-                //om vi inte är grounded när vårt hopp tar slut
-                //spara vår senaste velocity och applicera den för att 
-                //falla korrekt?
-            }
-        }
-
-        if(velocityBeforeLosingGroundContact.magnitude > .01f)
-            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
-
         CorrectStance();
         UpdateAnimator();
-        UpdateRotation();
     }
     void OnAnimatorMove()
     {
-        Vector3 tempV = velocity;
-        velocity = this.animator.velocity;
-        velocity.y = tempV.y;
-        
-        //apply gravity
-        velocity += Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale);
-        //applicera jump
-        if(isJumping)
-            velocity += GetJumpVelocity() * (gravitationalConstant + jumpAcceleration)  * (Time.deltaTime / Time.timeScale);
-        
-        if (isJumping || !isGrounded)
-        {
-            velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
-            velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
-        }
+        velocity.x = this.animator.velocity.x;
+        velocity.z = this.animator.velocity.z;
+
+        //tick modifierar velocity på många olika sätt
+        //måste ske i sync med animatorn
+        machine.Tick();
+
+        //if (!isGrounded)
+        //{
+        //    velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
+        //    velocity *= Mathf.Pow(airResistance, (Time.deltaTime / Time.timeScale));
+        //}
 
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
@@ -222,39 +207,26 @@ public class LocomotionController : MonoBehaviour
 
     void UpdateGroundedStatus()
     {
-        if(isJumping)
-            isGrounded = false;
-        else
+        Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
+
+        //offsetta lite uppåt för att få en mer reliable ground check
+        isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
+
+        if (wasGroundedLastFrame && !isGrounded)
         {
-            Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
-
-            //offsetta lite uppåt för att få en mer reliable ground check
-            isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
-
-            if (wasGroundedLastFrame && !isGrounded)
-            {
-                velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
-                fallDuration = 0f;
-            }
+            velocityBeforeLosingGroundContact = new Vector3(this.velocity.x, 0f, this.velocity.z);
+            fallDuration = 0f;
         }
 
-        fallDuration += (isGrounded || isJumping) ? 0f : (Time.deltaTime / Time.timeScale);
+        fallDuration += (isGrounded) ? 0f : (Time.deltaTime / Time.timeScale);
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
     }
     void GatherInput()
     {
-        if (Input.GetKeyDown(KeyCode.CapsLock))
-            isWalking = !isWalking;
-
-        isSprinting = Input.GetKey(KeyCode.LeftShift);
-        inIronSights = Input.GetKey(KeyCode.Mouse1);
-
-        targetInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        targetInput *= (isWalking || inIronSights) ? .5f : (isSprinting ? 2f : 1f);
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-
-        targetStance = Input.GetKey(KeyCode.C) ? 0f : 1f;
         actualStance = Mathf.Lerp(actualStance, targetStance, (combatInterpolationSpeed * 2f) * (Time.deltaTime / Time.timeScale));
+
+        inIronSights = Input.GetKey(KeyCode.Mouse1);
 
         if (Input.GetKey(KeyCode.Mouse0))
             GlobalEvents.Raise(GlobalEvent.Fire);
@@ -272,6 +244,52 @@ public class LocomotionController : MonoBehaviour
             GlobalEvents.Raise(GlobalEvent.Roll);
     }
 
+    void UpdateAnimator()
+    {
+        animator.SetFloat("x", actualInput.x);
+        animator.SetFloat("z", actualInput.z);
+        animator.SetFloat("inputMagnitude", targetInput.magnitude);
+
+        animator.SetFloat("actualStance", actualStance);
+        animator.SetFloat("fallDuration", fallDuration);
+
+        animator.SetBool("isGrounded", isGrounded);
+    }
+
+    void SetTargetInput(object[] args)
+    {
+        targetInput = (Vector3)args[0];
+        targetInput *= inputModifier;
+    }
+    void SetMovementSpeed(object[] args)
+    {
+        mode = (MovementMode)args[0];
+
+        switch (mode)
+        {
+            case MovementMode.Crouch:
+                inputModifier = .5f;
+                break;
+            case MovementMode.Walk:
+                inputModifier = .5f;
+                break;
+            case MovementMode.Jog:
+                inputModifier = 1f;
+                break;
+            case MovementMode.Sprint:
+                inputModifier = 2f;
+                break;
+            default:
+                inputModifier = .25f;
+                break;
+        }
+    }
+
+    void SetTargetStance(object[] args)
+    {
+        stance = (Stance)args[0];
+        targetStance = (int)stance;
+    }
     void CorrectStance()
     {
         Physics.Raycast(this.transform.position, Vector3.up, out RaycastHit hit, maxHeight);
@@ -289,40 +307,17 @@ public class LocomotionController : MonoBehaviour
                 actualStance = stance;
         }
     }
-    void UpdateAnimator()
-    {
-        animator.SetFloat("x", actualInput.x);
-        animator.SetFloat("z", actualInput.z);
-        animator.SetFloat("inputMagnitude", targetInput.magnitude);
 
-        animator.SetFloat("actualStance", actualStance);
-        animator.SetFloat("fallDuration", fallDuration);
-
-        animator.SetBool("isGrounded", isGrounded);
-        animator.SetBool("isJumping", isJumping);
-    }
     void UpdateRotation()
     {
-        this.transform.rotation = Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f);
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f), combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
     }
 
-    //enkapsulering av småskit
-    Vector3 GetJumpVelocity()
+    void ModifyVelocity(object[] args)
     {
-        if (!isJumping)
-            return Vector3.zero;
-
-        //if (Physics.Raycast(this.topPoint.position, Vector3.up))
-        //    return Vector3.zero;
-
-        //använder kurvor för att få bättre feel i hoppet
-        //behöver multiplicera med nuvarande velocity på något sätt här
-        //så att spelaren inte hoppar framåt om hen inte har framåtrörelse
-        //men för trött för den matten atm
-
-        //input heading
-        return Vector3.up * jumpCurve.Evaluate(jumpTimer);
+        this.velocity += (Vector3)args[0];
     }
+
     void ApplyFriction(Vector3 normalForce)
     {
         /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
@@ -339,4 +334,16 @@ public class LocomotionController : MonoBehaviour
             velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
         }
     } // Here is Friction calculated with normalForce and applied to velocity
+}
+public enum MovementMode
+{
+    Crouch,
+    Walk,
+    Jog,
+    Sprint
+}
+public enum Stance
+{
+    Crouched,
+    Standing,
 }

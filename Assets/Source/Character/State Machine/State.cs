@@ -1,10 +1,31 @@
 ﻿using UnityEngine;
 
+using System.Collections.Generic;
+
 public abstract class State : ScriptableObject
 {
-    public object owner;
-    public StateMachine stateMachine;
-    public virtual void Enter() { }
-    public virtual void Run() { }
-    public virtual void Exit() { }
+    public Dictionary<string, object> Context { get; private set; }
+    
+    //lazy properties
+    public LocomotionController Controller { get { return (LocomotionController)this.Context["controller"]; } }
+    public Transform Transform { get { return this.Controller.transform; } }
+
+    public StateMachine StateMachine { get; private set; }
+
+    public abstract void Initialize();
+
+    public virtual void Enter()
+    {
+        Debug.Log("Entering " + this.GetType());
+    }
+    public abstract void Tick();
+    public abstract void Exit();
+
+    public void SetStateMachine(StateMachine sm) => this.StateMachine = sm;
+    public void SetContext(Dictionary<string, object> context) => this.Context = context;
+
+    public void TransitionTo<T>() where T : State
+    {
+        this.StateMachine.TransitionTo<T>();
+    }
 }
