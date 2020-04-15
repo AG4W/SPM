@@ -1363,12 +1363,14 @@ MonoBehaviour:
   - {fileID: 4329522906030489120}
   - {fileID: 1228346417345086382}
   velocity: {x: 0, y: 0, z: 0}
-  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
+  lookAtPosition: {x: 0, y: 0, z: 0}
+  mode: 2
+  inputModifier: 1
+  stance: 1
   targetStance: 1
   actualStance: 0
-  isSprinting: 0
   minHeight: 1.1
   maxHeight: 1.9
   collisionRadius: 0.25
@@ -1378,42 +1380,9 @@ MonoBehaviour:
   airResistance: 0.5
   stepOverHeight: 0.5
   groundCheckDistance: 1
-  jumpAcceleration: 7
-  jumpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0.08436378
-      outSlope: 0.08436378
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.048879836
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -1.9181119
-      outSlope: -1.9181119
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.023397624
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jumpDuration: 1
-  minimumJumpDuration: 0.5
-  jumpTimer: 0
-  gravitationalConstant: 9.82
   fallDuration: 0
-  fallForwardMomentDeceleration: 0.5
-  fallForwardVelocityDivider: 1.5
   isGrounded: 1
   wasGroundedLastFrame: 1
-  isJumping: 0
-  isWalking: 0
   inIronSights: 0
   combatInterpolationSpeed: 5
   weapon: {fileID: 8668523209011216705}
