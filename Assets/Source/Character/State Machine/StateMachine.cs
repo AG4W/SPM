@@ -13,6 +13,8 @@ public class StateMachine
     //private Stack<State> automaton;
     readonly Dictionary<Type, State> states = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
 
+    public State Current { get { return current; } }
+
     public StateMachine(object controller, State[] states, Dictionary<string, object> context)
     {
         //onödig initialisering, de defaultar till null ovan
