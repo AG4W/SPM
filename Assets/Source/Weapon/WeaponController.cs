@@ -73,7 +73,7 @@ public class WeaponController : MonoBehaviour
         CreateReloadSFX();
 
         for (int i = 0; i < texts.Length; i++)
-            texts[i].text = ">> RELOAD <<";
+            texts[i].text = "Ø";
 
         yield return new WaitForSeconds(reloadTime);
 
