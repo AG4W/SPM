@@ -35,7 +35,10 @@ public class WeaponController : MonoBehaviour
     [SerializeField]Color low = Color.red;
     [SerializeField]Color high = Color.green;
 
+    [SerializeField]float textBlinkDuration = .1f;
+
     [SerializeField]Text[] texts;
+    [SerializeField]string[] reloadPrompts;
     [SerializeField]Image[] images;
 
     [SerializeField]Light[] lights;
@@ -64,19 +67,41 @@ public class WeaponController : MonoBehaviour
 
     public void Reload()
     {
+        if (this.IsReloading)
+            return;
+
         StartCoroutine(ReloadAsync());
     }
     IEnumerator ReloadAsync()
     {
         this.IsReloading = true;
-
         CreateReloadSFX();
 
         for (int i = 0; i < texts.Length; i++)
-            texts[i].text = ">> RELOAD <<";
+            texts[i].text = reloadPrompts.Random();
 
-        yield return new WaitForSeconds(reloadTime);
+        float t = 0f;
+        float bt = 0f;
 
+        while (t <= reloadTime)
+        {
+            t += Time.deltaTime;
+            bt += Time.deltaTime;
+
+            if(bt >= textBlinkDuration)
+            {
+                for (int i = 0; i < texts.Length; i++)
+                    texts[i].gameObject.SetActive(!texts[i].gameObject.activeSelf);
+
+                bt = 0f;
+            }
+
+            yield return null;
+        }
+
+        for (int i = 0; i < texts.Length; i++)
+            texts[i].gameObject.SetActive(true);
+        
         shotsLeftInCurrentClip = magasineSize;
         UpdateWorldUI();
 
