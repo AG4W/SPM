@@ -3861,6 +3861,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 282303529801915548, guid: 4fd008c660f50214ca9133568ce72a33,
         type: 3}
+      propertyPath: impactPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 282303529801915548, guid: 4fd008c660f50214ca9133568ce72a33,
+        type: 3}
+      propertyPath: hitPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 282303529801915548, guid: 4fd008c660f50214ca9133568ce72a33,
+        type: 3}
       propertyPath: source
       value: 
       objectReference: {fileID: 946490605}
@@ -3929,6 +3939,18 @@ PrefabInstance:
       propertyPath: reloadPrompts.Array.data[2]
       value: AD
       objectReference: {fileID: 0}
+    - target: {fileID: 282303529801915548, guid: 4fd008c660f50214ca9133568ce72a33,
+        type: 3}
+      propertyPath: impactPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 6167790376833598370, guid: eee0f87ca35bbc242b7bcb688daa087e,
+        type: 3}
+    - target: {fileID: 282303529801915548, guid: 4fd008c660f50214ca9133568ce72a33,
+        type: 3}
+      propertyPath: hitPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 6711929911472907694, guid: 562f5f4e42daa7349be3d292f39f7a24,
+        type: 3}
     - target: {fileID: 762928531118067407, guid: 4fd008c660f50214ca9133568ce72a33,
         type: 3}
       propertyPath: m_LocalPosition.x

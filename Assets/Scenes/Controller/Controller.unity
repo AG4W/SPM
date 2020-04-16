@@ -588,59 +588,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 61556076}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &70817225
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 70817226}
-  - component: {fileID: 70817227}
-  m_Layer: 0
-  m_Name: Decal Projector
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &70817226
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70817225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1140703658}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &70817227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70817225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 2
-  m_Material: {fileID: 2100000, guid: 3ad88d55bb2c5af40a3df1dc008fefc8, type: 2}
-  m_DrawDistance: 1000
-  m_FadeScale: 0.9
-  m_UVScale: {x: 1, y: 1}
-  m_UVBias: {x: 0, y: 0}
-  m_AffectsTransparency: 0
-  m_Offset: {x: 0, y: 0, z: 0.5}
-  m_Size: {x: 2, y: 2, z: 1}
-  m_FadeFactor: 1
 --- !u!1001 &70955264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10929,37 +10876,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1119367119}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1140703657
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1140703658}
-  m_Layer: 0
-  m_Name: Graffiti A
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1140703658
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140703657}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: -2.952, y: 1.046, z: -5.244}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 70817226}
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
 --- !u!1001 &1154065775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20538,49 +20454,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 51541159, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 51541159, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 51541159, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 51541160, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 51541162, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 617145847, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8,
-        type: 3}
-    - target: {fileID: 617145847, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
-      propertyPath: m_FillAmount
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1705366456, guid: 2331723a1997c634e9e5db77e3718c50, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 629145857}
-    - target: {fileID: 1376414086891732870, guid: 2331723a1997c634e9e5db77e3718c50,
-        type: 3}
-      propertyPath: shotSounds.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1376414086891732870, guid: 2331723a1997c634e9e5db77e3718c50,
-        type: 3}
-      propertyPath: shotSounds.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: 82b0615bc3d80d74896bb2df3db244c4, type: 3}
     - target: {fileID: 3732218028707103781, guid: 2331723a1997c634e9e5db77e3718c50,
         type: 3}
       propertyPath: m_Name

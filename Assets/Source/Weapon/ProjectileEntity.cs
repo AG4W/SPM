@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProjectileEntity : MonoBehaviour
 { 
@@ -10,7 +8,13 @@ public class ProjectileEntity : MonoBehaviour
 
     Vector3 lastFramePos;
 
-    private void Update()
+    public void Initialize(RaycastHit hit)
+    {
+        if (hit.transform != null)
+            projectileLifetime = Vector3.Distance(this.transform.position, hit.point) / projectileSpeed;
+    }
+
+    void Update()
     {
         UpdatePosition();
     }

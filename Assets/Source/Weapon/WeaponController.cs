@@ -21,6 +21,9 @@ public class WeaponController : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField]GameObject[] shotPrefabs;
+    [SerializeField]GameObject[] impactPrefabs;
+    [SerializeField]GameObject[] hitPrefabs;
+
     [SerializeField]Transform exitPoint;
 
     [Header("Audio")]
@@ -129,18 +132,17 @@ public class WeaponController : MonoBehaviour
         {
             Entity e = hit.transform.root.GetComponent<Entity>();
 
-            //hit something else, create hit marker or something
+            //hit something else, create hit marker or something    
             if (e == null)
             {
             }
             else
                 e.Health.Update(-damage);
 
-            Debug.DrawLine(exitPoint.transform.position, hit.point);
         }
 
         CreateSFX();
-        CreateVFX(heading);
+        CreateVFX(heading, hit);
 
         UpdateWorldUI();
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
@@ -186,12 +188,16 @@ public class WeaponController : MonoBehaviour
             lights[i].color = c;
     }
 
-    void CreateVFX(Vector3 heading)
+    void CreateVFX(Vector3 heading, RaycastHit hit)
     {
-        if (shotPrefabs == null || shotPrefabs.Length == 0)
-            return;
-
         GameObject bullet = Instantiate(shotPrefabs.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
+        bullet.GetComponent<ProjectileEntity>().Initialize(hit);
+
+        if(hit.transform != null)
+        {
+            Instantiate(hitPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
+            Instantiate(impactPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
+        }
     }
     void CreateSFX()
     {
