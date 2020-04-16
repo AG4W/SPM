@@ -50,6 +50,7 @@ public enum GlobalEvent
     SetTargetInput,
     SetTargetStance,
     SetMovementMode,
+    SetTargetAimMode,
 
     //player locomotion
     UpdatePlayerGroundedStatus,

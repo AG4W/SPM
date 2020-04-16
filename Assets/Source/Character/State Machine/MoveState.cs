@@ -12,6 +12,8 @@ public class MoveState : ActState
             base.TransitionTo<IdleState>();
         if (Input.GetKeyDown(KeyCode.LeftShift))
             base.TransitionTo<SprintState>();
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            base.TransitionTo<AimState>();
     }
     public override void Exit()
     {

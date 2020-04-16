@@ -24,6 +24,9 @@ public class LocomotionController : MonoBehaviour
     [SerializeField]float targetStance;
     [SerializeField]float actualStance;
 
+    [SerializeField]AimMode aimMode = AimMode.Default;
+    [SerializeField]float actualAimStance;
+
     [Header("Movement/Collision Properties")]
     [SerializeField]float minHeight = 1.1f;
     [SerializeField]float maxHeight = 1.9f;
@@ -91,6 +94,7 @@ public class LocomotionController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.SetTargetInput, SetTargetInput);
         GlobalEvents.Subscribe(GlobalEvent.SetMovementMode, SetMovementSpeed);
         GlobalEvents.Subscribe(GlobalEvent.SetTargetStance, SetTargetStance);
+        GlobalEvents.Subscribe(GlobalEvent.SetTargetAimMode, SetTargetAimMode);
 
         //velocity
         GlobalEvents.Subscribe(GlobalEvent.ModifyPlayerVelocity, ModifyVelocity);
@@ -268,12 +272,11 @@ public class LocomotionController : MonoBehaviour
     void GatherInput()
     {
         actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-        actualStance = Mathf.Lerp(actualStance, targetStance, (combatInterpolationSpeed * 2f) * (Time.deltaTime / Time.timeScale));
+        actualStance = Mathf.Lerp(actualStance, targetStance, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, (combatInterpolationSpeed * 1.5f) * (Time.deltaTime / Time.timeScale));
 
         for (int i = 0; i < targetLookAtWeights.Length; i++)
             actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-
-        inIronSights = Input.GetKey(KeyCode.Mouse1);
 
         if (Input.GetKeyDown(KeyCode.Space))
             GlobalEvents.Raise(GlobalEvent.Jump); 
@@ -289,6 +292,8 @@ public class LocomotionController : MonoBehaviour
     {
         animator.SetFloat("inputMagnitude", targetInput.magnitude);
         animator.SetFloat("fallDuration", fallDuration);
+        animator.SetFloat("stance", actualStance);
+        animator.SetFloat("aimStance", actualAimStance);
 
         animator.SetBool("isGrounded", isGrounded);
     }
@@ -318,7 +323,7 @@ public class LocomotionController : MonoBehaviour
         switch (mode)
         {
             case MovementMode.Crouch:
-                inputModifier = .5f;
+                inputModifier = 1f;
                 break;
             case MovementMode.Walk:
                 inputModifier = .5f;
@@ -358,6 +363,11 @@ public class LocomotionController : MonoBehaviour
         }
     }
 
+    void SetTargetAimMode(object[] args)
+    {
+        aimMode = (AimMode)args[0];
+    }
+
     void SetLookAtPosition(object[] args)
     {
         lookAtPosition = (Vector3)args[0];
@@ -383,4 +393,9 @@ public enum Stance
 {
     Crouched,
     Standing,
+}
+public enum AimMode
+{
+    Default,
+    IronSight,
 }

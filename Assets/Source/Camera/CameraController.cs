@@ -11,6 +11,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = 5f;
 
+    [SerializeField]float cameraTranslationSpeed = 5f;
+
     [SerializeField]Vector3 defaultPosition;
     [SerializeField]Vector3 ironSightPosition;
     [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.75f, 0f);
@@ -36,7 +38,7 @@ public class CameraController : MonoBehaviour
     Camera camera;
     GameObject target;
 
-    bool inIronSights;
+    AimMode mode = AimMode.Default;
 
     void Awake()
     {
@@ -48,11 +50,18 @@ public class CameraController : MonoBehaviour
 
         if (target == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
+
+        GlobalEvents.Subscribe(GlobalEvent.SetTargetAimMode, SetMode);
     }
     void Update()
     {
         GatherInput();
         UpdateSettings();
+    }
+
+    void SetMode(object[] args)
+    {
+        mode = (AimMode)args[0];
     }
 
     void GatherInput()
@@ -65,16 +74,14 @@ public class CameraController : MonoBehaviour
 
         if(target != null)
             this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, translationSpeed * (Time.deltaTime / Time.timeScale));
-
-        inIronSights = Input.GetKey(KeyCode.Mouse1);
     }
     void UpdateSettings()
     {
         RaycastBack();
 
-        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, inIronSights ? ironSightFOV : defaultFOV, translationSpeed * (Time.deltaTime / Time.timeScale));
+        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, mode == AimMode.IronSight ? ironSightFOV : defaultFOV, cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
 
-        Vector3 finalCameraPos = inIronSights ? ironSightPosition : defaultPosition;
+        Vector3 finalCameraPos = mode == AimMode.IronSight ? ironSightPosition : defaultPosition;
 
         if (Input.GetKey(KeyCode.C))
             finalCameraPos += crouchOffset;
@@ -82,7 +89,7 @@ public class CameraController : MonoBehaviour
         //clampa så att kameran inte kan gå igenom spelaren
         //finalCameraPos.z += cameraZBuffer;
 
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, translationSpeed * (Time.deltaTime / Time.timeScale));
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, finalCameraPos, cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
 
         Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity);
 
@@ -91,10 +98,10 @@ public class CameraController : MonoBehaviour
 
         actualDoFDistance = Mathf.Lerp(actualDoFDistance, lastFocusDistance, focusSpeed * (Time.deltaTime / Time.timeScale));
         dof.farFocusStart.value = actualDoFDistance + 2f;
-        dof.farMaxBlur = inIronSights ? ironSightDoFStrength : defaultDoFStrength;
+        dof.farMaxBlur = mode == AimMode.IronSight ? ironSightDoFStrength : defaultDoFStrength;
 
-        dof.nearFocusStart.value = inIronSights ? 1f : 0f;
-        dof.nearFocusEnd.value = inIronSights ? 1.5f : 0f;
+        dof.nearFocusStart.value = mode == AimMode.IronSight ? 1f : 0f;
+        dof.nearFocusEnd.value = mode == AimMode.IronSight ? 1.5f : 0f;
     }
 
     void RaycastBack()

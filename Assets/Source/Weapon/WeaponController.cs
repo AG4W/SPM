@@ -96,6 +96,12 @@ public class WeaponController : MonoBehaviour
                 for (int i = 0; i < texts.Length; i++)
                     texts[i].gameObject.SetActive(!texts[i].gameObject.activeSelf);
 
+                for (int i = 0; i < images.Length; i++)
+                    images[i].gameObject.SetActive(!images[i].gameObject.activeSelf);
+
+                for (int i = 0; i < lights.Length; i++)
+                    lights[i].gameObject.SetActive(!lights[i].gameObject.activeSelf);
+
                 bt = 0f;
             }
 
@@ -104,6 +110,10 @@ public class WeaponController : MonoBehaviour
 
         for (int i = 0; i < texts.Length; i++)
             texts[i].gameObject.SetActive(true);
+        for (int i = 0; i < images.Length; i++)
+            images[i].gameObject.SetActive(true);
+        for (int i = 0; i < lights.Length; i++)
+            lights[i].gameObject.SetActive(true);
         
         shotsLeftInCurrentClip = magasineSize;
         UpdateWorldUI();

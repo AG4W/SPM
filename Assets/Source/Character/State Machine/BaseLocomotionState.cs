@@ -21,8 +21,8 @@ public abstract class BaseLocomotionState : BaseState
 
         if (!base.Controller.IsGrounded)
             base.TransitionTo<FallState>();
-
-        ((Animator)base.Context["animator"]).SetFloat("actualStance", base.Controller.ActualStance);
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            base.TransitionTo<AimState>();
 
         GlobalEvents.Raise(GlobalEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
     }
