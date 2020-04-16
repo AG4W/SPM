@@ -1831,15 +1831,19 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
-  lookAtPosition: {x: 0, y: 0, z: 0}
-  targetLookAtWeights: []
-  actualLookAtWeights: []
-  lookAtInterpolationSpeed: 1.5
   mode: 2
   inputModifier: 1
   stance: 1
   targetStance: 1
   actualStance: 0
+  aimMode: 0
+  actualAimStance: 0
+  interpolationSpeed: 5
+  targetLookAtPosition: {x: 0, y: 0, z: 0}
+  actualLookAtPosition: {x: 0, y: 0, z: 0}
+  targetLookAtWeights: []
+  actualLookAtWeights: []
+  lookAtInterpolationSpeed: 5
   minHeight: 1.1
   maxHeight: 1.9
   collisionRadius: 0.25
@@ -1852,8 +1856,6 @@ MonoBehaviour:
   fallDuration: 0
   isGrounded: 1
   wasGroundedLastFrame: 1
-  inIronSights: 0
-  combatInterpolationSpeed: 5
   weapon: {fileID: 1376414086891732870}
 --- !u!95 &4399153179899732112
 Animator:
