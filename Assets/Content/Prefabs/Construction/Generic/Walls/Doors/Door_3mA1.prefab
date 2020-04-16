@@ -289,7 +289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3254456801940364116}
   m_Layer: 0
-  m_Name: Door_3m
+  m_Name: Door_3mA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,6 +519,11 @@ PrefabInstance:
       propertyPath: connectedEntities.Array.data[0]
       value: 
       objectReference: {fileID: 2029691672719843360}
+    - target: {fileID: 3378422049629057278, guid: 8f5971946902c7d4abb0d8438dce62b2,
+        type: 3}
+      propertyPath: header
+      value: Open
+      objectReference: {fileID: 0}
     - target: {fileID: 3378422049629057279, guid: 8f5971946902c7d4abb0d8438dce62b2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -599,6 +604,11 @@ PrefabInstance:
       propertyPath: connectedEntities.Array.data[0]
       value: 
       objectReference: {fileID: 2029691672719843360}
+    - target: {fileID: 3378422049629057278, guid: 8f5971946902c7d4abb0d8438dce62b2,
+        type: 3}
+      propertyPath: header
+      value: Open
+      objectReference: {fileID: 0}
     - target: {fileID: 3378422049629057279, guid: 8f5971946902c7d4abb0d8438dce62b2,
         type: 3}
       propertyPath: m_LocalPosition.x
