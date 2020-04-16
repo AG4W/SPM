@@ -217,7 +217,6 @@ public class WeaponController : MonoBehaviour
         source.pitch = Random.Range(Mathf.Min(minPitch, maxPitch), Mathf.Max(minPitch, maxPitch));
         source.PlayOneShot(shotSounds.Random());
     }
-
     void CreateReloadSFX()
     {
         if (reloadSounds == null || reloadSounds.Length == 0)
@@ -225,6 +224,4 @@ public class WeaponController : MonoBehaviour
 
         source.PlayOneShot(reloadSounds.Random());
     }
-
-    
 }

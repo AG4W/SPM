@@ -8,14 +8,11 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]Vector3 velocity;
 
+    [Header("Input")]
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
 
-    [SerializeField]Vector3 lookAtPosition;
-    [SerializeField]float[] targetLookAtWeights;
-    [SerializeField]float[] actualLookAtWeights;
-    [SerializeField]float lookAtInterpolationSpeed = 1.5f;
-
+    [Header("Animation")]
     [SerializeField]MovementMode mode = MovementMode.Jog;
     [SerializeField]float inputModifier = 1f;
 
@@ -26,6 +23,17 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]AimMode aimMode = AimMode.Default;
     [SerializeField]float actualAimStance;
+
+    [SerializeField]float interpolationSpeed = 2.5f;
+
+    [Header("IK")]
+    [SerializeField]Vector3 targetLookAtPosition;
+    [SerializeField]Vector3 actualLookAtPosition;
+
+    [SerializeField]float[] targetLookAtWeights;
+    [SerializeField]float[] actualLookAtWeights;
+
+    [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
     [Header("Movement/Collision Properties")]
     [SerializeField]float minHeight = 1.1f;
@@ -45,11 +53,6 @@ public class LocomotionController : MonoBehaviour
 
     [SerializeField]bool isGrounded;
     [SerializeField]bool wasGroundedLastFrame;
-
-    [SerializeField]bool inIronSights = false;
-
-    [Header("Combat Mode")]
-    [SerializeField]float combatInterpolationSpeed = 2.5f;
 
     [Header("Equipment")]
     [SerializeField]WeaponController weapon;
@@ -75,8 +78,6 @@ public class LocomotionController : MonoBehaviour
     public Vector3 Velocity { get { return velocity; } }
     public Vector3 TargetInput { get { return targetInput; } }
     public Vector3 ActualInput { get { return actualInput; } }
-
-    public float ActualStance { get { return actualStance; } }
 
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
 
@@ -144,8 +145,8 @@ public class LocomotionController : MonoBehaviour
     }
     void Update()
     {
-        //UpdateGroundedStatus();
-        GatherInput();
+        DispatchInput();
+        Interpolate();
 
         CorrectStance();
         UpdateAnimator();
@@ -165,6 +166,40 @@ public class LocomotionController : MonoBehaviour
 
         this.transform.position += velocity * (Time.deltaTime / Time.timeScale);
     }
+    
+    void OnAnimatorIK(int layerIndex)
+    {
+        //kommer lookatgrejs här sen
+        animator.SetLookAtPosition(actualLookAtPosition);
+        animator.SetLookAtWeight(actualLookAtWeights[0], actualLookAtWeights[1], actualLookAtWeights[2], actualLookAtWeights[3], actualLookAtWeights[4]);
+    }
+    void LateUpdate()
+    {
+        wasGroundedLastFrame = isGrounded;
+    }
+
+    void DispatchInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            GlobalEvents.Raise(GlobalEvent.Jump); 
+        if (Input.GetKeyDown(KeyCode.V))
+            GlobalEvents.Raise(GlobalEvent.Roll);
+        if (Input.GetKeyDown(KeyCode.R))
+            GlobalEvents.Raise(GlobalEvent.Reload);
+        if (Input.GetKeyDown(KeyCode.F))
+            GlobalEvents.Raise(GlobalEvent.ToggleTorches);
+    }
+    void Interpolate()
+    {
+        actualInput = Vector3.Lerp(actualInput, targetInput, interpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualStance = Mathf.Lerp(actualStance, targetStance, interpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualLookAtPosition = Vector3.Lerp(actualLookAtPosition, targetLookAtPosition, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+
+        for (int i = 0; i < targetLookAtWeights.Length; i++)
+            actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+    }
+
     void CheckCollision()
     {
         Vector3 pointA = this.transform.position + (Vector3.up * (currentHeight - collisionRadius));
@@ -258,35 +293,6 @@ public class LocomotionController : MonoBehaviour
             counter++;
         }
     }
-    void OnAnimatorIK(int layerIndex)
-    {
-        //kommer lookatgrejs här sen
-        animator.SetLookAtPosition(lookAtPosition);
-        animator.SetLookAtWeight(actualLookAtWeights[0], actualLookAtWeights[1], actualLookAtWeights[2], actualLookAtWeights[3], actualLookAtWeights[4]);
-    }
-    void LateUpdate()
-    {
-        wasGroundedLastFrame = isGrounded;
-    }
-
-    void GatherInput()
-    {
-        actualInput = Vector3.Lerp(actualInput, targetInput, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-        actualStance = Mathf.Lerp(actualStance, targetStance, combatInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-        actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, (combatInterpolationSpeed * 1.5f) * (Time.deltaTime / Time.timeScale));
-
-        for (int i = 0; i < targetLookAtWeights.Length; i++)
-            actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            GlobalEvents.Raise(GlobalEvent.Jump); 
-        if (Input.GetKeyDown(KeyCode.V))
-            GlobalEvents.Raise(GlobalEvent.Roll);
-        if (Input.GetKeyDown(KeyCode.R))
-            GlobalEvents.Raise(GlobalEvent.Reload);
-        if (Input.GetKeyDown(KeyCode.F))
-            GlobalEvents.Raise(GlobalEvent.ToggleTorches);
-    }
 
     void UpdateAnimator()
     {
@@ -370,7 +376,7 @@ public class LocomotionController : MonoBehaviour
 
     void SetLookAtPosition(object[] args)
     {
-        lookAtPosition = (Vector3)args[0];
+        targetLookAtPosition = (Vector3)args[0];
     }
     void SetLookAtWeights(object[] args)
     {
