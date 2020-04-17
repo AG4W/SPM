@@ -20,13 +20,15 @@ public class ShotgunController : WeaponController
                 //hit something else, create hit marker or something    
                 if (e == null)
                 {
+                    if (hit.transform.GetComponent<Rigidbody>())
+                        hit.transform.GetComponent<Rigidbody>().AddForce(heading.normalized * base.StoppingPower, ForceMode.Impulse);
                 }
                 else
                     e.Health.Update(-base.Damage);
             }
 
-            Debug.DrawLine(base.ExitPoint.position, hit.transform != null ? hit.point : base.ExitPoint.position + h.normalized * 300f, Color.red);
-            base.CreateVFX(heading, hit);
+            Debug.DrawLine(base.ExitPoint.position, hit.transform != null ? hit.point : base.ExitPoint.position + h.normalized * 50f, Color.red);
+            base.CreateVFX(h, hit);
         }
 
         base.CreateSFX();

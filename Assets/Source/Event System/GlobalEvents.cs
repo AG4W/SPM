@@ -99,6 +99,7 @@ public enum GlobalEvent
 
     //camera
     SetCameraAimMode,
+    SetCameraFOVMultiplier,
 
     //ui
     CurrentInteractableEntityChanged,

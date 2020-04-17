@@ -35,6 +35,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]float defaultDoFStrength = .25f;
     [SerializeField]float ironSightDoFStrength = 7f;
 
+    float fovMultiplier = 1f;
+
     Camera camera;
     GameObject target;
 
@@ -53,6 +55,7 @@ public class CameraController : MonoBehaviour
 
         //fixa surrogat för denna
         GlobalEvents.Subscribe(GlobalEvent.SetCameraAimMode, SetMode);
+        GlobalEvents.Subscribe(GlobalEvent.SetCameraFOVMultiplier, SetFOVMultiplier);
         //GlobalEvents.Subscribe(GlobalEvent.SetActorTargetAimMode, SetMode);
     }
     void Update()
@@ -64,6 +67,10 @@ public class CameraController : MonoBehaviour
     void SetMode(object[] args)
     {
         mode = (AimMode)args[0];
+    }
+    void SetFOVMultiplier(object[] args)
+    {
+        fovMultiplier = (float)args[0];
     }
 
     void GatherInput()
@@ -81,7 +88,7 @@ public class CameraController : MonoBehaviour
     {
         RaycastBack();
 
-        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, mode == AimMode.IronSight ? ironSightFOV : defaultFOV, cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
+        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, (mode == AimMode.IronSight ? ironSightFOV * fovMultiplier : defaultFOV), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
 
         Vector3 finalCameraPos = mode == AimMode.IronSight ? ironSightPosition : defaultPosition;
 

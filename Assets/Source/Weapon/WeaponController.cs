@@ -14,8 +14,11 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]float damage = 3f;
     [SerializeField]float reloadTime = 2f;
+    [SerializeField]float stoppingPower = 10f;
 
     [SerializeField]float noiseValue = 50f;
+
+    [SerializeField]float zoomMultiplier = 2f;
 
     [SerializeField]LayerMask mask;
 
@@ -47,11 +50,13 @@ public class WeaponController : MonoBehaviour
     [SerializeField]Light[] lights;
 
     protected float Damage { get { return damage; } }
+    protected float StoppingPower { get { return stoppingPower; } }
 
     protected Transform ExitPoint { get { return exitPoint; } }
 
     protected LayerMask Mask { get { return mask; } }
 
+    public float ZoomMultiplier { get { return zoomMultiplier; } }
     public bool CanFire { get; private set; }
     public bool IsReloading { get; private set; }
 
@@ -105,6 +110,8 @@ public class WeaponController : MonoBehaviour
             //hit something else, create hit marker or something    
             if (e == null)
             {
+                if (hit.transform.GetComponent<Rigidbody>())
+                    hit.transform.GetComponent<Rigidbody>().AddForce(heading.normalized * stoppingPower, ForceMode.Impulse);
             }
             else
                 e.Health.Update(-damage);
