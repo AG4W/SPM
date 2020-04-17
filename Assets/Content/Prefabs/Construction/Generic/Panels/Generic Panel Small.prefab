@@ -365,7 +365,7 @@ MonoBehaviour:
   connectedEntities:
   - {fileID: 0}
   promptOffset: {x: 0, y: 0.25, z: 0}
-  interactionDistance: 4
+  interactionDistance: 5
   interactionDelay: 0.1
   isRepeatable: 1
   activateOnDestruction: 1
@@ -383,7 +383,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6, y: 0.6, z: 0.01}
+  m_Size: {x: 0.75, y: 0.75, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3378422049783542677
 GameObject:
