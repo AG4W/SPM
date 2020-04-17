@@ -65,6 +65,8 @@ public class WeaponController : MonoBehaviour
             source.playOnAwake = false;
         }
 
+        this.GetComponentInChildren<Canvas>().worldCamera = Camera.main;
+
         UpdateWorldUI();
     }
     void Update()

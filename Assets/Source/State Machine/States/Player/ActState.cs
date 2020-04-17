@@ -2,6 +2,17 @@
 
 public abstract class ActState : BaseLocomotionState
 {
+    protected override void OnInitialize()
+    {
+        base.OnInitialize();
+
+        base.Actor.Subscribe(ActorEvent.ReloadActorWeapon, (object[] args) =>
+        {
+            if (this.IsActiveState)
+                ((WeaponController)base.Context["weapon"]).Reload();
+        });
+    }
+
     public override void Tick()
     {
         base.Tick();

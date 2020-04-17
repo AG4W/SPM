@@ -94,11 +94,10 @@ public enum GlobalEvent
 {
     Jump,
     Roll,
-    Reload,
     ToggleTorches,
     ForcePowerActivated,
 
-    //
+    //camera
     SetCameraAimMode,
 
     //ui
@@ -118,7 +117,9 @@ public enum ActorEvent
 
     UpdateActorGroundedStatus,
 
+    //weapon
     FireActorWeapon,
+    ReloadActorWeapon,
 
     //velocity
     ModifyActorVelocity,
