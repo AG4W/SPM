@@ -46,6 +46,12 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]Light[] lights;
 
+    protected float Damage { get { return damage; } }
+
+    protected Transform ExitPoint { get { return exitPoint; } }
+
+    protected LayerMask Mask { get { return mask; } }
+
     public bool CanFire { get; private set; }
     public bool IsReloading { get; private set; }
 
@@ -76,9 +82,18 @@ public class WeaponController : MonoBehaviour
     {
         CanFire = false;
         shotsLeftInCurrentClip--;
-
         Vector3 heading = target - exitPoint.position;
 
+        OnFireWeapon(target, heading);
+
+        UpdateWorldUI();
+        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
+
+        if (shotsLeftInCurrentClip == 0)
+            Reload();
+    }
+    protected virtual void OnFireWeapon(Vector3 target, Vector3 heading)
+    {
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 
         if (hit.transform != null)
@@ -97,12 +112,6 @@ public class WeaponController : MonoBehaviour
 
         CreateSFX();
         CreateVFX(heading, hit);
-
-        UpdateWorldUI();
-        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
-
-        if (shotsLeftInCurrentClip == 0)
-            Reload();
     }
 
     public void Reload()
@@ -195,7 +204,7 @@ public class WeaponController : MonoBehaviour
             lights[i].color = c;
     }
 
-    void CreateVFX(Vector3 heading, RaycastHit hit)
+    protected virtual void CreateVFX(Vector3 heading, RaycastHit hit)
     {
         GameObject bullet = Instantiate(shotPrefabs.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null);
         bullet.GetComponent<ProjectileEntity>().Initialize(hit);
@@ -211,7 +220,7 @@ public class WeaponController : MonoBehaviour
             Instantiate(impactPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), hit.transform);
         }
     }
-    void CreateSFX()
+    protected virtual void CreateSFX()
     {
         if (shotSounds == null || shotSounds.Length == 0)
             return;
