@@ -1034,7 +1034,6 @@ MonoBehaviour:
     debugStateMachine: 1
   torches:
   - {fileID: 4329522906030489120}
-  - {fileID: 7799597268148863121}
 --- !u!95 &4399153179899732112
 Animator:
   serializedVersion: 3
@@ -3054,12 +3053,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5d1a19732e601243b2b1201842ff61b, type: 3}
---- !u!1 &7799597268148863121 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2780065071727271769, guid: f5d1a19732e601243b2b1201842ff61b,
-    type: 3}
-  m_PrefabInstance: {fileID: 5379965439610232776}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4629433668691366151 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 762928531118067407, guid: f5d1a19732e601243b2b1201842ff61b,
@@ -3072,7 +3065,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5379965439610232776}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7799597268148863121}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33e5194056dab27458dfc0aa46def1c6, type: 3}
