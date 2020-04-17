@@ -77,7 +77,7 @@ public class HumanoidPawn : HumanoidActor
             this.CanSeeTarget = false;
             return;
         }
-        if(Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position, LayerMask.GetMask("Player", "Enemy")))
+        if(Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position))
         {
 
             this.CanSeeTarget = false;
