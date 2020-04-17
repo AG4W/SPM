@@ -3,15 +3,15 @@ using System.Linq;
 
 namespace BehaviourTree.composites
 {
-    public class RandomSelector : Composite
+    public class RandomSelector : Node
     {
         public override Status Tick(Context context)
         {
             Status s;
 
-            foreach(int i in Enumerable.Range(0, base.children.Length).OrderBy(x => ((Random)context.data["random"]).Next()))
+            foreach(int i in Enumerable.Range(0, base.Children.Length).OrderBy(x => ((Random)context.data["random"]).Next()))
             {
-                s = base.children[i].Tick(context);
+                s = base.Children[i].Tick(context);
 
                 if (s != Status.Failed)
                     return s;

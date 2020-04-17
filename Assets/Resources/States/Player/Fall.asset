@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 526157f8a3ccc524aa42240744f9b8ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fe0ae28fd9711245808caba3d3cb06d, type: 3}
   m_Name: Fall
   m_EditorClassIdentifier: 
   total: 1
@@ -20,6 +20,5 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: -0.3248467, y: 0, z: 0.41060778}
-  fallForwardVelocityDivider: 1.8
-  fallForwardMomentDeceleration: 0.1
+  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
+  fallMomentumDeceleration: 0.5
