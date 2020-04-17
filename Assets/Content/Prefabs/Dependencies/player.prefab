@@ -1829,6 +1829,7 @@ MonoBehaviour:
   healthRegenerationRate: 0
   healthRegenerationAmount: 0
   isDestructible: 1
+  path: States/Player
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
   minHeight: 1.1
@@ -1852,6 +1853,8 @@ MonoBehaviour:
   isGrounded: 1
   wasGroundedLastFrame: 1
   weapon: {fileID: 1376414086891732870}
+  machine:
+    debugStateMachine: 1
   torches:
   - {fileID: 4329522906030489120}
   - {fileID: 8817256634547699049}

@@ -9,16 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fe0ae28fd9711245808caba3d3cb06d, type: 3}
-  m_Name: Fall
+  m_Script: {fileID: 11500000, guid: bc1ed053c0961c843adbc8af7681ba99, type: 3}
+  m_Name: Trooper Idle
   m_EditorClassIdentifier: 
-  total: 1
-  body: 0.25
-  head: 0.75
-  eyes: 1
-  clamp: 0.5
-  rotationSpeed: 5
   gravitationalConstant: 9.82
-  airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
-  fallMomentumDeceleration: 0.5

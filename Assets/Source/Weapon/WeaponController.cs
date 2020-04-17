@@ -60,12 +60,49 @@ public class WeaponController : MonoBehaviour
         }
 
         UpdateWorldUI();
-        GlobalEvents.Subscribe(GlobalEvent.FireWeapon, OnFireWeapon);
     }
     void Update()
     {
         if (!CanFire && !IsReloading)
             TickFireTimer();
+    }
+
+    public void FireWeapon(object[] args)
+    {
+        if (CanFire && !IsReloading)
+            FireWeapon((Vector3)args[0]);
+    }
+    void FireWeapon(Vector3 target)
+    {
+        CanFire = false;
+        shotsLeftInCurrentClip--;
+
+        Vector3 heading = target - exitPoint.position;
+
+        Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
+
+        if (hit.transform != null)
+        {
+            Entity e = hit.transform.root.GetComponent<Entity>();
+
+            //hit something else, create hit marker or something    
+            if (e == null)
+            {
+            }
+            else
+                e.Health.Update(-damage);
+        }
+
+        Debug.DrawLine(exitPoint.position, hit.transform != null ? hit.point : exitPoint.position + heading.normalized * 300f, Color.red);
+
+        CreateSFX();
+        CreateVFX(heading, hit);
+
+        UpdateWorldUI();
+        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
+
+        if (shotsLeftInCurrentClip == 0)
+            Reload();
     }
 
     public void Reload()
@@ -121,46 +158,6 @@ public class WeaponController : MonoBehaviour
         this.IsReloading = false;
     }
 
-    void OnFireWeapon(object[] args)
-    {
-        if (this != (WeaponController)args[0])
-            return;
-
-        if (CanFire && !IsReloading)
-            FireWeapon((Vector3)args[1]);
-    }
-    void FireWeapon(Vector3 target)
-    {
-        CanFire = false;
-        shotsLeftInCurrentClip--;
-
-        Vector3 heading = target - exitPoint.position;
-
-        Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
-
-        if(hit.transform != null)
-        {
-            Entity e = hit.transform.root.GetComponent<Entity>();
-
-            //hit something else, create hit marker or something    
-            if (e == null)
-            {
-            }
-            else
-                e.Health.Update(-damage);
-
-        }
-
-        CreateSFX();
-        CreateVFX(heading, hit);
-
-        UpdateWorldUI();
-        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
-
-        if (shotsLeftInCurrentClip == 0)
-            Reload();
-    }
-
     void TickFireTimer()
     {
         fireTimer += Time.deltaTime;
@@ -205,8 +202,13 @@ public class WeaponController : MonoBehaviour
 
         if(hit.transform != null)
         {
-            Instantiate(hitPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
-            Instantiate(impactPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
+            Entity e = hit.transform.root.GetComponent<Entity>();
+
+            //dont create hit markers on actors 
+            if (e == null)
+                Instantiate(hitPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal), hit.transform);
+                
+            Instantiate(impactPrefabs.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), hit.transform);
         }
     }
     void CreateSFX()

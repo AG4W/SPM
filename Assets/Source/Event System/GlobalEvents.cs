@@ -4,11 +4,13 @@ using System.Collections.Generic;
 public static class GlobalEvents
 {
     static List<Action<object[]>>[] events;
+    static Dictionary<HumanoidActor, List<Action<object[]>>[]> actorEvents;
 
     //orkade inte sätta upp en initializer, så lazy initar arrayen
     static void Initialize()
     {
         events = new List<Action<object[]>>[Enum.GetNames(typeof(GlobalEvent)).Length];
+        actorEvents = new Dictionary<HumanoidActor, List<Action<object[]>>[]>();
 
         for (int i = 0; i < events.Length; i++)
             events[i] = new List<Action<object[]>>();
@@ -21,10 +23,40 @@ public static class GlobalEvents
 
         events[(int)e].Add(a);
     }
+
+    //look upon me and despair
+    public static void Subscribe(this HumanoidActor actor, ActorEvent e, Action<object[]> action)
+    {
+        if (actorEvents == null)
+            Initialize();
+
+        //skapa ny slot ifall actor inte finns
+        if (!actorEvents.ContainsKey(actor))
+        {
+            List<Action<object[]>>[] entries = new List<Action<object[]>>[Enum.GetNames(typeof(ActorEvent)).Length];
+
+            for (int i = 0; i < entries.Length; i++)
+                entries[i] = new List<Action<object[]>>();
+
+            actorEvents.Add(actor, entries);
+        }
+
+        actorEvents[actor][(int)e].Add(action);
+    }
+
     public static void Unsubscribe(GlobalEvent e, Action<object[]> a)
     {
         events[(int)e].Remove(a);
     }
+    public static void Unsubscribe(this HumanoidActor actor, ActorEvent e, Action<object[]> action)
+    {
+        actorEvents[actor][(int)e].Remove(action);
+    }
+    public static void ClearAllListeners(this HumanoidActor actor)
+    {
+        actorEvents.Remove(actor);
+    }
+
     public static void Raise(GlobalEvent e, params object[] args)
     {
         if (events == null)
@@ -40,31 +72,28 @@ public static class GlobalEvents
             events[(int)e][i].Invoke(args);
         }
     }
+    //vem behöver koll på vad som skickas vart oavsett
+    public static void Raise(this HumanoidActor actor, ActorEvent e, params object[] args)
+    {
+        if (actorEvents == null)
+            Initialize();
+
+        for (int i = 0; i < actorEvents[actor][(int)e].Count; i++)
+        {
+            if (actorEvents[actor][(int)e][i] == null)
+                actorEvents[actor][(int)e].RemoveAt(i);
+
+            actorEvents[actor][(int)e][i].Invoke(args);
+        }
+    }
 }
 
 //obs, notera att serializerade (de ni exposeat i inspectorn)/hårdkodade variabler av den här typen inte uppdateras
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
-    //actor input
-    SetActorTargetInput,
-    SetActorTargetStance,
-    SetActorMovementMode,
-    SetActorTargetAimMode,
-
-    //player locomotion
-    UpdateActorGroundedStatus,
-
-    //velocity
-    ModifyActorVelocity,
-
-    //IK
-    SetActorLookAtPosition,
-    SetActorLookAtWeights,
-
     Jump,
     Roll,
-    FireWeapon,
     Reload,
     ToggleTorches,
     ForcePowerActivated,
@@ -74,4 +103,27 @@ public enum GlobalEvent
 
     //ai
     NoiseCreated,
+}
+public enum ActorEvent
+{
+    //actor input
+    SetActorTargetInput,
+    SetActorTargetStance,
+    SetActorMovementMode,
+    SetActorTargetAimMode,
+    SetActorTargetRotation,
+
+    UpdateActorGroundedStatus,
+
+    FireActorWeapon,
+
+    //velocity
+    ModifyActorVelocity,
+
+    //IK
+    SetActorLookAtPosition,
+    SetActorLookAtWeights,
+
+    //AI
+    UpdateAITargetStatus
 }
