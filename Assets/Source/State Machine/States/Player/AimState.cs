@@ -9,6 +9,7 @@ public class AimState : ActState
 
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Walk);
         base.Actor.Raise(ActorEvent.SetActorTargetAimMode, AimMode.IronSight);
+        GlobalEvents.Raise(GlobalEvent.SetCameraAimMode, AimMode.IronSight);
     }
     public override void Tick()
     {
@@ -31,6 +32,7 @@ public class AimState : ActState
     }
     public override void Exit()
     {
-        base.Actor.Raise(ActorEvent.SetActorTargetAimMode, AimMode.Default);
+        base.Actor.Raise(ActorEvent.SetActorTargetAimMode, AimMode.Default); 
+        GlobalEvents.Raise(GlobalEvent.SetCameraAimMode, AimMode.Default);
     }
 }

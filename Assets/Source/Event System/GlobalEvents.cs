@@ -98,6 +98,9 @@ public enum GlobalEvent
     ToggleTorches,
     ForcePowerActivated,
 
+    //
+    SetCameraAimMode,
+
     //ui
     CurrentInteractableEntityChanged,
 
