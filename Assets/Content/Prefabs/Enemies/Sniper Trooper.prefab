@@ -829,7 +829,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6d4c607348b13b144839cb0f7b23d832, type: 2}
+  - {fileID: 2100000, guid: bdb9f8c2a6142b34697e98884cd2cf1a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2114,7 +2114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   header: REPLACE ME
-  maxHealth: 10
+  maxHealth: 20
   healthRegenerationRate: 0
   healthRegenerationAmount: 0
   isDestructible: 1
