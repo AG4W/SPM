@@ -7,20 +7,15 @@ using System.Linq;
 [Serializable]
 public class StateMachine
 {
-    State current;
     State next;
 
     //private Stack<State> automaton;
     readonly Dictionary<Type, State> states = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
 
-    public State Current { get { return current; } }
+    public State Current { get; private set; }
 
     public StateMachine(object controller, State[] states, Dictionary<string, object> context)
     {
-        //onödig initialisering, de defaultar till null ovan
-        //currentState = null;
-        //queuedState = null;
-
         //glorious fori superier
         //fuck foreach
         //syntaktiskt socker för scriptkiddies
@@ -40,6 +35,7 @@ public class StateMachine
         //Undviker att kopiera, nu kan vi ändra världen i realtid istället.
         //state.SetStateMachine(this);
         //state.SetContext(context);
+        //OBS, MÅSTE ÄNDRA TILLBAKA DETTA NÄR VI LÄGGER IN AI, DÅ AIN använder flera states
 
         //state.Initialize();
 
@@ -62,8 +58,8 @@ public class StateMachine
         // Känns som att det är bättre om vi kastar exceptions i loggen
         // ifall något viktigt saknar states så att vi märker felet innan build
         //currentState?.Enter(); // Om jag fick ett state, starta den
-        current = states.FirstOrDefault(s => s.GetType() == typeof(IdleState));
-        current.Enter();
+        this.Current = states.FirstOrDefault(s => s.GetType() == typeof(IdleState));
+        this.Current.Enter();
     }
 
     public void TransitionTo<T>() where T : State // T måste vara ett State
@@ -81,20 +77,20 @@ public class StateMachine
 
     public void Tick()
     {
-        current.Tick();
+        this.Current.Tick();
 
         UpdateState();
     }
 
     void UpdateState()
     {
-        if (next != null && next != current)
+        if (next != null && next != Current)
         {
-            current?.Exit();
+            this.Current?.Exit();
             //: Pushdown automaton
             //automaton.Push(currentState);
-            current = next;
-            current.Enter();
+            this.Current = next;
+            this.Current.Enter();
         }
     }
 }
