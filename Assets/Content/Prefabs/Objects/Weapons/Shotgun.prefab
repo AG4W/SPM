@@ -862,9 +862,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 762928531118067407}
-  - component: {fileID: 282303529801915548}
+  - component: {fileID: 7336834952899086635}
   m_Layer: 0
-  m_Name: Sci Fi AR
+  m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -885,7 +885,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &282303529801915548
+--- !u!114 &7336834952899086635
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -894,15 +894,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2780065071727271769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20b54c7d0ab31fd4d899dcb54aecd37c, type: 3}
+  m_Script: {fileID: 11500000, guid: 33e5194056dab27458dfc0aa46def1c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magasineSize: 20
+  magasineSize: 8
   shotsLeftInCurrentClip: 0
   fireTimer: 0
-  fireRate: 0.05
-  damage: 2.5
-  reloadTime: 2
+  fireRate: 1
+  damage: 3
+  reloadTime: 4
   noiseValue: 50
   mask:
     serializedVersion: 2
@@ -917,8 +917,8 @@ MonoBehaviour:
   source: {fileID: 946490605}
   shotSounds:
   - {fileID: 8300000, guid: 82b0615bc3d80d74896bb2df3db244c4, type: 3}
-  minPitch: 0.8
-  maxPitch: 1.2
+  minPitch: 0.75
+  maxPitch: 1.25
   reloadSounds:
   - {fileID: 8300000, guid: c0f5ef0292cc98a4e8e6cf5a58f21585, type: 3}
   low: {r: 1, g: 0, b: 0, a: 1}
@@ -927,13 +927,14 @@ MonoBehaviour:
   texts:
   - {fileID: 51541160}
   reloadPrompts:
-  - '[RELOAD]'
-  - '>RELOAD<'
+  - '[ RELOAD ]'
   images:
   - {fileID: 617145847}
   lights:
   - {fileID: 247856115}
   - {fileID: 1415539009}
+  shots: 8
+  spread: 1
 --- !u!1 &5219028734383369599
 GameObject:
   m_ObjectHideFlags: 0
