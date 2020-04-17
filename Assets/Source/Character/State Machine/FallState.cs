@@ -6,14 +6,13 @@ public class FallState : BaseState
 {
     [SerializeField]Vector3 velocityBeforeLosingGroundContact;
 
-    [SerializeField]float fallForwardVelocityDivider = 1.8f;
-    [SerializeField]float fallForwardMomentDeceleration = .5f;
+    [SerializeField]float fallMomentumDeceleration = .5f;
 
     public override void Enter()
     {
         base.Enter();
 
-        velocityBeforeLosingGroundContact = base.Controller.Velocity;
+        velocityBeforeLosingGroundContact = base.Actor.Velocity;
         velocityBeforeLosingGroundContact.y = 0f;
     }
     public override void Tick()
@@ -21,13 +20,15 @@ public class FallState : BaseState
         base.Tick();
 
         if (velocityBeforeLosingGroundContact.magnitude > .01f)
-            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallForwardMomentDeceleration * (Time.deltaTime / Time.timeScale));
+            velocityBeforeLosingGroundContact = Vector3.Lerp(velocityBeforeLosingGroundContact, Vector3.zero, fallMomentumDeceleration * (Time.deltaTime / Time.timeScale));
+        else
+            velocityBeforeLosingGroundContact = Vector3.zero;
 
-        GlobalEvents.Raise(GlobalEvent.ModifyPlayerVelocity, velocityBeforeLosingGroundContact / fallForwardVelocityDivider);
+        GlobalEvents.Raise(GlobalEvent.ModifyActorVelocity, velocityBeforeLosingGroundContact);
         
-        if (((Animator)base.Context["animator"]).GetBool("isJumping") == false && base.Controller.IsGrounded)
+        if (((Animator)base.Context["animator"]).GetBool("isJumping") == false && base.Actor.IsGrounded)
         {
-            if (base.Controller.TargetInput.magnitude > .1f)
+            if (base.Actor.TargetInput.magnitude > .1f)
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                     base.TransitionTo<SprintState>();

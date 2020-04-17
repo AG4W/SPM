@@ -20,11 +20,11 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: 0.12086215, y: 0, z: 0.12990482}
+  velocityBeforeLosingGroundContact: {x: 5.4205604, y: 0, z: -1.2170446}
   fallForwardVelocityDivider: 1.8
-  fallForwardMomentDeceleration: 0.25
-  jumpInputModifier: 1
-  jumpAcceleration: 8
+  fallForwardMomentDeceleration: 0.1
+  jumpInputModifier: 0.25
+  jumpAcceleration: 30
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -49,4 +49,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpDuration: 1
+  jumpDuration: 0.33

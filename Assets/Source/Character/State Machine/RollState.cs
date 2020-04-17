@@ -13,12 +13,12 @@ public class RollState : BaseState
     {
         base.Tick();
 
-        if (!base.Controller.IsGrounded)
+        if (!base.Actor.IsGrounded)
             base.TransitionTo<FallState>();
 
         if (!((Animator)base.Context["animator"]).GetBool("isRolling"))
         {
-            if (base.Controller.TargetInput.magnitude > .1f)
+            if (base.Actor.TargetInput.magnitude > .1f)
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                     base.TransitionTo<SprintState>();

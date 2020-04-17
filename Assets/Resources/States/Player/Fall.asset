@@ -20,6 +20,6 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  velocityBeforeLosingGroundContact: {x: 0.27526736, y: 0, z: 0.19988723}
+  velocityBeforeLosingGroundContact: {x: -0.3248467, y: 0, z: 0.41060778}
   fallForwardVelocityDivider: 1.8
-  fallForwardMomentDeceleration: 0.5
+  fallForwardMomentDeceleration: 0.1

@@ -19,11 +19,11 @@ public abstract class BaseLocomotionState : BaseState
     {
         base.Tick();
 
-        if (!base.Controller.IsGrounded)
+        if (!base.Actor.IsGrounded)
             base.TransitionTo<FallState>();
         if (Input.GetKeyDown(KeyCode.Mouse1))
             base.TransitionTo<AimState>();
 
-        GlobalEvents.Raise(GlobalEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
+        GlobalEvents.Raise(GlobalEvent.SetActorTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
     }
 }

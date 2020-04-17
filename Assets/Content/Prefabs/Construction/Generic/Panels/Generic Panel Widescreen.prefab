@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2156119447264308234
 Transform:
@@ -83,8 +83,8 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 2
+  m_Lightmapping: 1
+  m_LightShadowCasterMode: 1
   m_AreaSize: {x: 0.2133333, y: 0.12}
   m_BounceIntensity: 0
   m_ColorTemperature: 7720
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_FadeDistance: 10000
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
-  m_NonLightmappedOnly: 0
+  m_NonLightmappedOnly: 1
   m_ShapeWidth: 0.2133333
   m_ShapeHeight: 0.12
   m_AspectRatio: 1
@@ -215,7 +215,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2156119447728259946
 Transform:
@@ -292,7 +292,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2156119447800070488
 Transform:
@@ -323,11 +323,11 @@ GameObject:
   - component: {fileID: 2156119447982649029}
   - component: {fileID: 2156119447982649027}
   m_Layer: 0
-  m_Name: Generic Panel 16_9
+  m_Name: Generic Panel Widescreen
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2156119447982649028
 Transform:
@@ -399,7 +399,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2156119448105020847
 Transform:
@@ -528,7 +528,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2156119448471545671
 Transform:

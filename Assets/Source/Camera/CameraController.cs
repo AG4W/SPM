@@ -51,7 +51,7 @@ public class CameraController : MonoBehaviour
         if (target == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
 
-        GlobalEvents.Subscribe(GlobalEvent.SetTargetAimMode, SetMode);
+        GlobalEvents.Subscribe(GlobalEvent.SetActorTargetAimMode, SetMode);
     }
     void Update()
     {

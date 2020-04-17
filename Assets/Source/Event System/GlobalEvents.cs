@@ -46,21 +46,21 @@ public static class GlobalEvents
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
-    //player input
-    SetTargetInput,
-    SetTargetStance,
-    SetMovementMode,
-    SetTargetAimMode,
+    //actor input
+    SetActorTargetInput,
+    SetActorTargetStance,
+    SetActorMovementMode,
+    SetActorTargetAimMode,
 
     //player locomotion
-    UpdatePlayerGroundedStatus,
+    UpdateActorGroundedStatus,
 
     //velocity
-    ModifyPlayerVelocity,
+    ModifyActorVelocity,
 
     //IK
-    SetPlayerLookAtPosition,
-    SetPlayerLookAtWeights,
+    SetActorLookAtPosition,
+    SetActorLookAtWeights,
 
     Jump,
     Roll,

@@ -23,7 +23,6 @@ public class ForcePush : Ability
             float distanceModifier = Mathf.InverseLerp(distance, 0f, hits[i].distance);
 
             Rigidbody rb = hits[i].transform.GetComponent<Rigidbody>();
-            Pawn nap = hits[i].transform.root.GetComponent<Pawn>();
 
             Vector3 force = (hits[i].transform.root.position - ray.origin).normalized * power.Evaluate(base.DurationTimer01) * powerMultiplier * distanceModifier;
 
