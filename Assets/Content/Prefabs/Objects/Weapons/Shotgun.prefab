@@ -900,7 +900,7 @@ MonoBehaviour:
   magasineSize: 8
   shotsLeftInCurrentClip: 0
   fireTimer: 0
-  fireRate: 1
+  fireRate: 0.45
   damage: 3
   reloadTime: 4
   noiseValue: 50
@@ -917,8 +917,8 @@ MonoBehaviour:
   source: {fileID: 946490605}
   shotSounds:
   - {fileID: 8300000, guid: 2ed0a1a34fafdf143aefd791aa61bba7, type: 3}
-  minPitch: 0.75
-  maxPitch: 1.25
+  minPitch: 0.95
+  maxPitch: 1.05
   reloadSounds:
   - {fileID: 8300000, guid: c0f5ef0292cc98a4e8e6cf5a58f21585, type: 3}
   low: {r: 1, g: 0, b: 0, a: 1}
