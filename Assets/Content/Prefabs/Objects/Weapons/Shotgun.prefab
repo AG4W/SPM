@@ -903,7 +903,9 @@ MonoBehaviour:
   fireRate: 0.45
   damage: 3
   reloadTime: 4
+  stoppingPower: 100
   noiseValue: 50
+  zoomMultiplier: 1
   mask:
     serializedVersion: 2
     m_Bits: 4294967295

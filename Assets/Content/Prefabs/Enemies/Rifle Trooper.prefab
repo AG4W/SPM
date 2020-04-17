@@ -902,7 +902,7 @@ GameObject:
   - component: {fileID: 5381753778340850263}
   - component: {fileID: 832565324}
   m_Layer: 30
-  m_Name: Trooper
+  m_Name: Rifle Trooper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -937,7 +937,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   header: REPLACE ME
-  maxHealth: 10
+  maxHealth: 20
   healthRegenerationRate: 0
   healthRegenerationAmount: 0
   isDestructible: 1
@@ -2361,7 +2361,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6d4c607348b13b144839cb0f7b23d832, type: 2}
+  - {fileID: 2100000, guid: 316288633991d4f49a8e39c274e9fe94, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

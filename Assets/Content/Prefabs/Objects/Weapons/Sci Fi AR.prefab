@@ -903,7 +903,9 @@ MonoBehaviour:
   fireRate: 0.05
   damage: 2.5
   reloadTime: 2
+  stoppingPower: 35
   noiseValue: 50
+  zoomMultiplier: 0.85
   mask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -916,9 +918,9 @@ MonoBehaviour:
   exitPoint: {fileID: 4101039546307122290}
   source: {fileID: 946490605}
   shotSounds:
-  - {fileID: 8300000, guid: 82b0615bc3d80d74896bb2df3db244c4, type: 3}
-  minPitch: 0.8
-  maxPitch: 1.2
+  - {fileID: 8300000, guid: 27855a388d9e4384aac0f8cc6e135ce9, type: 3}
+  minPitch: 0.95
+  maxPitch: 1.05
   reloadSounds:
   - {fileID: 8300000, guid: c0f5ef0292cc98a4e8e6cf5a58f21585, type: 3}
   low: {r: 1, g: 0, b: 0, a: 1}

@@ -62,7 +62,7 @@ public class LocomotionController : HumanoidActor
         if (Input.GetKeyDown(KeyCode.V))
             GlobalEvents.Raise(GlobalEvent.Roll);
         if (Input.GetKeyDown(KeyCode.R))
-            GlobalEvents.Raise(GlobalEvent.Reload);
+            this.Raise(ActorEvent.ReloadActorWeapon);
         if (Input.GetKeyDown(KeyCode.F))
             GlobalEvents.Raise(GlobalEvent.ToggleTorches);
     }

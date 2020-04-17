@@ -10,6 +10,7 @@ public class AimState : ActState
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Walk);
         base.Actor.Raise(ActorEvent.SetActorTargetAimMode, AimMode.IronSight);
         GlobalEvents.Raise(GlobalEvent.SetCameraAimMode, AimMode.IronSight);
+        GlobalEvents.Raise(GlobalEvent.SetCameraFOVMultiplier, ((WeaponController)base.Context["weapon"]).ZoomMultiplier);
     }
     public override void Tick()
     {
@@ -34,5 +35,6 @@ public class AimState : ActState
     {
         base.Actor.Raise(ActorEvent.SetActorTargetAimMode, AimMode.Default); 
         GlobalEvents.Raise(GlobalEvent.SetCameraAimMode, AimMode.Default);
+        GlobalEvents.Raise(GlobalEvent.SetCameraFOVMultiplier, 0f);
     }
 }
