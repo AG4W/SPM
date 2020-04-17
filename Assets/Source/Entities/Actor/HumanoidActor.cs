@@ -14,6 +14,8 @@ public class HumanoidActor : Entity
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
     [SerializeField]float skinWidth = .03f;
+    [SerializeField]float StaticFriction = .5f;
+    [SerializeField]float DynamicFriction = .4f;
 
     [Header("Animation")]
     [SerializeField]MovementMode mode = MovementMode.Jog;
@@ -176,7 +178,11 @@ public class HumanoidActor : Entity
                 this.transform.position += this.Velocity.normalized * allowedMoveDistance;
 
             if (hit.distance <= this.Velocity.magnitude)
-                this.Velocity += this.Velocity.GetNormalForce(hit.normal);
+            {
+                Vector3 tnf = this.Velocity.GetNormalForce(hit.normal);
+                this.Velocity += tnf;
+                this.Velocity = Friction(this.Velocity, tnf);
+            }
 
             CheckOverlap();
 
@@ -188,6 +194,9 @@ public class HumanoidActor : Entity
             if (counter == 11)
                 break;
         }
+
+        CheckOverlap(); // ifall vi breakar ur while-loopen vill vi fortfarande kolla overlap
+
     }
     void CheckOverlap()
     {
@@ -248,7 +257,24 @@ public class HumanoidActor : Entity
             counter++;
         }
     }
-
+    Vector3 Friction(Vector3 velocity, Vector3 normalForce)
+    {
+        /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
+         * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
+         * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
+         */
+        if (velocity.magnitude < (normalForce.magnitude * StaticFriction))
+        {
+            velocity.x = 0f;
+            velocity.z = 0f;
+            return velocity;
+        }
+        else
+        {
+            velocity += -velocity.normalized * (normalForce.magnitude * DynamicFriction);
+            return velocity;
+        }
+    }
     void UpdateGroundedStatus()
     {
         //Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
