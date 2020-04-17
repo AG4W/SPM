@@ -16,7 +16,7 @@ public class JumpState : FallState
         base.Enter();
         ((Animator)base.Context["animator"]).SetBool("isJumping", true);
 
-        base.Controller.IsGrounded = false;
+        base.Actor.IsGrounded = false;
         jumpTimer = 0f;
     }
     public override void Tick()
@@ -27,9 +27,9 @@ public class JumpState : FallState
 
         if (jumpTimer >= jumpDuration)
         {
-            if (base.Controller.IsGrounded)
+            if (base.Actor.IsGrounded)
             {
-                if (base.Controller.TargetInput.magnitude > .1f)
+                if (base.Actor.TargetInput.magnitude > .1f)
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                         base.TransitionTo<SprintState>();
@@ -44,13 +44,13 @@ public class JumpState : FallState
         }
 
         Vector3 velocity = Vector3.zero;
-        velocity += Vector3.up * jumpCurve.Evaluate(jumpTimer) * (base.GravitationalConstant + jumpAcceleration) * (Time.deltaTime / Time.timeScale);
+        velocity += Vector3.up * jumpCurve.Evaluate(jumpTimer) * jumpAcceleration * (Time.deltaTime / Time.timeScale);
         //lägg till väldigt lite styrfart för spelaren i luften
-        velocity += ((base.Controller.transform.right * base.Controller.TargetInput.x) + (base.Controller.transform.forward * base.Controller.TargetInput.z)) * (jumpInputModifier * (jumpDuration - jumpTimer)); //minska inputpåverkan längre in i hoppet
+        velocity += ((base.Actor.transform.right * base.Actor.TargetInput.x) + (base.Actor.transform.forward * base.Actor.TargetInput.z)) * (jumpInputModifier * (jumpDuration - jumpTimer)); //minska inputpåverkan längre in i hoppet
         //velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
         velocity *= Mathf.Pow(base.AirResistance, (Time.deltaTime / Time.timeScale));
 
-        GlobalEvents.Raise(GlobalEvent.ModifyPlayerVelocity, velocity);
+        GlobalEvents.Raise(GlobalEvent.ModifyActorVelocity, velocity);
     }
     public override void Exit()
     {

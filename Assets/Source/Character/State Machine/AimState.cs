@@ -7,8 +7,8 @@ public class AimState : ActState
     {
         base.Enter();
 
-        GlobalEvents.Raise(GlobalEvent.SetMovementMode, MovementMode.Walk);
-        GlobalEvents.Raise(GlobalEvent.SetTargetAimMode, AimMode.IronSight);
+        GlobalEvents.Raise(GlobalEvent.SetActorMovementMode, MovementMode.Walk);
+        GlobalEvents.Raise(GlobalEvent.SetActorTargetAimMode, AimMode.IronSight);
     }
     public override void Tick()
     {
@@ -16,7 +16,7 @@ public class AimState : ActState
 
         if (Input.GetKeyUp(KeyCode.Mouse1))
         {
-            if (base.Controller.TargetInput.magnitude > .1f)
+            if (base.Actor.TargetInput.magnitude > .1f)
             {
                 if (Input.GetKeyDown(KeyCode.LeftShift))
                     base.TransitionTo<SprintState>();
@@ -31,6 +31,6 @@ public class AimState : ActState
     }
     public override void Exit()
     {
-        GlobalEvents.Raise(GlobalEvent.SetTargetAimMode, AimMode.Default);
+        GlobalEvents.Raise(GlobalEvent.SetActorTargetAimMode, AimMode.Default);
     }
 }

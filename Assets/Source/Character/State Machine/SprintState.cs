@@ -6,7 +6,7 @@ public class SprintState : BaseLocomotionState
     public override void Enter()
     {
         base.Enter();
-        GlobalEvents.Raise(GlobalEvent.SetMovementMode, MovementMode.Sprint);
+        GlobalEvents.Raise(GlobalEvent.SetActorMovementMode, MovementMode.Sprint);
     }
     public override void Tick()
     {
@@ -14,7 +14,7 @@ public class SprintState : BaseLocomotionState
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            if (base.Controller.TargetInput.magnitude > .1f)
+            if (base.Actor.TargetInput.magnitude > .1f)
                 base.TransitionTo<MoveState>();
             else
                 base.TransitionTo<IdleState>();
@@ -24,6 +24,6 @@ public class SprintState : BaseLocomotionState
     }
     public override void Exit()
     {
-        GlobalEvents.Raise(GlobalEvent.SetMovementMode, MovementMode.Jog);
+        GlobalEvents.Raise(GlobalEvent.SetActorMovementMode, MovementMode.Jog);
     }
 }

@@ -1788,7 +1788,6 @@ GameObject:
   - component: {fileID: 9199550058994552007}
   - component: {fileID: 6106227005973504131}
   - component: {fileID: 4399153179899732112}
-  - component: {fileID: 5879649217900966343}
   - component: {fileID: 450760355962469599}
   - component: {fileID: 6582677308043489607}
   m_Layer: 31
@@ -1825,38 +1824,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29bd5ef44ca9f8f4299670574caf2184, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  torches:
-  - {fileID: 4329522906030489120}
-  - {fileID: 8817256634547699049}
-  velocity: {x: 0, y: 0, z: 0}
+  header: REPLACE ME
+  maxHealth: 10
+  healthRegenerationRate: 0
+  healthRegenerationAmount: 0
+  isDestructible: 1
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
-  mode: 2
-  inputModifier: 1
-  stance: 1
-  targetStance: 1
-  actualStance: 0
-  aimMode: 0
-  actualAimStance: 0
-  interpolationSpeed: 5
-  targetLookAtPosition: {x: 0, y: 0, z: 0}
-  actualLookAtPosition: {x: 0, y: 0, z: 0}
-  targetLookAtWeights: []
-  actualLookAtWeights: []
-  lookAtInterpolationSpeed: 5
   minHeight: 1.1
   maxHeight: 1.9
   collisionRadius: 0.25
   skinWidth: 0.03
-  staticFriction: 0.5
-  dynamicFriction: 0.4
-  airResistance: 0.5
+  mode: 2
+  inputModifier: 1
+  aimMode: 0
+  actualAimStance: 0
+  interpolationSpeed: 5
+  stance: 1
+  targetStance: 1
+  actualStance: 0
+  targetLookAtPosition: {x: 0, y: 0, z: 0}
+  actualLookAtPosition: {x: 0, y: 0, z: 0}
+  lookAtInterpolationSpeed: 5
   stepOverHeight: 0.5
   groundCheckDistance: 1
   fallDuration: 0
   isGrounded: 1
   wasGroundedLastFrame: 1
   weapon: {fileID: 1376414086891732870}
+  torches:
+  - {fileID: 4329522906030489120}
+  - {fileID: 8817256634547699049}
 --- !u!95 &4399153179899732112
 Animator:
   serializedVersion: 3
@@ -1876,23 +1874,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &5879649217900966343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3732218028707103781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bcbd1d9d68831541ae33bf1a69754c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  header: REPLACE ME
-  maxHealth: 100
-  healthRegenerationRate: 1
-  healthRegenerationAmount: 15
-  isDestructible: 1
 --- !u!114 &450760355962469599
 MonoBehaviour:
   m_ObjectHideFlags: 0

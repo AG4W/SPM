@@ -7,7 +7,7 @@ public class IdleState : ActState
     {
         base.Tick();
 
-        if (base.Controller.TargetInput.magnitude > .1f)
+        if (base.Actor.TargetInput.magnitude > .1f)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift))
                 base.TransitionTo<SprintState>();

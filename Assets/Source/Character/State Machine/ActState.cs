@@ -8,8 +8,8 @@ public abstract class ActState : BaseLocomotionState
 
         //fire
         if (Input.GetKey(KeyCode.Mouse0))
-        {
-            if (!((WeaponController)base.Context["weapon"]).CanFire || base.Controller.ActualInput.magnitude > 1f)
+        {                                                                                         //    \/ aaaaaaaaay lmao
+            if (!((WeaponController)base.Context["weapon"]).CanFire || base.Actor.ActualInput.normalized.magnitude > 1f)
                 return;
 
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));

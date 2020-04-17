@@ -65,6 +65,7 @@ public class StateMachine
     public void TransitionTo<T>() where T : State // T måste vara ett State
     {
         next = states[typeof(T)];
+        Debug.Log("Moving to: " + next.GetType().ToString());
     }
     public void TransitionBack()
     {
