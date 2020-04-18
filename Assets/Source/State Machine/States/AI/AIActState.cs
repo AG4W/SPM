@@ -40,7 +40,7 @@ public abstract class AIActState : AIBaseLocomotionState
             Vector3 fp = base.Pawn.Target.FocusPoint.position;
             fp += Random.insideUnitSphere * base.Pawn.Accuracy;
 
-            base.Actor.Raise(ActorEvent.FireActorWeapon, fp);
+            base.Actor.Raise(ActorEvent.FireActorWeapon, fp, base.Actor.ActualInput.magnitude);
         }
     }
     public override void Exit()

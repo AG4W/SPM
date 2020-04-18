@@ -864,7 +864,7 @@ GameObject:
   - component: {fileID: 762928531118067407}
   - component: {fileID: 282303529801915548}
   m_Layer: 0
-  m_Name: Sci Fi AR
+  m_Name: Assault Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -901,6 +901,7 @@ MonoBehaviour:
   shotsLeftInCurrentClip: 0
   fireTimer: 0
   fireRate: 0.05
+  baseSpread: 0.01
   damage: 2.5
   reloadTime: 2
   stoppingPower: 35

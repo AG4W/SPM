@@ -901,6 +901,7 @@ MonoBehaviour:
   shotsLeftInCurrentClip: 0
   fireTimer: 0
   fireRate: 0.45
+  baseSpread: 0.05
   damage: 2
   reloadTime: 4
   stoppingPower: 100
@@ -936,7 +937,6 @@ MonoBehaviour:
   - {fileID: 247856115}
   - {fileID: 1415539009}
   shots: 8
-  spread: 0.05
 --- !u!1 &5219028734383369599
 GameObject:
   m_ObjectHideFlags: 0
