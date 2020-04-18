@@ -206,7 +206,7 @@ public class WeaponController : MonoBehaviour
             texts[i].material.SetColor("_Emission", c * 8f);
             texts[i].color = c;
 
-            texts[i].text = shotsLeftInCurrentClip.ToString();
+            texts[i].text = this.NeedsReload ? "[ RELOAD ]" : shotsLeftInCurrentClip.ToString();
         }
 
         for (int i = 0; i < images.Length; i++)
