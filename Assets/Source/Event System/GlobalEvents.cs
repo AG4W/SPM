@@ -116,6 +116,13 @@ public enum ActorEvent
     SetActorTargetAimMode,
     SetActorTargetRotation,
 
+    //animator actor
+    SetActorAnimatorFloat,
+    SetActorAnimatorTrigger,
+    SetActorAnimatorBool,
+    SetActorAnimatorLayer,
+
+
     UpdateActorGroundedStatus,
 
     //weapon
@@ -128,6 +135,8 @@ public enum ActorEvent
     //IK
     SetActorLookAtPosition,
     SetActorLookAtWeights,
+    SetActorLeftHandTarget,
+    SetActorLeftHandWeight,
 
     //AI
     UpdateAITargetStatus

@@ -23,6 +23,9 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]LayerMask mask;
 
+    [Header("IK")]
+    [SerializeField]Transform leftHandIKTarget;
+
     [Header("Visual")]
     [SerializeField]GameObject[] shotPrefabs;
     [SerializeField]GameObject[] impactPrefabs;
@@ -59,8 +62,12 @@ public class WeaponController : MonoBehaviour
     protected LayerMask Mask { get { return mask; } }
 
     public float ZoomMultiplier { get { return zoomMultiplier; } }
+
+    public Transform LeftHandIKTarget { get { return leftHandIKTarget; } }
+
     public bool CanFire { get; private set; }
     public bool IsReloading { get; private set; }
+    public bool NeedsReload { get { return shotsLeftInCurrentClip == 0; } }
 
     void Start()
     {
@@ -97,9 +104,6 @@ public class WeaponController : MonoBehaviour
         UpdateWorldUI();
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
-
-        if (shotsLeftInCurrentClip == 0)
-            Reload();
     }
     protected virtual void OnFireWeapon(Vector3 target, Vector3 heading)
     {
