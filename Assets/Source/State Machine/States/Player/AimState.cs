@@ -17,7 +17,7 @@ public class AimState : ActState
     {
         base.Tick();
 
-        if (Input.GetKeyUp(KeyCode.Mouse1))
+        if (!Input.GetKey(KeyCode.Mouse1))
         {
             if (base.Actor.TargetInput.magnitude > .1f)
             {
@@ -35,6 +35,7 @@ public class AimState : ActState
     public override void Exit()
     {
         base.Actor.Raise(ActorEvent.SetActorTargetAimMode, AimMode.Default); 
+
         GlobalEvents.Raise(GlobalEvent.SetCameraAimMode, AimMode.Default);
         GlobalEvents.Raise(GlobalEvent.SetCameraFOVMultiplier, 0f);
     }

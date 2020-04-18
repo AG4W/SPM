@@ -12,7 +12,7 @@ public class SprintState : BaseLocomotionState
     {
         base.Tick();
 
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (!Input.GetKey(KeyCode.LeftShift))
         {
             if (base.Actor.TargetInput.magnitude > .1f)
                 base.TransitionTo<MoveState>();

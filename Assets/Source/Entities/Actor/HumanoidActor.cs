@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class HumanoidActor : Entity
 {
@@ -30,6 +31,9 @@ public class HumanoidActor : Entity
 
     [SerializeField]float targetStance;
     [SerializeField]float actualStance;
+
+    float[] targetLayerWeights;
+    float[] actualLayerWeights;
 
     [Header("IK")]
     [SerializeField]Vector3 targetLookAtPosition;
@@ -94,6 +98,9 @@ public class HumanoidActor : Entity
         }
 
         this.Animator = this.GetComponent<Animator>();
+
+        targetLayerWeights = new float[Enum.GetNames(typeof(AnimatorLayer)).Length];
+        actualLayerWeights = new float[Enum.GetNames(typeof(AnimatorLayer)).Length];
 
         //Input
         this.Subscribe(ActorEvent.SetActorTargetInput, SetTargetInput);
@@ -170,13 +177,35 @@ public class HumanoidActor : Entity
     void Interpolate()
     {
         actualInput = Vector3.Lerp(actualInput, targetInput, interpolationSpeed * (Time.deltaTime / Time.timeScale));
+
         actualStance = Mathf.Lerp(actualStance, targetStance, interpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+
+        for (int i = 0; i < targetLayerWeights.Length; i++)
+            actualLayerWeights[i] = Mathf.Lerp(actualLayerWeights[i], targetLayerWeights[i], interpolationSpeed * (Time.deltaTime / Time.timeScale));
+
+        //IK
         actualLookAtPosition = Vector3.Lerp(actualLookAtPosition, targetLookAtPosition, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualLeftHandWeight = Mathf.Lerp(actualLeftHandWeight, targetLeftHandWeight, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         for (int i = 0; i < targetLookAtWeights.Length; i++)
             actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+    }
+    void UpdateAnimator()
+    {
+        this.Animator.SetFloat("x", this.ActualInput.x);
+        this.Animator.SetFloat("z", this.ActualInput.z);
+
+        this.Animator.SetFloat("stance", actualStance);
+        this.Animator.SetFloat("aimStance", actualAimStance);
+
+        this.Animator.SetFloat("inputMagnitude", targetInput.magnitude);
+        this.Animator.SetFloat("fallDuration", fallDuration);
+
+        this.Animator.SetBool("isGrounded", isGrounded);
+
+        for (int i = 0; i < actualLayerWeights.Length; i++)
+            this.Animator.SetLayerWeight(i, actualLayerWeights[i]);
     }
 
     void CheckCollision()
@@ -312,15 +341,6 @@ public class HumanoidActor : Entity
         fallDuration += (isGrounded) ? 0f : (Time.deltaTime / Time.timeScale);
         //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
     }
-    void UpdateAnimator()
-    {
-        this.Animator.SetFloat("inputMagnitude", targetInput.magnitude);
-        this.Animator.SetFloat("fallDuration", fallDuration);
-        this.Animator.SetFloat("stance", actualStance);
-        this.Animator.SetFloat("aimStance", actualAimStance);
-
-        this.Animator.SetBool("isGrounded", isGrounded);
-    }
 
     void SetTargetInput(object[] args)
     {
@@ -374,7 +394,7 @@ public class HumanoidActor : Entity
     }
     void SetAnimatorLayer(object[] args)
     {
-        this.Animator.SetLayerWeight((int)(AnimatorLayer)args[0], (float)args[1]);
+        targetLayerWeights[(int)(AnimatorLayer)args[0]] = (float)args[1];
     }
 
     //IK

@@ -39,4 +39,8 @@ public abstract class State : ScriptableObject
     {
         this.StateMachine.TransitionTo<T>();
     }
+    public void Return()
+    {
+        this.StateMachine.Return();
+    }
 }

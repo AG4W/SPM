@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+using System.Collections.Generic;
 public class LocomotionController : HumanoidActor
 {
     [SerializeField]GameObject[] torches;
@@ -16,15 +16,6 @@ public class LocomotionController : HumanoidActor
         if (jig == null)
             Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
 
-        GlobalEvents.Subscribe(GlobalEvent.ForcePowerActivated, (object[] args) =>
-        {
-            if (!base.IsGrounded)
-                return;
-
-            base.Animator.SetFloat("castIndex", (int)((Ability)args[0]).AnimationIndex);
-            base.Animator.SetTrigger("cast");
-            base.Animator.SetLayerWeight(2, 1f);
-        });
         //flytta detta till en separat controller sen, borde nog inte vara här
         GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
         {

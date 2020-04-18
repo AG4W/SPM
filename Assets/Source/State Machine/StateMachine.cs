@@ -7,12 +7,12 @@ using System.Collections.Generic;
 public class StateMachine
 {
     [SerializeField]bool debugStateMachine = false;
-    HumanoidActor owner; 
+    HumanoidActor owner;
+
+    readonly Stack<State> queue = new Stack<State>();
+    readonly Dictionary<Type, State> states = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
 
     State next;
-
-    //private Stack<State> automaton;
-    Dictionary<Type, State> states = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
 
     public State Current { get; private set; }
 
@@ -69,19 +69,15 @@ public class StateMachine
 
         next = states[typeof(T)];
     }
-    public void TransitionBack()
+    public void Return()
     {
-        // NOTE(Fors): Pushdown automaton
-        /*
-        if (automaton.Count != 0)
-            queuedState = automaton.Pop();
-            */
+        if (queue.Count > 0)
+            next = queue.Pop();
     }
 
     public void Tick()
     {
         this.Current.Tick();
-
         UpdateState();
     }
 
@@ -90,8 +86,10 @@ public class StateMachine
         if (next != null && next != Current)
         {
             this.Current?.Exit();
-            //: Pushdown automaton
-            //automaton.Push(currentState);
+
+            if(this.Current != null)
+                queue.Push(this.Current);
+            
             this.Current = next;
             this.Current.Enter();
         }

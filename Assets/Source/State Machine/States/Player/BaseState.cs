@@ -39,9 +39,6 @@ public abstract class BaseState : State
     {
         UpdateAnimatorIK();
 
-        ((Animator)base.Context["animator"]).SetFloat("x", base.Actor.ActualInput.x);
-        ((Animator)base.Context["animator"]).SetFloat("z", base.Actor.ActualInput.z);
-
         base.Actor.Raise(ActorEvent.SetActorTargetInput, new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")));
         // Ground Check
         base.Actor.Raise(ActorEvent.UpdateActorGroundedStatus);
@@ -62,7 +59,7 @@ public abstract class BaseState : State
         else
             base.Actor.Raise(ActorEvent.SetActorLookAtPosition, ray.GetPoint(10f));
 
-        Debug.DrawLine(((HumanoidActor)base.Context["actor"]).FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
+        Debug.DrawLine(base.Actor.FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
         base.Actor.Raise(ActorEvent.SetActorLookAtWeights, new float[] { total, body, head, eyes, clamp });
     }
 }

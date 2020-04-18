@@ -10,9 +10,9 @@ public class MoveState : ActState
 
         if (base.Actor.TargetInput.magnitude < .1f)
             base.TransitionTo<IdleState>();
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
             base.TransitionTo<SprintState>();
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.Mouse1))
             base.TransitionTo<AimState>();
     }
     public override void Exit()

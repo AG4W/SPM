@@ -14,7 +14,7 @@ public abstract class ActState : BaseLocomotionState
         if (base.Actor.ActualInput.normalized.magnitude > 1f)
             return;
 
-        //fire
+        //weapon
         if (Input.GetKey(KeyCode.Mouse0))
         {
             if (((WeaponController)base.Context["weapon"]).NeedsReload && !((WeaponController)base.Context["weapon"]).IsReloading)
@@ -28,7 +28,15 @@ public abstract class ActState : BaseLocomotionState
 
             base.Actor.Raise(ActorEvent.FireActorWeapon, hit.transform != null ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude);
         }
-        if (Input.GetKey(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
             base.TransitionTo<ReloadState>();
+
+        //abilities
+        if (Input.GetKey(KeyCode.Alpha1))
+            base.TransitionTo<PushState>();
+        if (Input.GetKey(KeyCode.Alpha2))
+            base.TransitionTo<PullState>();
+        if (Input.GetKey(KeyCode.Alpha3))
+            base.TransitionTo<TimeDilationState>();
     }
 }
