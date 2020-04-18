@@ -9,7 +9,8 @@ public class ShotgunController : WeaponController
     {
         for (int i = 0; i < shots; i++)
         {
-            Vector3 h = (target + new Vector3(Random.Range(-spread, spread), Random.Range(-spread, spread), Random.Range(-spread, spread))) - base.ExitPoint.position;
+            Vector3 h = heading.normalized + new Vector3(Random.Range(-spread, spread), Random.Range(-spread, spread), Random.Range(-spread, spread));
+                //(target + new Vector3(Random.Range(-spread, spread), Random.Range(-spread, spread), Random.Range(-spread, spread))) - base.ExitPoint.position;
 
             Physics.Raycast(base.ExitPoint.position, h.normalized, out RaycastHit hit, Mathf.Infinity, base.Mask);
 
@@ -21,13 +22,19 @@ public class ShotgunController : WeaponController
                 if (e == null)
                 {
                     if (hit.transform.GetComponent<Rigidbody>())
-                        hit.transform.GetComponent<Rigidbody>().AddForce(heading.normalized * base.StoppingPower, ForceMode.Impulse);
+                    {
+                        //do some dropoff so we dont shoot stuff around on the entire map
+                        Vector3 force = heading.normalized * base.StoppingPower;
+                        force /= hit.point.DistanceTo(base.ExitPoint.position);
+                        hit.transform.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+                    }
                 }
                 else
                     e.Health.Update(-base.Damage);
             }
 
-            Debug.DrawLine(base.ExitPoint.position, hit.transform != null ? hit.point : base.ExitPoint.position + h.normalized * 50f, Color.red);
+            Debug.DrawRay(base.ExitPoint.position, h, Color.red, .5f);
+            //Debug.DrawLine(base.ExitPoint.position, hit.transform != null ? hit.point : base.ExitPoint.position + h.normalized * 50f, Color.red);
             base.CreateVFX(h, hit);
         }
 

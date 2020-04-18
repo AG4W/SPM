@@ -5,9 +5,9 @@ public class ForcePush : Ability
 {
     [SerializeField]float radius;
     [SerializeField]float distance;
+    [SerializeField]float powerMultiplier;
 
     [SerializeField]AnimationCurve power;
-    [SerializeField]float powerMultiplier;
 
     public override void Tick()
     {
@@ -16,21 +16,15 @@ public class ForcePush : Ability
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
         RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance);
 
-        Debug.DrawRay(ray.origin, ray.GetPoint(distance));
-
         for (int i = 0; i < hits.Length; i++)
         {
-            float distanceModifier = Mathf.InverseLerp(distance, 0f, hits[i].distance);
+            if (hits[i].transform.GetComponent<IForceAffectable>() != null)
+            {
+                if (base.Debug)
+                    UnityEngine.Debug.DrawLine(ray.origin, hits[i].point, Color.Lerp(Color.white, Color.red, base.DurationTimer01));
 
-            Rigidbody rb = hits[i].transform.GetComponent<Rigidbody>();
-
-            Vector3 force = (hits[i].transform.root.position - ray.origin).normalized * power.Evaluate(base.DurationTimer01) * powerMultiplier * distanceModifier;
-
-            //för icke-actors som fortfarande ska röra sig
-            if (rb != null)
-                rb.AddForce(force, ForceMode.Impulse);
-            //else if (nap != null)
-            //    nap.ModifyVelocity(force * nap.ForceInfluenceModifier * Time.deltaTime);
+                hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(ray.origin.DirectionTo(hits[i].point).normalized * powerMultiplier * power.Evaluate(base.DurationTimer01));
+            }
         }
     }
 }
