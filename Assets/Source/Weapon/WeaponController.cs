@@ -93,7 +93,7 @@ public class WeaponController : MonoBehaviour
         shotsLeftInCurrentClip--;
 
         //apply velocity spread from actor movement
-        OnFireWeapon(target, exitPoint.position.DirectionTo(target).normalized + (new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude))) * .1f);
+        OnFireWeapon(target, exitPoint.position.DirectionTo(target).normalized + (new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude))) * .025f);
         UpdateWorldUI();
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
