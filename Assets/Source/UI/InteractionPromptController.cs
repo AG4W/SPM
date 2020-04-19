@@ -5,12 +5,12 @@ public class InteractionPromptController : MonoBehaviour
 {
     [SerializeField]Text prompt;
 
-    InteractableEntity target;
+    IInteractable interactable;
 
     void Awake()
     {
-        GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableEntityChanged, (object[] args) => {
-            InteractableEntity entity = args[0] as InteractableEntity;
+        GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
+            IInteractable entity = args[0] as IInteractable;
 
             if (entity != null)
                 OpenInteractPrompt(entity, args[1] as Transform);
@@ -23,24 +23,27 @@ public class InteractionPromptController : MonoBehaviour
     }
     void Update()
     {
-        if (target == null)
+        if (interactable == null)
             return;
 
-        prompt.transform.position = Camera.main.WorldToScreenPoint(target.transform.position + target.PromptOffset);
+        prompt.transform.position = Camera.main.WorldToScreenPoint(interactable.PromptPosition);
 
         if (Input.GetKeyDown(KeyCode.E))
-            target.Interact();
+        {
+            interactable.Interact();
+            GlobalEvents.Raise(GlobalEvent.OnInteractableActivated, interactable);
+        }
     }
-    void OpenInteractPrompt(InteractableEntity entity, Transform interactee)
+    void OpenInteractPrompt(IInteractable entity, Transform interactee)
     {
-        target = entity;
+        interactable = entity;
 
-        prompt.text = entity.Header;
+        prompt.text = entity.InteractionHeader;
         prompt.gameObject.SetActive(true);
     }
     void CloseInteractPrompt()
     {
         prompt.gameObject.SetActive(false);
-        target = null;
+        interactable = null;
     }
 }

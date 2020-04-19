@@ -519,6 +519,11 @@ PrefabInstance:
       propertyPath: connectedEntities.Array.data[0]
       value: 
       objectReference: {fileID: 2029691672719843360}
+    - target: {fileID: 3378422049629057278, guid: 8f5971946902c7d4abb0d8438dce62b2,
+        type: 3}
+      propertyPath: interactionHeader
+      value: Open
+      objectReference: {fileID: 0}
     - target: {fileID: 3378422049629057279, guid: 8f5971946902c7d4abb0d8438dce62b2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -604,6 +609,11 @@ PrefabInstance:
       propertyPath: connectedEntities.Array.data[0]
       value: 
       objectReference: {fileID: 2029691672719843360}
+    - target: {fileID: 3378422049629057278, guid: 8f5971946902c7d4abb0d8438dce62b2,
+        type: 3}
+      propertyPath: interactionHeader
+      value: Open
+      objectReference: {fileID: 0}
     - target: {fileID: 3378422049629057279, guid: 8f5971946902c7d4abb0d8438dce62b2,
         type: 3}
       propertyPath: m_LocalPosition.x

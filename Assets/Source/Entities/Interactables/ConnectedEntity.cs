@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 
-using System.Collections;
-
-public class InteractableEntity : Entity
+public class ConnectedEntity : Entity, IInteractable
 {
-    [SerializeField]GameObject[] connectedEntities;
-    [SerializeField]Vector3 promptOffset;
+    [SerializeField]string interactionHeader = "Replace Me";
 
     [SerializeField]float interactionDistance = 5f;
-    [SerializeField]float interactionDelay = 0f;
+
+    [SerializeField]GameObject[] connectedEntities;
+    [SerializeField]Vector3 promptOffset;
 
     [SerializeField]bool isRepeatable = true;
     [SerializeField]bool activateOnDestruction = false;
@@ -17,9 +16,11 @@ public class InteractableEntity : Entity
     [SerializeField]AudioClip[] interactionSoundEffects;
 
     protected GameObject[] ConnectedEntities { get { return connectedEntities; } }
-    public Vector3 PromptOffset { get { return promptOffset; } }
 
+    public virtual string InteractionHeader { get { return interactionHeader; } }
     public float InteractionDistance { get { return interactionDistance; } }
+
+    public Vector3 PromptPosition { get { return this.transform.position + promptOffset; } }
 
     protected override void Initalize()
     {
@@ -39,25 +40,24 @@ public class InteractableEntity : Entity
             Debug.LogWarning(this.name + " is missing an audiosource and will not play any sound!", this.gameObject);
     }
 
-    protected override void OnHealthZero()
-    {
-        if (activateOnDestruction)
-            Interact();
-
-        base.OnHealthZero();
-    }
-
     public void Interact()
     {
         OnInteractionStart();
-        this.StartCoroutine(InteractAsync());
+
+        if (!isRepeatable)
+            Destroy(this);
+    }
+    protected virtual void OnInteractionStart()
+    {
+        CreateInteractionVFX();
+        CreateInteractionSFX();
     }
 
-    protected virtual void CreateOnInteractVFX()
+    protected virtual void CreateInteractionVFX()
     {
 
     }
-    protected virtual void CreateOnInteractSFX()
+    protected virtual void CreateInteractionSFX()
     {
         if (interactionSoundEffects != null && interactionSoundEffects.Length > 0)
         {
@@ -67,26 +67,14 @@ public class InteractableEntity : Entity
                 source.PlayOneShot(interactionSoundEffects.Random());
         }
     }
-    
-    protected virtual void OnInteractionStart()
-    {
-        CreateOnInteractVFX();
-        CreateOnInteractSFX();
-    }
-    protected virtual void OnInteractionDelayComplete()
-    {
-        
-    }
 
     //Auto-reset on timer
     //Timed interact
-
-    IEnumerator InteractAsync()
+    protected override void OnHealthZero()
     {
-        yield return new WaitForSeconds(interactionDelay);
-        OnInteractionDelayComplete();
+        if (activateOnDestruction)
+            Interact();
 
-        if (!isRepeatable)
-            Destroy(this);
+        base.OnHealthZero();
     }
 }
