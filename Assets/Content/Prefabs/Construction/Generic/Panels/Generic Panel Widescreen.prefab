@@ -357,20 +357,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8ff976ba7a45a45b16d31822644be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  header: REPLACE ME
   maxHealth: 10
   healthRegenerationRate: 0
   healthRegenerationAmount: 0
   isDestructible: 1
+  interactionHeader: Replace Me
+  interactionDistance: 4
   connectedEntities: []
   promptOffset: {x: 0, y: 0.25, z: 0}
-  interactionDistance: 4
-  interactionDelay: 0.1
   isRepeatable: 1
   activateOnDestruction: 1
   source: {fileID: 2156119448105020832}
   interactionSoundEffects:
   - {fileID: 8300000, guid: 0784b3bc373617a45b35870f0153e72b, type: 3}
+  offHeader: Close
 --- !u!65 &2156119447982649027
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -382,8 +382,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.3, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.3, y: 0.3, z: 0.023447461}
+  m_Center: {x: 0, y: 0, z: 0.0067237318}
 --- !u!1 &2156119448105020846
 GameObject:
   m_ObjectHideFlags: 0

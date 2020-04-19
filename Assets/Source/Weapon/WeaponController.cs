@@ -100,4 +100,8 @@ public class WeaponController : MonoBehaviour
         shotsLeftInCurrentClip = this.weapon.ClipSize;
         uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
     }
+    public void OnDeath()
+    {
+
+    }
 }

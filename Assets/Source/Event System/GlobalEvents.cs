@@ -99,7 +99,8 @@ public enum GlobalEvent
     SetCameraFOVMultiplier,
 
     //ui
-    CurrentInteractableEntityChanged,
+    OnInteractableActivated,
+    CurrentInteractableChanged,
 
     //ai
     NoiseCreated,
