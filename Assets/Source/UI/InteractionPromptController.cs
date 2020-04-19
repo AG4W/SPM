@@ -12,7 +12,7 @@ public class InteractionPromptController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
             IInteractable entity = args[0] as IInteractable;
 
-            if (entity != null)
+            if (entity != null && entity.WantsPrompt)
                 OpenInteractPrompt(entity, args[1] as Transform);
             else
                 CloseInteractPrompt();
@@ -26,19 +26,16 @@ public class InteractionPromptController : MonoBehaviour
         if (interactable == null)
             return;
 
-        prompt.transform.position = Camera.main.WorldToScreenPoint(interactable.PromptPosition);
+        //prompt.transform.position = Camera.main.WorldToScreenPoint(interactable.PromptPosition);
 
         if (Input.GetKeyDown(KeyCode.E))
-        {
             interactable.Interact();
-            GlobalEvents.Raise(GlobalEvent.OnInteractableActivated, interactable);
-        }
     }
     void OpenInteractPrompt(IInteractable entity, Transform interactee)
     {
         interactable = entity;
 
-        prompt.text = entity.InteractionHeader;
+        prompt.text = entity.Prompt;
         prompt.gameObject.SetActive(true);
     }
     void CloseInteractPrompt()

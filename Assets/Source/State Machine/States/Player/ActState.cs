@@ -17,7 +17,7 @@ public abstract class ActState : BaseLocomotionState
         //weapon
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (base.Get<WeaponController>().NeedsReload && !base.Get<WeaponController>().IsReloading)
+            if (base.Get<WeaponController>().NeedsReload)
                 base.TransitionTo<ReloadState>();
 
             if (!base.Get<WeaponController>().CanFire)
@@ -28,7 +28,7 @@ public abstract class ActState : BaseLocomotionState
 
             base.Get<WeaponController>().Fire(hit.transform != null ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude);
         }
-        if (Input.GetKeyDown(KeyCode.R) && !base.Get<WeaponController>().IsReloading)
+        if (Input.GetKeyDown(KeyCode.R))
             base.TransitionTo<ReloadState>();
 
         //abilities

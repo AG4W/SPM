@@ -2,11 +2,12 @@
 
 public class ConnectedEntity : Entity, IInteractable
 {
-    [SerializeField]string interactionHeader = "Replace Me";
+    [SerializeField]string prompt;
 
     [SerializeField]float interactionDistance = 5f;
 
-    [SerializeField]GameObject[] connectedEntities;
+    [SerializeField]ConnectedEntity[] linkedControllers;
+    [SerializeField]GameObject[] connectedObjects;
     [SerializeField]Vector3 promptOffset;
 
     [SerializeField]bool isRepeatable = true;
@@ -15,18 +16,18 @@ public class ConnectedEntity : Entity, IInteractable
     [SerializeField]AudioSource source;
     [SerializeField]AudioClip[] interactionSoundEffects;
 
-    protected GameObject[] ConnectedEntities { get { return connectedEntities; } }
+    protected GameObject[] ConnectedEntities { get { return connectedObjects; } }
 
-    public virtual string InteractionHeader { get { return interactionHeader; } }
+    public string Prompt { get { return prompt; } }
     public float InteractionDistance { get { return interactionDistance; } }
-
-    public Vector3 PromptPosition { get { return this.transform.position + promptOffset; } }
+    public Vector3 Position { get { return this.transform.position; } }
+    public bool WantsPrompt { get { return prompt.Length > 0; } }
 
     protected override void Initalize()
     {
         base.Initalize();
 
-        if(connectedEntities.Length == 0)
+        if(connectedObjects.Length == 0)
             Debug.LogError(this.name + " does not have any connected entities, did you forget to assign them?", this.gameObject);
         if (this.GetComponent<Collider>() == null)
             Debug.LogError(this.name + " is missing a collider or trigger and will not be interactable.", this.gameObject);
@@ -38,26 +39,65 @@ public class ConnectedEntity : Entity, IInteractable
         //ifall det fortfarande inte finns någon, skicka argt meddelande.
         if(source == null)
             Debug.LogWarning(this.name + " is missing an audiosource and will not play any sound!", this.gameObject);
+
+        this.onLinkedStart += OnLinkedStart;
+        this.onLinkedAnimate += OnLinkedAnimate;
+        this.onLinkedComplete += OnLinkedComplete;
     }
 
     public void Interact()
     {
-        OnInteractionStart();
+        OnInteractStart();
 
         if (!isRepeatable)
             Destroy(this);
     }
-    protected virtual void OnInteractionStart()
+
+    //vad som händer när denna aktiveras
+    public virtual void OnInteractStart()
     {
-        CreateInteractionVFX();
-        CreateInteractionSFX();
+        GlobalEvents.Raise(GlobalEvent.OnInteractableStart);
+
+        for (int i = 0; i < linkedControllers.Length; i++)
+            linkedControllers[i].onLinkedStart?.Invoke(this);
+
+        CreateInteractionStartVFX();
+        CreateInteractionStartSFX();
+    }
+    //behöver inte kallas
+    //används mest för att trigga UI update när något animerat klart
+    public virtual void OnInteractAnimate()
+    {
+        for (int i = 0; i < linkedControllers.Length; i++)
+            linkedControllers[i].onLinkedAnimate?.Invoke(this);
+    }
+    public virtual void OnInteractComplete()
+    {
+        for (int i = 0; i < linkedControllers.Length; i++)
+            linkedControllers[i].onLinkedComplete?.Invoke(this);
+
+        GlobalEvents.Raise(GlobalEvent.OnInteractableComplete);
     }
 
-    protected virtual void CreateInteractionVFX()
+    //Vad som händer när en länkad controller aktiveras
+    protected virtual void OnLinkedStart(ConnectedEntity other)
     {
 
     }
-    protected virtual void CreateInteractionSFX()
+    protected virtual void OnLinkedAnimate(ConnectedEntity other)
+    {
+
+    }
+    protected virtual void OnLinkedComplete(ConnectedEntity other)
+    {
+
+    }
+
+    protected virtual void CreateInteractionStartVFX()
+    {
+
+    }
+    protected virtual void CreateInteractionStartSFX()
     {
         if (interactionSoundEffects != null && interactionSoundEffects.Length > 0)
         {
@@ -77,4 +117,9 @@ public class ConnectedEntity : Entity, IInteractable
 
         base.OnHealthZero();
     }
+
+    public delegate void LinkedControllerEvent(ConnectedEntity other);
+    public LinkedControllerEvent onLinkedStart;
+    public LinkedControllerEvent onLinkedAnimate;
+    public LinkedControllerEvent onLinkedComplete;
 }

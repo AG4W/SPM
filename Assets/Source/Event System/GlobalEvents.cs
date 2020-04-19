@@ -99,7 +99,8 @@ public enum GlobalEvent
     SetCameraFOVMultiplier,
 
     //ui
-    OnInteractableActivated,
+    OnInteractableStart,
+    OnInteractableComplete,
     CurrentInteractableChanged,
 
     //ai

@@ -2,15 +2,10 @@
 
 public class WeaponPickup : ConnectedEntity
 {
-    Weapon weapon;
+    [SerializeField]Weapon weapon;
 
-    public void RuntimeInitialize(Weapon weapon)
+    public override void OnInteractStart()
     {
-        this.weapon = weapon;
-    }
-
-    protected override void OnInteractionStart()
-    {
-        base.OnInteractionStart();
+        base.OnInteractStart();
     }
 }

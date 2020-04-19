@@ -2,10 +2,11 @@
 
 public interface IInteractable
 {
-    string InteractionHeader { get; }
+    string Prompt { get; }
     float InteractionDistance { get; }
+    bool WantsPrompt { get; }
 
-    Vector3 PromptPosition { get; }
+    Vector3 Position { get; }
 
     void Interact();
 }

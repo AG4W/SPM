@@ -3,6 +3,45 @@ using UnityEngine;
 
 public static class Extensions
 {
+    //floats
+    //try using these when lerping to improve feels
+    //linear interpolation feels boring af
+    //glorious curves superior
+    public static float Smoothstep(this float t)
+    {
+        return t * t * (3f - 2f * t);
+    }
+    public static float Smootherstep(this float t)
+    {
+        return t * t * t * (t * (6f * t - 15f) + 10f);
+    }
+    public static float EaseOut(this float t)
+    {
+        return Mathf.Sin(t * Mathf.PI * .5f);
+    }
+    public static float EaseIn(this float t)
+    {
+        return 1f - Mathf.Cos(t * Mathf.PI * .5f);
+    }
+    public static float Interpolate(this float t, InterpolationMode mode)
+    {
+        switch (mode)
+        {
+            case InterpolationMode.Linear:
+                return t;
+            case InterpolationMode.Smoothstep:
+                return t.Smoothstep();
+            case InterpolationMode.Smootherstep:
+                return t.Smootherstep();
+            case InterpolationMode.EaseIn:
+                return t.EaseIn();
+            case InterpolationMode.EaseOut:
+                return t.EaseOut();
+            default:
+                return t;
+        }
+    }
+
     //arrays
     public static T Random<T>(this T[] array)
     {
@@ -81,4 +120,12 @@ public static class Extensions
 
         return null;
     }
+}
+public enum InterpolationMode
+{
+    Linear,
+    Smoothstep,
+    Smootherstep,
+    EaseIn,
+    EaseOut,
 }

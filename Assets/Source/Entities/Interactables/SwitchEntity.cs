@@ -1,30 +1,92 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class SwitchEntity : ConnectedEntity
 {
     [Header("Switch Settings")]
-    [SerializeField]string offHeader = "Offstate - Replace Me";
+    [SerializeField]string onText;
+    [SerializeField]string offText;
 
-    bool inOffState = false;
+    [Header("UI Settings")]
+    [SerializeField]GameObject worldUIRoot;
 
-    public override string InteractionHeader
+    [SerializeField]Color onColor = Color.blue;
+    [SerializeField]Color offColor = Color.red;
+
+    [SerializeField]Text[] texts;
+    [SerializeField]Image[] images;
+    [SerializeField]Light[] lights;
+
+    [SerializeField]
+
+    protected bool InOffState { get; set; } = false;
+    protected override void Initalize()
     {
-        get
-        {
-            if (inOffState)
-                return offHeader;
-            else
-                return base.InteractionHeader;
-        }
+        base.Initalize();
+
+        Material tm = Instantiate(texts.First().material);
+        Material im = Instantiate(images.First().material);
+
+        for (int i = 0; i < texts.Length; i++)
+            texts[i].material = tm;
+        for (int i = 0; i < images.Length; i++)
+            images[i].material = im;
+
+        UpdateWorldUI();
+    }
+    public override void OnInteractStart()
+    {
+        base.OnInteractStart();
+
+        Switch();
+        UpdateWorldUI();
     }
 
-    protected override void OnInteractionStart()
+    protected override void OnLinkedStart(ConnectedEntity other)
     {
-        base.OnInteractionStart();
+        base.OnLinkedStart(other);
 
-        for (int i = 0; i < base.ConnectedEntities.Length; i++)
-            base.ConnectedEntities[i].SetActive(!base.ConnectedEntities[i].activeSelf);
+        Switch();
+        UpdateWorldUI();
+    }
+    protected override void OnLinkedComplete(ConnectedEntity other)
+    {
+        base.OnLinkedComplete(other);
 
-        inOffState = !inOffState;
+        UpdateWorldUI();
+    }
+
+    public void Switch()
+    {
+        this.InOffState = !this.InOffState;
+    }
+
+    public virtual void OverrideWorldUI(string text, Color color)
+    {
+        for (int i = 0; i < texts.Length; i++)
+        {
+            texts[i].material.SetColor("_Color", color);
+            texts[i].material.SetColor("_Emission", color * 16f);
+            texts[i].color = color;
+            texts[i].text = text;
+        }
+        for (int i = 0; i < images.Length; i++)
+        {
+            images[i].material.SetColor("_Color", color);
+            images[i].material.SetColor("_Emission", color * 16f);
+            images[i].color = color;
+        }
+        for (int i = 0; i < lights.Length; i++)
+            lights[i].color = color;
+
+        worldUIRoot.SetActive(true);
+    }
+    public void UpdateWorldUI()
+    {
+        OverrideWorldUI(this.InOffState ? offText : onText, this.InOffState ? offColor : onColor);
+    }
+    public virtual void CloseWorldUI()
+    {
+        worldUIRoot.SetActive(false);
     }
 }

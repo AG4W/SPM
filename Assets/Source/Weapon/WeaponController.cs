@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 
-using System.Collections;
-
 public class WeaponController : MonoBehaviour
 {
     int shotsLeftInCurrentClip;
@@ -16,15 +14,16 @@ public class WeaponController : MonoBehaviour
     //cached stuff
     GameObject model;
     Transform exitPoint;
+    Light muzzleFlash;
     AudioSource source;
     WeaponWorldUIController uiController;
 
     protected LayerMask Mask { get { return mask; } }
 
     public Transform LeftHandIKTarget { get; private set; }
+    public Weapon Weapon { get { return weapon; } }
 
     public bool CanFire { get; private set; }
-    public bool IsReloading { get; private set; }
     public bool NeedsReload { get { return shotsLeftInCurrentClip == 0; } }
 
     void Awake()
@@ -33,9 +32,12 @@ public class WeaponController : MonoBehaviour
     }
     void Update()
     {
-        if (!CanFire && !IsReloading)
+        if (!CanFire)
         {
             fireTimer += Time.deltaTime;
+
+            if (fireTimer >= .03f)
+                muzzleFlash.gameObject.SetActive(false);
 
             if (fireTimer >= weapon.FireRate)
             {
@@ -47,12 +49,13 @@ public class WeaponController : MonoBehaviour
 
     public void Fire(Vector3 target, float magnitude)
     {
-        if (!CanFire || IsReloading)
+        if (!CanFire || NeedsReload)
             return;
 
         this.CanFire = false;
         shotsLeftInCurrentClip--;
         uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+        muzzleFlash.gameObject.SetActive(true);
 
         //apply velocity spread modifier
         Vector3 velocitySpread = new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude)) * .05f;
@@ -63,19 +66,9 @@ public class WeaponController : MonoBehaviour
     }
     public void Reload()
     {
-        if (this.IsReloading)
-            return;
-
-        StartCoroutine(ReloadAsync());
-    }
-    IEnumerator ReloadAsync()
-    {
-        this.IsReloading = true;
-        yield return new WaitForSeconds(weapon.ReloadTime);
-
         shotsLeftInCurrentClip = weapon.ClipSize;
         uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
-        this.IsReloading = false;
+        source.PlayOneShot(this.weapon.ReloadSFX.Random());
     }
 
     public void SetWeapon(Weapon weapon)
@@ -94,6 +87,8 @@ public class WeaponController : MonoBehaviour
         exitPoint = model.transform.FindRecursively("exitPoint");
         this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
         uiController = model.GetComponentInChildren<WeaponWorldUIController>();
+        muzzleFlash = model.transform.FindRecursively("muzzleFlash").GetComponent<Light>();
+        muzzleFlash.gameObject.SetActive(false);
         source = model.GetComponentInChildren<AudioSource>();
 
         //update counter and UI

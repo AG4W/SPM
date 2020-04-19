@@ -6,7 +6,7 @@ public class Weapon : ScriptableObject
     [SerializeField]int clipSize = 20;
 
     [SerializeField]float damage = 3f;
-    [SerializeField]float fireRate = .5f;
+    [Range(.03f, 2f)][SerializeField]float fireRate = .5f;
     [SerializeField]float stoppingPower = 10f;
     [SerializeField]float spread = 0f;
     [SerializeField]float reloadTime = 2f;
@@ -88,6 +88,7 @@ public class Weapon : ScriptableObject
     }
     protected virtual void CreateShotSFX(AudioSource source)
     {
+        source.pitch = Random.Range(minPitch, maxPitch);
         source.PlayOneShot(shotSFX.Random());
     }
 }

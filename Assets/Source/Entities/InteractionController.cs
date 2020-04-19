@@ -8,9 +8,10 @@ public class InteractionController : MonoBehaviour
 
     void Awake()
     {
-        GlobalEvents.Subscribe(GlobalEvent.OnInteractableActivated, (object[] args) => GlobalEvents.Raise(GlobalEvent.CurrentInteractableChanged, interactable, this.transform));
+        GlobalEvents.Subscribe(GlobalEvent.OnInteractableStart, (object[] args) => interactable = null);
+        GlobalEvents.Subscribe(GlobalEvent.OnInteractableComplete, (object[] args) => interactable = null);
     }
-    void FixedUpdate()
+    void Update()
     {
         UpdateCurrentEntity();
     }
@@ -26,7 +27,7 @@ public class InteractionController : MonoBehaviour
         {
             IInteractable entity = hit.transform.GetComponent<IInteractable>();
 
-            if (entity != null && Vector3.Distance(this.transform.position, entity.PromptPosition) <= entity.InteractionDistance)
+            if (entity != null && Vector3.Distance(this.transform.position, entity.Position) <= entity.InteractionDistance)
                 interactable = entity;
             else
                 interactable = null;

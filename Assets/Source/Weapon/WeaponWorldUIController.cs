@@ -30,7 +30,7 @@ public class WeaponWorldUIController : MonoBehaviour
             texts[i].material.SetColor("_Color", c);
             texts[i].material.SetColor("_Emission", c * 8f);
             texts[i].color = c;
-            texts[i].text = shotsLeft.ToString();
+            texts[i].text = shotsLeft == 0 ? "RELOAD" : shotsLeft.ToString();
         }
         for (int i = 0; i < images.Length; i++)
         {

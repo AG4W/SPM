@@ -34,7 +34,7 @@ public abstract class AIActState : AIBaseLocomotionState
             base.Actor.Raise(ActorEvent.SetActorLookAtPosition, base.Pawn.Target.FocusPoint.position);
             base.Actor.Raise(ActorEvent.SetActorLookAtWeights, weights);
 
-            if (base.Get<WeaponController>().NeedsReload && !base.Get<WeaponController>().IsReloading)
+            if (base.Get<WeaponController>().NeedsReload)
                 base.Get<WeaponController>().Reload();
 
             if (!base.Get<WeaponController>().CanFire || base.Actor.ActualInput.normalized.magnitude > 1f)
