@@ -14,7 +14,7 @@ public class JumpState : FallState
     public override void Enter()
     {
         base.Enter();
-        ((Animator)base.Context["animator"]).SetBool("isJumping", true);
+        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", true);
 
         base.Actor.IsGrounded = false;
         jumpTimer = 0f;
@@ -56,6 +56,6 @@ public class JumpState : FallState
     public override void Exit()
     {
         base.Exit();
-        ((Animator)base.Context["animator"]).SetBool("isJumping", false);
+        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", false);
     }
 }

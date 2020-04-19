@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class StateMachine
 {
     [SerializeField]bool debugStateMachine = false;
-    HumanoidActor owner;
+    Actor owner;
 
     readonly Stack<State> queue = new Stack<State>();
     readonly Dictionary<Type, State> states = new Dictionary<Type, State>(); // Här kommer vi åt kopiorna på alla states. Endast en typ av state skall ha en instance.
@@ -16,9 +16,9 @@ public class StateMachine
 
     public State Current { get; private set; }
 
-    public StateMachine(object controller, State[] states, Dictionary<string, object> context, Type startState)
+    public StateMachine(object controller, State[] states, Dictionary<Type, object> context, Type startState)
     {
-        owner = (HumanoidActor)controller;
+        owner = (Actor)controller;
 
         //glorious fori superier
         //fuck foreach

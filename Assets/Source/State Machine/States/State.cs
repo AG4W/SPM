@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
 
 using System.Collections.Generic;
+using System;
 
 public abstract class State : ScriptableObject
 {
-    public Dictionary<string, object> Context { get; private set; }
+    Dictionary<Type, object> context;
 
     //lazy properties
-    public HumanoidActor Actor { get; private set; }
+    public Actor Actor { get; private set; }
     public Transform Transform { get { return this.Actor.transform; } }
 
     public StateMachine StateMachine { get; private set; }
     public bool IsActiveState { get { return this.StateMachine.Current == this; } }
 
-    public void Initialize(StateMachine stateMachine, Dictionary<string, object> context)
+    public void Initialize(StateMachine stateMachine, Dictionary<Type, object> context)
     {
         this.StateMachine = stateMachine;
-        this.Context = context;
-        this.Actor = (HumanoidActor)context["actor"];
+
+        this.context = context;
+        this.Actor = this.Get<Actor>();
 
         //stoppa något retarded ifrån att inte kalla init-funktionen i subklasser
         //mha stäng init och sen overrideable OnInit-funktion istället.
@@ -42,5 +44,11 @@ public abstract class State : ScriptableObject
     public void Return()
     {
         this.StateMachine.Return();
+    }
+
+    //hämtar ur context via type istället för string, så vi kan få autocasting istället för att manuellt behöva göra det.
+    protected T Get<T>()
+    {
+        return (T)this.context[typeof(T)];
     }
 }

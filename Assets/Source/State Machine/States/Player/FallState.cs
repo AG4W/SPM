@@ -25,7 +25,7 @@ public class FallState : BaseState
 
         base.Actor.Raise(ActorEvent.ModifyActorVelocity, velocityBeforeLosingGroundContact);
 
-        if (((Animator)base.Context["animator"]).GetBool("isJumping") == false && base.Actor.IsGrounded)
+        if (base.Get<Animator>().GetBool("isJumping") == false && base.Actor.IsGrounded)
         {
             if (base.Actor.TargetInput.magnitude > .1f)
             {

@@ -13,8 +13,6 @@ public abstract class BaseState : State
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float airResistance = .5f;
 
-    Transform jig { get { return ((CameraController)base.Context["jig"]).transform; } }
-
     public float GravitationalConstant { get { return gravitationalConstant; } }
     public float AirResistance { get { return airResistance; } }
 
@@ -23,10 +21,7 @@ public abstract class BaseState : State
         base.OnInitialize();
 
         //lefthand
-        Transform lht = ((WeaponController)base.Context["weapon"]).LeftHandIKTarget;
-
-        if (lht == null)
-            return;
+        Transform lht = base.Get<WeaponController>().LeftHandIKTarget;
 
         base.Actor.Raise(ActorEvent.SetActorLeftHandTarget, lht);
         base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
@@ -46,7 +41,7 @@ public abstract class BaseState : State
         base.Actor.Raise(ActorEvent.ModifyActorVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));
 
         //rotation
-        base.Actor.transform.rotation = Quaternion.Slerp(base.Actor.transform.rotation, Quaternion.Euler(0f, jig.transform.eulerAngles.y, 0f), rotationSpeed * (Time.deltaTime / Time.timeScale));
+        base.Actor.transform.rotation = Quaternion.Slerp(base.Actor.transform.rotation, Quaternion.Euler(0f, base.Get<CameraController>().transform.eulerAngles.y, 0f), rotationSpeed * (Time.deltaTime / Time.timeScale));
     }
 
     void UpdateAnimatorIK()

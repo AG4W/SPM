@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+using System.Collections.Generic;
+using System;
 
 public class HumanoidPawn : HumanoidActor
 {
@@ -32,17 +34,17 @@ public class HumanoidPawn : HumanoidActor
         this.Subscribe(ActorEvent.SetActorTargetRotation, SetTargetRotation);
 
         this.Subscribe(ActorEvent.UpdateAITargetStatus, UpdateCanSeeTargetStatus);
-        this.Target = FindObjectOfType<LocomotionController>();
+        this.Target = FindObjectOfType<PlayerActor>();
     }
     protected override StateMachine InitializeStateMachine()
     {
         return new StateMachine(this,
             Resources.LoadAll<State>(base.Path),
-            new Dictionary<string, object>
+            new Dictionary<Type, object>
             {
-                ["animator"] = this.GetComponent<Animator>(),
-                ["actor"] = this,
-                ["weapon"] = base.Weapon,
+                [typeof(Animator)] = this.GetComponent<Animator>(),
+                [typeof(Actor)] = this,
+                [typeof(WeaponController)] = base.WeaponController,
             },
             typeof(AIIdleState));
     }
@@ -90,9 +92,11 @@ public class HumanoidPawn : HumanoidActor
     protected override void OnHealthZero()
     {
         Destroy(this.GetComponent<Collider>());
-        model.SetActive(false);
+        Destroy(model);
+        
         ragdoll.SetActive(true);
+        ragdoll.transform.SetParent(null);
 
-        base.OnHealthZero();
+        Destroy(this.gameObject);
     }
 }

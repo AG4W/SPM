@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Rigidbody), typeof(NavMeshObstacle))]
 public class RigidBodyForceWrapper : MonoBehaviour, IForceAffectable
 {
     Rigidbody[] rbs;

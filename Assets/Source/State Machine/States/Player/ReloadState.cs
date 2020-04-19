@@ -12,7 +12,7 @@ public class ReloadState : ActState
 
         base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 0f);
 
-        ((WeaponController)base.Context["weapon"]).Reload();
+        base.Get<WeaponController>().Reload();
     }
     public override void Tick()
     {

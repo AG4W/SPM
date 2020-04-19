@@ -34,13 +34,13 @@ public abstract class AIActState : AIBaseLocomotionState
             base.Actor.Raise(ActorEvent.SetActorLookAtPosition, base.Pawn.Target.FocusPoint.position);
             base.Actor.Raise(ActorEvent.SetActorLookAtWeights, weights);
 
-            if (!((WeaponController)base.Context["weapon"]).CanFire || base.Actor.ActualInput.normalized.magnitude > 1f)
+            if (base.Get<WeaponController>().NeedsReload && !base.Get<WeaponController>().IsReloading)
+                base.Get<WeaponController>().Reload();
+
+            if (!base.Get<WeaponController>().CanFire || base.Actor.ActualInput.normalized.magnitude > 1f)
                 return;
 
-            Vector3 fp = base.Pawn.Target.FocusPoint.position;
-            fp += Random.insideUnitSphere * base.Pawn.Accuracy;
-
-            base.Actor.Raise(ActorEvent.FireActorWeapon, fp, base.Actor.ActualInput.magnitude);
+            base.Get<WeaponController>().Fire(base.Pawn.Target.FocusPoint.position + (Random.insideUnitSphere * base.Pawn.Accuracy), base.Actor.ActualInput.magnitude);
         }
     }
     public override void Exit()

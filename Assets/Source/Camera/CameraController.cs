@@ -48,7 +48,7 @@ public class CameraController : MonoBehaviour
 
         profile.TryGet(out dof);
         camera = this.GetComponentInChildren<Camera>();
-        target = FindObjectOfType<LocomotionController>().gameObject;
+        target = FindObjectOfType<PlayerActor>().gameObject;
 
         if (target == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");

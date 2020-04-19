@@ -4,13 +4,13 @@ using System.Collections.Generic;
 public static class GlobalEvents
 {
     static List<Action<object[]>>[] events;
-    static Dictionary<HumanoidActor, List<Action<object[]>>[]> actorEvents;
+    static Dictionary<Actor, List<Action<object[]>>[]> actorEvents;
 
     //orkade inte sätta upp en initializer, så lazy initar arrayen
     static void Initialize()
     {
         events = new List<Action<object[]>>[Enum.GetNames(typeof(GlobalEvent)).Length];
-        actorEvents = new Dictionary<HumanoidActor, List<Action<object[]>>[]>();
+        actorEvents = new Dictionary<Actor, List<Action<object[]>>[]>();
 
         for (int i = 0; i < events.Length; i++)
             events[i] = new List<Action<object[]>>();
@@ -23,9 +23,14 @@ public static class GlobalEvents
 
         events[(int)e].Add(a);
     }
+    public static void Unsubscribe(GlobalEvent e, Action<object[]> a)
+    {
+        events[(int)e].Remove(a);
+    }
+
 
     //look upon me and despair
-    public static void Subscribe(this HumanoidActor actor, ActorEvent e, Action<object[]> action)
+    public static void Subscribe(this Actor actor, ActorEvent e, Action<object[]> action)
     {
         if (actorEvents == null)
             Initialize();
@@ -43,16 +48,11 @@ public static class GlobalEvents
 
         actorEvents[actor][(int)e].Add(action);
     }
-
-    public static void Unsubscribe(GlobalEvent e, Action<object[]> a)
-    {
-        events[(int)e].Remove(a);
-    }
-    public static void Unsubscribe(this HumanoidActor actor, ActorEvent e, Action<object[]> action)
+    public static void Unsubscribe(this Actor actor, ActorEvent e, Action<object[]> action)
     {
         actorEvents[actor][(int)e].Remove(action);
     }
-    public static void ClearAllListeners(this HumanoidActor actor)
+    public static void ClearAllListeners(this Actor actor)
     {
         actorEvents.Remove(actor);
     }
@@ -73,7 +73,7 @@ public static class GlobalEvents
         }
     }
     //vem behöver koll på vad som skickas vart oavsett
-    public static void Raise(this HumanoidActor actor, ActorEvent e, params object[] args)
+    public static void Raise(this Actor actor, ActorEvent e, params object[] args)
     {
         if (actorEvents == null)
             Initialize();
@@ -92,10 +92,7 @@ public static class GlobalEvents
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
-    Jump,
-    Roll,
     ToggleTorches,
-    ForcePowerActivated,
 
     //camera
     SetCameraAimMode,
@@ -122,12 +119,10 @@ public enum ActorEvent
     SetActorAnimatorBool,
     SetActorAnimatorLayer,
 
-
     UpdateActorGroundedStatus,
 
     //weapon
-    FireActorWeapon,
-    ReloadActorWeapon,
+    SetActorWeapon,
 
     //velocity
     ModifyActorVelocity,

@@ -6,8 +6,7 @@ public class RollState : BaseState
     public override void Enter()
     {
         base.Enter();
-
-        ((Animator)base.Context["animator"]).SetBool("isRolling", true);
+        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isRolling", true);
     }
     public override void Tick()
     {
@@ -16,7 +15,7 @@ public class RollState : BaseState
         if (!base.Actor.IsGrounded)
             base.TransitionTo<FallState>();
 
-        if (!((Animator)base.Context["animator"]).GetBool("isRolling"))
+        if (!base.Get<Animator>().GetBool("isRolling"))
         {
             if (base.Actor.TargetInput.magnitude > .1f)
             {

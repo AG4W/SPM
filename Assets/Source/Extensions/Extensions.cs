@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class Extensions
 {
@@ -15,11 +16,17 @@ public static class Extensions
     {
         return array[array.Length - 1];
     }
-
-    //floats
-    public static float Remap(this float value, float from1, float to1, float from2, float to2)
+    public static T Random<T>(this List<T> list)
     {
-        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        return list[UnityEngine.Random.Range(0, list.Count - 1)];
+    }
+    public static T First<T>(this List<T> list)
+    {
+        return list[0];
+    }
+    public static T Last<T>(this List<T> list)
+    {
+        return list[list.Count - 1];
     }
 
     //Vectors
