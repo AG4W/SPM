@@ -46,6 +46,20 @@ public static class Extensions
             Vector3.Dot(origin.transform.forward, (position - origin.transform.position)));
     }
 
+    public static Vector3 DirectionTo(this Vector3 origin, Vector3 target)
+    {
+        return target - origin;
+    }
+    public static Vector3 DirectionFrom(this Vector3 origin, Vector3 target)
+    {
+        return origin - target;
+    }
+
+    public static float DistanceTo(this Vector3 origin, Vector3 target)
+    {
+        return Vector3.Distance(origin, target);
+    }
+
     //transform
     public static Transform FindRecursively(this Transform origin, string name)
     {

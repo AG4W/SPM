@@ -18,6 +18,19 @@ public abstract class BaseState : State
     public float GravitationalConstant { get { return gravitationalConstant; } }
     public float AirResistance { get { return airResistance; } }
 
+    protected override void OnInitialize()
+    {
+        base.OnInitialize();
+
+        //lefthand
+        Transform lht = ((WeaponController)base.Context["weapon"]).LeftHandIKTarget;
+
+        if (lht == null)
+            return;
+
+        base.Actor.Raise(ActorEvent.SetActorLeftHandTarget, lht);
+        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
+    }
     public override void Enter()
     {
         base.Enter();
@@ -41,6 +54,7 @@ public abstract class BaseState : State
 
     void UpdateAnimatorIK()
     {
+        //Look at
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
 
         if (Physics.Raycast(ray, out RaycastHit hit))

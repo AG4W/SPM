@@ -11,13 +11,20 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]float fireTimer;
     [SerializeField]float fireRate = .5f;
+    [SerializeField]float baseSpread = 0f;
 
     [SerializeField]float damage = 3f;
     [SerializeField]float reloadTime = 2f;
+    [SerializeField]float stoppingPower = 10f;
 
     [SerializeField]float noiseValue = 50f;
 
+    [SerializeField]float zoomMultiplier = 2f;
+
     [SerializeField]LayerMask mask;
+
+    [Header("IK")]
+    [SerializeField]Transform leftHandIKTarget;
 
     [Header("Visual")]
     [SerializeField]GameObject[] shotPrefabs;
@@ -47,13 +54,20 @@ public class WeaponController : MonoBehaviour
     [SerializeField]Light[] lights;
 
     protected float Damage { get { return damage; } }
+    protected float StoppingPower { get { return stoppingPower; } }
+    protected float BaseSpread { get { return baseSpread; } }
 
     protected Transform ExitPoint { get { return exitPoint; } }
 
     protected LayerMask Mask { get { return mask; } }
 
+    public float ZoomMultiplier { get { return zoomMultiplier; } }
+
+    public Transform LeftHandIKTarget { get { return leftHandIKTarget; } }
+
     public bool CanFire { get; private set; }
     public bool IsReloading { get; private set; }
+    public bool NeedsReload { get { return shotsLeftInCurrentClip == 0; } }
 
     void Start()
     {
@@ -78,24 +92,23 @@ public class WeaponController : MonoBehaviour
     public void FireWeapon(object[] args)
     {
         if (CanFire && !IsReloading)
-            FireWeapon((Vector3)args[0]);
+            FireWeapon((Vector3)args[0], (float)args[1]);
     }
-    void FireWeapon(Vector3 target)
+    void FireWeapon(Vector3 target, float magnitude)
     {
-        CanFire = false;
+        this.CanFire = false;
         shotsLeftInCurrentClip--;
-        Vector3 heading = target - exitPoint.position;
 
-        OnFireWeapon(target, heading);
-
+        //apply velocity spread from actor movement
+        OnFireWeapon(target, exitPoint.position.DirectionTo(target).normalized + (new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude))) * .025f);
         UpdateWorldUI();
-        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
 
-        if (shotsLeftInCurrentClip == 0)
-            Reload();
+        GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, noiseValue);
     }
     protected virtual void OnFireWeapon(Vector3 target, Vector3 heading)
     {
+        //apply weapon spread
+        heading += new Vector3(Random.Range(-baseSpread, baseSpread), Random.Range(-baseSpread, baseSpread), Random.Range(-baseSpread, baseSpread));
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 
         if (hit.transform != null)
@@ -105,6 +118,8 @@ public class WeaponController : MonoBehaviour
             //hit something else, create hit marker or something    
             if (e == null)
             {
+                if (hit.transform.GetComponent<Rigidbody>())
+                    hit.transform.GetComponent<Rigidbody>().AddForce(heading.normalized * (this.StoppingPower / hit.point.DistanceTo(this.ExitPoint.position)), ForceMode.Impulse);
             }
             else
                 e.Health.Update(-damage);

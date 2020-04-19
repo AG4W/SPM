@@ -14,6 +14,8 @@ public class HumanoidActor : Entity
     [SerializeField]float maxHeight = 1.9f;
     [SerializeField]float collisionRadius = .25f;
     [SerializeField]float skinWidth = .03f;
+    [SerializeField]float StaticFriction = .5f;
+    [SerializeField]float DynamicFriction = .4f;
 
     [Header("Animation")]
     [SerializeField]MovementMode mode = MovementMode.Jog;
@@ -35,6 +37,10 @@ public class HumanoidActor : Entity
 
     float[] targetLookAtWeights = new float[5];
     float[] actualLookAtWeights = new float[5];
+
+    Transform leftHandTarget;
+    float targetLeftHandWeight;
+    float actualLeftHandWeight;
 
     [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
@@ -59,7 +65,6 @@ public class HumanoidActor : Entity
             return Mathf.Lerp(1.4f, 1.8f, actualStance);
         }
     }
-
     protected string Path { get { return path; } }
     protected Animator Animator { get; private set; }
     protected WeaponController Weapon { get { return weapon; } }
@@ -96,6 +101,12 @@ public class HumanoidActor : Entity
         this.Subscribe(ActorEvent.SetActorTargetStance, SetTargetStance);
         this.Subscribe(ActorEvent.SetActorTargetAimMode, SetTargetAimMode);
 
+        //animator
+        this.Subscribe(ActorEvent.SetActorAnimatorFloat, SetAnimatorFloat);
+        this.Subscribe(ActorEvent.SetActorAnimatorTrigger, SetAnimatorTrigger);
+        this.Subscribe(ActorEvent.SetActorAnimatorBool, SetAnimatorBool);
+        this.Subscribe(ActorEvent.SetActorAnimatorLayer, SetAnimatorLayer);
+
         //velocity
         this.Subscribe(ActorEvent.ModifyActorVelocity, ModifyVelocity);
 
@@ -105,6 +116,8 @@ public class HumanoidActor : Entity
         //IK
         this.Subscribe(ActorEvent.SetActorLookAtPosition, SetLookAtPosition);
         this.Subscribe(ActorEvent.SetActorLookAtWeights, SetLookAtWeights);
+        this.Subscribe(ActorEvent.SetActorLeftHandTarget, SetLeftHandTarget);
+        this.Subscribe(ActorEvent.SetActorLeftHandWeight, SetLeftHandWeight);
 
         this.Subscribe(ActorEvent.FireActorWeapon, (object[] args) => this.Weapon.FireWeapon(args));
 
@@ -135,8 +148,19 @@ public class HumanoidActor : Entity
     protected virtual void OnAnimatorIK(int layerIndex)
     {
         //kommer lookatgrejs här sen
+        //Look at
         this.Animator.SetLookAtPosition(actualLookAtPosition);
         this.Animator.SetLookAtWeight(actualLookAtWeights[0], actualLookAtWeights[1], actualLookAtWeights[2], actualLookAtWeights[3], actualLookAtWeights[4]);
+
+        //left hand
+        if (leftHandTarget == null)
+            return;
+
+        this.Animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
+        this.Animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, actualLeftHandWeight);
+
+        this.Animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+        this.Animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, actualLeftHandWeight);
     }
     void LateUpdate()
     {
@@ -149,6 +173,7 @@ public class HumanoidActor : Entity
         actualStance = Mathf.Lerp(actualStance, targetStance, interpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualLookAtPosition = Vector3.Lerp(actualLookAtPosition, targetLookAtPosition, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualLeftHandWeight = Mathf.Lerp(actualLeftHandWeight, targetLeftHandWeight, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         for (int i = 0; i < targetLookAtWeights.Length; i++)
             actualLookAtWeights[i] = Mathf.Lerp(actualLookAtWeights[i], targetLookAtWeights[i], lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
@@ -176,7 +201,11 @@ public class HumanoidActor : Entity
                 this.transform.position += this.Velocity.normalized * allowedMoveDistance;
 
             if (hit.distance <= this.Velocity.magnitude)
-                this.Velocity += this.Velocity.GetNormalForce(hit.normal);
+            {
+                Vector3 tnf = this.Velocity.GetNormalForce(hit.normal);
+                this.Velocity += tnf;
+                this.Velocity = Friction(this.Velocity, tnf);
+            }
 
             CheckOverlap();
 
@@ -188,6 +217,9 @@ public class HumanoidActor : Entity
             if (counter == 11)
                 break;
         }
+
+        CheckOverlap(); // ifall vi breakar ur while-loopen vill vi fortfarande kolla overlap
+
     }
     void CheckOverlap()
     {
@@ -248,7 +280,24 @@ public class HumanoidActor : Entity
             counter++;
         }
     }
-
+    Vector3 Friction(Vector3 velocity, Vector3 normalForce)
+    {
+        /* Om magnituden av vår hastighet är mindre än den statiska friktionen (normalkraften multiplicerat med den statiska friktionskoefficienten)
+         * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
+         * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
+         */
+        if (velocity.magnitude < (normalForce.magnitude * StaticFriction))
+        {
+            velocity.x = 0f;
+            velocity.z = 0f;
+            return velocity;
+        }
+        else
+        {
+            velocity += -velocity.normalized * (normalForce.magnitude * DynamicFriction);
+            return velocity;
+        }
+    }
     void UpdateGroundedStatus()
     {
         //Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
@@ -311,6 +360,23 @@ public class HumanoidActor : Entity
         aimMode = (AimMode)args[0];
     }
 
+    void SetAnimatorFloat(object[] args)
+    {
+        this.Animator.SetFloat((string)args[0], (float)args[1]);
+    }
+    void SetAnimatorTrigger(object[] args)
+    {
+        this.Animator.SetTrigger((string)args[0]);
+    }
+    void SetAnimatorBool(object[] args)
+    {
+        this.Animator.SetBool((string)args[0], (bool)args[1]);
+    }
+    void SetAnimatorLayer(object[] args)
+    {
+        this.Animator.SetLayerWeight((int)(AnimatorLayer)args[0], (float)args[1]);
+    }
+
     //IK
     void SetLookAtPosition(object[] args)
     {
@@ -319,6 +385,15 @@ public class HumanoidActor : Entity
     void SetLookAtWeights(object[] args)
     {
         targetLookAtWeights = (float[])args[0];
+    }
+
+    void SetLeftHandTarget(object[] args)
+    {
+        leftHandTarget = (Transform)args[0];
+    }
+    void SetLeftHandWeight(object[] args)
+    {
+        targetLeftHandWeight = (float)args[0];
     }
 
     protected override void OnHealthZero()

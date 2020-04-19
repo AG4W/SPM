@@ -8,6 +8,8 @@ public abstract class Ability
 
     [SerializeField]AbilityAnimationIndex animationIndex;
 
+    [SerializeField]bool debug = true;
+
     protected float Duration { get { return duration; } }
     protected float DurationTimer01 { get { return Mathf.InverseLerp(0f, this.Duration, DurationTimer); } }
 
@@ -18,6 +20,7 @@ public abstract class Ability
 
     public bool HasCooldown { get; private set; }
     public bool IsActive { get; private set; }
+    public bool Debug { get { return debug; } }
 
     public virtual void Activate()
     {
