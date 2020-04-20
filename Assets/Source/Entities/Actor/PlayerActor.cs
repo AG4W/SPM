@@ -76,7 +76,7 @@ public class PlayerActor : HumanoidActor
         int counter = 0;
         while (overlapCheckA == true || overlapCheckB == true)
         {
-            Collider[] overlapCollidersA = Physics.OverlapSphere(pointB, base.CollisionRadius);
+            Collider[] overlapCollidersA = Physics.OverlapSphere(pointA, base.CollisionRadius);
             if (overlapCollidersA.Length > 0)
                 for (int i = 0; i < overlapCollidersA.Length; i++)
                 {
