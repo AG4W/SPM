@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [Serializable]
 public class StateMachine
 {
-    bool debugStateMachine = true;
+    bool debugStateMachine = false;
     Actor owner;
 
     readonly Stack<State> queue = new Stack<State>();

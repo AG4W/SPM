@@ -61,12 +61,11 @@ MonoBehaviour:
   sprintFOV: 50
   fallFOV: 90
   maxCameraUpAngle: 30
-  maxCameraDownAngle: 90
-  targetDoFDistance: 5.838827
-  actualDoFDistance: 5.838823
+  maxCameraDownAngle: 30
   focusSpeed: 2
   defaultDoFStrength: 0.05
   ironSightDoFStrength: 2
+  traumaInterpolationSpeed: 0.01
 --- !u!1 &4975658104452451928
 GameObject:
   m_ObjectHideFlags: 0

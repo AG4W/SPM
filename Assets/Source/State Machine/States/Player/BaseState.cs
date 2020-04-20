@@ -35,12 +35,7 @@ public abstract class BaseState : State
     protected override void OnInitialize()
     {
         base.OnInitialize();
-
-        //lefthand
-        Transform lht = base.Get<WeaponController>().LeftHandIKTarget;
-
-        base.Actor.Raise(ActorEvent.SetActorLeftHandTarget, lht);
-        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
+        UpdateIKTarget();
     }
     public override void Enter()
     {
@@ -71,6 +66,11 @@ public abstract class BaseState : State
 
         Debug.DrawLine(base.Actor.FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
         base.Actor.Raise(ActorEvent.SetActorLookAtWeights, new float[] { total, body, head, eyes, clamp });
+    }
+    void UpdateIKTarget()
+    {
+        base.Actor.Raise(ActorEvent.SetActorLeftHandTarget, base.Get<WeaponController>().LeftHandIKTarget);
+        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
     }
 }
 

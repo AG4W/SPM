@@ -28,6 +28,8 @@ public abstract class ActState : BaseLocomotionState
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
 
             base.Get<WeaponController>().Fire(hit.transform != null ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude);
+
+            GlobalEvents.Raise(GlobalEvent.ModifyCameraTraumaCapped, base.Get<WeaponController>().Weapon.TraumaValue);
         }
         if (Input.GetKeyDown(KeyCode.R))
             base.TransitionTo<ReloadState>();

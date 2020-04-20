@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clipSize: 4
   damage: 50
-  fireRate: 1
+  fireRate: 1.25
   stoppingPower: 50
   spread: 0
   reloadTime: 3
   noiseValue: 100
+  traumaValue: 0.75
   prefab: {fileID: 2780065071727271769, guid: 7ed53edba2aa92a4ba0c9749f3029314, type: 3}
   shots:
   - {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b, type: 3}

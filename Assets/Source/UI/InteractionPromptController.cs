@@ -12,8 +12,8 @@ public class InteractionPromptController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
             IInteractable entity = args[0] as IInteractable;
 
-            if (entity != null && entity.WantsPrompt)
-                OpenInteractPrompt(entity, args[1] as Transform);
+            if (entity != null && entity.Prompt.Length > 0)
+                OpenInteractPrompt(entity);
             else
                 CloseInteractPrompt();
         });
@@ -31,7 +31,7 @@ public class InteractionPromptController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
             interactable.Interact();
     }
-    void OpenInteractPrompt(IInteractable entity, Transform interactee)
+    void OpenInteractPrompt(IInteractable entity)
     {
         interactable = entity;
 

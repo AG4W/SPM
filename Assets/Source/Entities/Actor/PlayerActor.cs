@@ -24,6 +24,13 @@ public class PlayerActor : HumanoidActor
             for (int i = 0; i < torches.Length; i++)
                 torches[i].SetActive(!torches[i].activeSelf);
         });
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) =>
+        {
+            base.WeaponController.SetWeapon(args[0] as Weapon);
+
+            this.Raise(ActorEvent.SetActorLeftHandTarget, base.WeaponController.LeftHandIKTarget);
+            this.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
+        });
 
         base.Animator.SetBool("isAlert", true);
     }
@@ -59,6 +66,9 @@ public class PlayerActor : HumanoidActor
     {
         if (Input.GetKeyDown(KeyCode.F))
             GlobalEvents.Raise(GlobalEvent.ToggleTorches);
+
+        if (Input.GetKey(KeyCode.O))
+            GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, 1f);
     }
 
     protected override void CheckOverlap()

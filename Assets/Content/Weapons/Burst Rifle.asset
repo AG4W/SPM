@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33e5194056dab27458dfc0aa46def1c6, type: 3}
-  m_Name: Automatic Shotgun
-  m_EditorClassIdentifier: Assembly-CSharp::Shotgun
-  clipSize: 7
-  damage: 4
-  fireRate: 0.5
-  stoppingPower: 75
-  spread: 0.025
-  reloadTime: 3
+  m_Script: {fileID: 11500000, guid: a9cfeff5d4978e640b42f49f3973f6ec, type: 3}
+  m_Name: Burst Rifle
+  m_EditorClassIdentifier: 
+  clipSize: 27
+  damage: 3
+  fireRate: 0.45
+  stoppingPower: 10
+  spread: 0
+  reloadTime: 2
   noiseValue: 50
-  traumaValue: 0.6
-  prefab: {fileID: 2780065071727271769, guid: f5d1a19732e601243b2b1201842ff61b, type: 3}
+  traumaValue: 0.5
+  prefab: {fileID: 2780065071727271769, guid: 4fd008c660f50214ca9133568ce72a33, type: 3}
   shots:
   - {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b, type: 3}
   impacts:
@@ -28,9 +28,10 @@ MonoBehaviour:
   hits:
   - {fileID: 6711929911472907694, guid: 562f5f4e42daa7349be3d292f39f7a24, type: 3}
   shotSFX:
-  - {fileID: 8300000, guid: 2ed0a1a34fafdf143aefd791aa61bba7, type: 3}
-  minPitch: 0.95
-  maxPitch: 1.05
+  - {fileID: 8300000, guid: ab61210295c246c4ebfb04739416f89f, type: 3}
+  minPitch: 0.9
+  maxPitch: 1.1
   reloadSFX:
-  - {fileID: 8300000, guid: cbd3d4d73221fa1478bc879e762c8f77, type: 3}
-  bulletsPerShot: 8
+  - {fileID: 8300000, guid: a38de8bd72514924b9941f0359c34ff2, type: 3}
+  roundsPerBurst: 3
+  interBurstTime: 0.05

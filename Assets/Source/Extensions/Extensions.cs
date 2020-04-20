@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+using System.Collections;
+using System.Collections.Generic;
 public static class Extensions
 {
     //floats
@@ -119,6 +120,12 @@ public static class Extensions
         }
 
         return null;
+    }
+
+    //coroutines
+    public static void Run(this IEnumerator routine)
+    {
+        CoroutineSurrogate.instance.StartCoroutine(routine);
     }
 }
 public enum InterpolationMode

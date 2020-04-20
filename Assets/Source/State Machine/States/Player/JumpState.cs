@@ -29,8 +29,6 @@ public class JumpState : GroundLostState
 
         if (jumpTimer >= jumpDuration)
         {
-            Debug.Log(base.DistanceToGround);
-
             if (base.DistanceToGround <= landThreshold)
                 base.TransitionTo<LandState>();
             else

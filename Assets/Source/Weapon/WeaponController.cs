@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using System.Collections;
+
 public class WeaponController : MonoBehaviour
 {
     int shotsLeftInCurrentClip;
@@ -13,7 +15,6 @@ public class WeaponController : MonoBehaviour
 
     //cached stuff
     GameObject model;
-    Transform exitPoint;
     Light muzzleFlash;
     AudioSource source;
     WeaponWorldUIController uiController;
@@ -21,7 +22,7 @@ public class WeaponController : MonoBehaviour
     protected LayerMask Mask { get { return mask; } }
 
     public Transform LeftHandIKTarget { get; private set; }
-    public Transform ExitPoint { get { return exitPoint; } }
+    public Transform ExitPoint { get; private set; }
 
     public Weapon Weapon { get { return weapon; } }
 
@@ -55,17 +56,37 @@ public class WeaponController : MonoBehaviour
             return;
 
         this.CanFire = false;
-        shotsLeftInCurrentClip--;
-        uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
         muzzleFlash.gameObject.SetActive(true);
 
-        //apply velocity spread modifier
         Vector3 velocitySpread = new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude)) * .05f;
-        Vector3 heading = exitPoint.position.DirectionTo(target).normalized + velocitySpread;
-        weapon.Fire(target, heading, exitPoint, source, mask);
+        Vector3 heading = ExitPoint.position.DirectionTo(target).normalized + velocitySpread;
+
+        if (this.weapon.RepeatFirings > 1)
+            this.StartCoroutine(FireAsync(target, heading, this.ExitPoint, source, mask));
+        else
+        {
+            shotsLeftInCurrentClip--;
+            uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+            this.weapon.Fire(target, heading, this.ExitPoint, source, mask);
+        }
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, weapon.NoiseValue);
     }
+    IEnumerator FireAsync(Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    {
+        int count = shotsLeftInCurrentClip > this.weapon.RepeatFirings ? this.weapon.RepeatFirings : shotsLeftInCurrentClip;
+
+        for (int i = 0; i < count; i++)
+        {
+            shotsLeftInCurrentClip--;
+            uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+
+            //apply velocity spread modifier
+            weapon.Fire(target, heading, exitPoint, source, mask);
+            yield return new WaitForSeconds(this.weapon.TimeBetweenFirings);
+        }
+    }
+
     public void Reload()
     {
         shotsLeftInCurrentClip = weapon.ClipSize;
@@ -86,7 +107,7 @@ public class WeaponController : MonoBehaviour
         model = Instantiate(weapon.Prefab, anchorPoint.position, anchorPoint.rotation, anchorPoint);
 
         //grab relevant transforms and cache them
-        exitPoint = model.transform.FindRecursively("exitPoint");
+        ExitPoint = model.transform.FindRecursively("exitPoint");
         this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
         uiController = model.GetComponentInChildren<WeaponWorldUIController>();
         muzzleFlash = model.transform.FindRecursively("muzzleFlash").GetComponent<Light>();

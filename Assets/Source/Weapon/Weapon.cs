@@ -11,6 +11,8 @@ public class Weapon : ScriptableObject
     [SerializeField]float spread = 0f;
     [SerializeField]float reloadTime = 2f;
     [SerializeField]float noiseValue = 50f;
+
+    [Range(0f, 1f)][SerializeField]float traumaValue = .2f;
     //[SerializeField]float zoomMultiplier = 2f;
 
     [Header("Visual")]
@@ -28,6 +30,8 @@ public class Weapon : ScriptableObject
     [SerializeField]AudioClip[] reloadSFX;
 
     public int ClipSize => clipSize;
+    public virtual int RepeatFirings => 1;
+    public virtual float TimeBetweenFirings => 0f;
 
     public float Damage => damage;
     public float FireRate => fireRate;
@@ -35,13 +39,13 @@ public class Weapon : ScriptableObject
     public float Spread => spread;
     public float ReloadTime => reloadTime;
     public float NoiseValue => noiseValue;
+    public float TraumaValue => traumaValue;
     //public float ZoomMultiplier => zoomMultiplier;
 
     public GameObject Prefab => prefab;
     public GameObject[] Shots => shots;
     public GameObject[] Impacts => impacts;
     public GameObject[] Hits => hits;
-
 
     public AudioClip[] ShotSFX => shotSFX;
     public float MinPitch => minPitch;

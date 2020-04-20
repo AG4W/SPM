@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Weapons/Shotgun")]
-public class Shotgun : Weapon
+[CreateAssetMenu(menuName = "Weapons/Spread")]
+public class SpreadWeapon : Weapon
 {
-    [Header("Shotgun Specific")]
+    [Header("Spread Weapon Specific")]
     [SerializeField]int bulletsPerShot = 4;
 
     public override void Fire(Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
