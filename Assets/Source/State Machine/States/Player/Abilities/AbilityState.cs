@@ -21,7 +21,6 @@ public abstract class AbilityState : ActState
         base.Actor.Raise(ActorEvent.SetActorAnimatorLayer, AnimatorLayer.Force, 1f);
         base.Actor.Raise(ActorEvent.SetActorAnimatorFloat, "castIndex", (float)this.animationIndex);
         base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isCasting", true);
-
         base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 0f);
     }
     public override void Tick()
@@ -37,7 +36,7 @@ public abstract class AbilityState : ActState
     {
         base.Actor.Raise(ActorEvent.SetActorAnimatorLayer, AnimatorLayer.Force, 0f);
         base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isCasting", false);
-        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 0f);
+        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
     }
 }
 public enum AbilityAnimationIndex

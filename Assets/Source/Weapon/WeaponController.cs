@@ -21,6 +21,8 @@ public class WeaponController : MonoBehaviour
     protected LayerMask Mask { get { return mask; } }
 
     public Transform LeftHandIKTarget { get; private set; }
+    public Transform ExitPoint { get { return exitPoint; } }
+
     public Weapon Weapon { get { return weapon; } }
 
     public bool CanFire { get; private set; }

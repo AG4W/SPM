@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ecb371d79b20e24ca8a9d3c82142539, type: 3}
+  m_Name: Handgun
+  m_EditorClassIdentifier: 
+  clipSize: 18
+  damage: 5
+  fireRate: 0.3
+  stoppingPower: 5
+  spread: 0.015
+  reloadTime: 2
+  noiseValue: 25
+  prefab: {fileID: 3027418996487015481, guid: 8556ce54a1beaf44ab372090befd2fc6, type: 3}
+  shots:
+  - {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b, type: 3}
+  impacts:
+  - {fileID: 6167790376833598370, guid: eee0f87ca35bbc242b7bcb688daa087e, type: 3}
+  hits:
+  - {fileID: 6711929911472907694, guid: 562f5f4e42daa7349be3d292f39f7a24, type: 3}
+  shotSFX:
+  - {fileID: 8300000, guid: 27855a388d9e4384aac0f8cc6e135ce9, type: 3}
+  minPitch: 0.95
+  maxPitch: 1.05
+  reloadSFX:
+  - {fileID: 8300000, guid: 3752be82f4983c24f838d0df84d3988f, type: 3}

@@ -23,6 +23,7 @@ public abstract class ActState : BaseLocomotionState
             if (!base.Get<WeaponController>().CanFire)
                 return;
 
+            //skjut ifrån kamera
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
 

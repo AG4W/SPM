@@ -12,14 +12,22 @@ public class WeaponWorldUIController : MonoBehaviour
 
     void Awake()
     {
-        Material tm = texts[0].material;
-        Material im = images[0].material;
+        if(texts.Length > 0)
+        {
+            Material tm = texts[0].material;
 
-        //detta kostar minne som fan, byt ut mot [PerRendererData] senare
-        for (int i = 0; i < texts.Length; i++)
-            texts[i].material = Material.Instantiate(tm);
-        for (int i = 0; i < images.Length; i++)
-            images[i].material = Material.Instantiate(im);
+            //detta kostar minne som fan, byt ut mot [PerRendererData] senare
+            for (int i = 0; i < texts.Length; i++)
+                texts[i].material = Material.Instantiate(tm);
+        }
+        
+        if(images.Length > 0)
+        {
+            Material im = images[0].material;
+
+            for (int i = 0; i < images.Length; i++)
+                images[i].material = Material.Instantiate(im);
+        }
     }
     public void UpdateUI(int shotsLeft, int clipSize)
     {

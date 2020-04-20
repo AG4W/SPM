@@ -14,9 +14,10 @@ public class JumpState : FallState
     public override void Enter()
     {
         base.Enter();
-        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", true);
 
+        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", true);
         base.Actor.IsGrounded = false;
+
         jumpTimer = 0f;
     }
     public override void Tick()

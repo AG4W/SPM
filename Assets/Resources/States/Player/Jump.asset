@@ -22,8 +22,8 @@ MonoBehaviour:
   airResistance: 0.5
   velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
   fallMomentumDeceleration: 0.5
-  jumpInputModifier: 0.15
-  jumpAcceleration: 30
+  jumpInputModifier: 0.33
+  jumpAcceleration: 20
   jumpCurve:
     serializedVersion: 2
     m_Curve:

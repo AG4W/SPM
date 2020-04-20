@@ -2,9 +2,9 @@
 
 namespace BehaviourTree
 {
-    public class CanSeeTarget : Node
+    public class CanSeeTarget : Leaf
     {
-        public override Status Tick(Context context)
+        public override Status Execute(Context context)
         {
             return Status.Failed;
         }

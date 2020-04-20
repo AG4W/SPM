@@ -162,44 +162,17 @@ public class HumanoidActor : Actor
         stance = (Stance)args[0];
         targetStance = (int)stance;
     }
-    void SetTargetAimMode(object[] args)
-    {
-        aimMode = (AimMode)args[0];
-    }
+    void SetTargetAimMode(object[] args) => aimMode = (AimMode)args[0];
 
-    void SetAnimatorFloat(object[] args)
-    {
-        this.Animator.SetFloat((string)args[0], (float)args[1]);
-    }
-    void SetAnimatorTrigger(object[] args)
-    {
-        this.Animator.SetTrigger((string)args[0]);
-    }
-    void SetAnimatorBool(object[] args)
-    {
-        this.Animator.SetBool((string)args[0], (bool)args[1]);
-    }
-    void SetAnimatorLayer(object[] args)
-    {
-        targetLayerWeights[(int)(AnimatorLayer)args[0]] = (float)args[1];
-    }
+    void SetAnimatorFloat(object[] args) => this.Animator.SetFloat((string)args[0], (float)args[1]);
+    void SetAnimatorTrigger(object[] args) => this.Animator.SetTrigger((string)args[0]);
+    void SetAnimatorBool(object[] args) => this.Animator.SetBool((string)args[0], (bool)args[1]);
+    void SetAnimatorLayer(object[] args) => targetLayerWeights[(int)(AnimatorLayer)args[0]] = (float)args[1];
 
     //IK
-    void SetLookAtPosition(object[] args)
-    {
-        targetLookAtPosition = (Vector3)args[0];
-    }
-    void SetLookAtWeights(object[] args)
-    {
-        targetLookAtWeights = (float[])args[0];
-    }
+    void SetLookAtPosition(object[] args) => targetLookAtPosition = (Vector3)args[0];
+    void SetLookAtWeights(object[] args) => targetLookAtWeights = (float[])args[0];
 
-    void SetLeftHandTarget(object[] args)
-    {
-        leftHandTarget = (Transform)args[0];
-    }
-    void SetLeftHandWeight(object[] args)
-    {
-        targetLeftHandWeight = (float)args[0];
-    }
+    void SetLeftHandTarget(object[] args) => leftHandTarget = (Transform)args[0];
+    void SetLeftHandWeight(object[] args) => targetLeftHandWeight = (float)args[0];
 }

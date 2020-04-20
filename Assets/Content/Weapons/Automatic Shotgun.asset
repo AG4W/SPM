@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Automatic Shotgun
   m_EditorClassIdentifier: Assembly-CSharp::Shotgun
   clipSize: 7
-  damage: 2.5
+  damage: 4
   fireRate: 0.5
-  stoppingPower: 35
+  stoppingPower: 75
   spread: 0.025
   reloadTime: 3
   noiseValue: 50
@@ -32,4 +32,4 @@ MonoBehaviour:
   maxPitch: 1.05
   reloadSFX:
   - {fileID: 8300000, guid: cbd3d4d73221fa1478bc879e762c8f77, type: 3}
-  bulletsPerShot: 5
+  bulletsPerShot: 8

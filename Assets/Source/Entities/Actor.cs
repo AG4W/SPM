@@ -70,35 +70,22 @@ public class Actor : Entity
 
         this.StateMachine = InitializeStateMachine();
     }
-    protected virtual StateMachine InitializeStateMachine()
-    {
-        return null;
-    }
+    protected virtual StateMachine InitializeStateMachine() => null;
 
-    protected virtual void Update()
-    {
-        Interpolate();
-    }
-    protected virtual void Interpolate()
-    {
-        actualInput = Vector3.Lerp(actualInput, targetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
-    }
+    protected virtual void Update() => Interpolate();
+    protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, targetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
     void SetTargetInput(object[] args)
     {
         targetInput = (Vector3)args[0];
         targetInput *= inputModifier;
     }
-    protected void SetInputModifier(float modifier)
-    {
-        inputModifier = modifier;
-    }
+    protected void SetInputModifier(float modifier) => inputModifier = modifier;
 
     //vitals
     protected override void OnHealthZero()
     {
         base.OnHealthZero();
-
         Destroy(this);
     }
 
@@ -176,8 +163,5 @@ public class Actor : Entity
             return velocity;
         }
     }
-    void ModifyVelocity(object[] args)
-    {
-        this.Velocity += (Vector3)args[0];
-    }
+    void ModifyVelocity(object[] args) => this.Velocity += (Vector3)args[0];
 }

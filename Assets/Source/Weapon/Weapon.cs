@@ -42,6 +42,7 @@ public class Weapon : ScriptableObject
     public GameObject[] Impacts => impacts;
     public GameObject[] Hits => hits;
 
+
     public AudioClip[] ShotSFX => shotSFX;
     public float MinPitch => minPitch;
     public float MaxPitch => maxPitch;
