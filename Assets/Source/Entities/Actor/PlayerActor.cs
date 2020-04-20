@@ -63,8 +63,8 @@ public class PlayerActor : HumanoidActor
 
     protected override void CheckOverlap()
     {
-        Vector3 pointA = this.transform.position + (Vector3.up * (CurrentHeight - base.CollisionRadius));
-        Vector3 pointB = this.transform.position + (Vector3.up * base.CollisionRadius);
+        Vector3 pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius));
+        Vector3 pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius));
 
         Vector3 closestPoint;
         Vector3 hitDirection;
@@ -90,8 +90,8 @@ public class PlayerActor : HumanoidActor
                     this.Velocity += this.Velocity.GetNormalForce(-hitDirection.normalized); // Applicera normalkraft 
 
                     // Uppdatera pointA/B
-                    pointA = this.transform.position + (Vector3.up * (CurrentHeight - base.CollisionRadius));
-                    pointB = this.transform.position + (Vector3.up * base.CollisionRadius);
+                    pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius));
+                    pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius));
                 }
 
             Collider[] overlapCollidersB = Physics.OverlapSphere(pointB, base.CollisionRadius);
@@ -107,8 +107,8 @@ public class PlayerActor : HumanoidActor
 
                     this.Velocity += this.Velocity.GetNormalForce(-hitDirection.normalized);
 
-                    pointA = this.transform.position + (Vector3.up * (CurrentHeight - base.CollisionRadius));
-                    pointB = this.transform.position + (Vector3.up * base.CollisionRadius);
+                    pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius));
+                    pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius));
                 }
 
             // Kolla overlap igen

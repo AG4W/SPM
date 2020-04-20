@@ -6,6 +6,10 @@ public class HumanoidActor : Actor
 {
     [Header("Bipedal Settings")]
     [SerializeField]float crouchHeight = 1.4f;
+    [SerializeField]float jumpFeetOffset = .5f;
+
+    [SerializeField]float stepOverHeight = .25f;
+    [SerializeField]float groundCheckDistance = .5f;
 
     [Header("Animation")]
     [SerializeField]MovementMode mode = MovementMode.Jog;
@@ -35,7 +39,10 @@ public class HumanoidActor : Actor
     [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
     protected override float CurrentHeight => Mathf.Lerp(crouchHeight, base.Height, actualStance);
+    protected override float CurrentFeetOffset => this.Animator.GetBool("isJumping") ? jumpFeetOffset : base.CurrentFeetOffset;
     protected Animator Animator { get; private set; }
+
+    public bool IsGrounded { get; set; }
 
     // Använd inte Start/Awake i klasser som ärver ifrån Entity!
     // Använd istället protected override base.Initialize(), denna kallas i Start.
@@ -63,6 +70,9 @@ public class HumanoidActor : Actor
         this.Subscribe(ActorEvent.SetActorLookAtWeights, SetLookAtWeights);
         this.Subscribe(ActorEvent.SetActorLeftHandTarget, SetLeftHandTarget);
         this.Subscribe(ActorEvent.SetActorLeftHandWeight, SetLeftHandWeight);
+
+        //GroundCheck
+        this.Subscribe(ActorEvent.UpdateActorGroundedStatus, (object[] args) => UpdateGroundedStatus());
 
         //exekveringsorder är relevant
         //vill regga events innan vi kallar basklassen
@@ -127,13 +137,22 @@ public class HumanoidActor : Actor
         this.Animator.SetFloat("stance", actualStance);
         this.Animator.SetFloat("aimStance", actualAimStance);
 
-        this.Animator.SetFloat("inputMagnitude", base.TargetInput.magnitude);
-        this.Animator.SetBool("isGrounded", base.IsGrounded);
+        this.Animator.SetFloat("targetMagnitude", base.TargetInput.magnitude);
+        this.Animator.SetFloat("actualMagnitude", base.ActualInput.magnitude);
+
+        this.Animator.SetBool("isGrounded", this.IsGrounded);
 
         for (int i = 0; i < actualLayerWeights.Length; i++)
             this.Animator.SetLayerWeight(i, actualLayerWeights[i]);
     }
-    
+    protected virtual void UpdateGroundedStatus()
+    {
+        if (this.Animator.GetBool("isJumping"))
+            this.IsGrounded = false;
+        else
+            this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
+    }
+
     void SetMovementSpeed(object[] args)
     {
         mode = (MovementMode)args[0];

@@ -16,6 +16,8 @@ public abstract class BaseState : State
     public float GravitationalConstant { get { return gravitationalConstant; } }
     public float AirResistance { get { return airResistance; } }
 
+    new public HumanoidActor Actor { get { return base.Actor as HumanoidActor; } }
+
     protected override void OnInitialize()
     {
         base.OnInitialize();

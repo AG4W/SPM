@@ -6,7 +6,7 @@ public abstract class AIBaseLocomotionState : AIBaseState
     {
         base.Tick();
 
-        if (!base.Actor.IsGrounded)
+        if (!base.Pawn.IsGrounded)
             base.TransitionTo<AIFallState>();
     }
 }

@@ -7,7 +7,7 @@ public class AIFallState : AIBaseState
     {
         base.Tick();
 
-        if (base.Actor.IsGrounded)
+        if (base.Pawn.IsGrounded)
             base.TransitionTo<AIIdleState>();
     }
     public override void Exit()

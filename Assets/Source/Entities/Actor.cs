@@ -15,8 +15,6 @@ public class Actor : Entity
 
     [Header("Movement/Collision Properties")]
     [SerializeField]float collisionRadius = .25f;
-    [SerializeField]float stepOverHeight = .25f;
-    [SerializeField]float groundCheckDistance = .5f;
 
     [SerializeField]float skinWidth = .03f;
     [SerializeField]float staticFriction = .5f;
@@ -28,6 +26,7 @@ public class Actor : Entity
     WeaponController weaponController;
 
     protected virtual float CurrentHeight => height;
+    protected virtual float CurrentFeetOffset => 0f;
     protected float Height { get { return height; } }
     protected float CollisionRadius { get { return collisionRadius; } }
     protected float SkinWidth { get { return skinWidth; } }
@@ -42,7 +41,6 @@ public class Actor : Entity
     public Vector3 ActualInput { get { return actualInput; } }
 
     public Transform FocusPoint { get; private set; }
-    public bool IsGrounded { get; set; }
 
     protected override void Initalize()
     {
@@ -62,8 +60,6 @@ public class Actor : Entity
 
         this.Subscribe(ActorEvent.SetActorTargetInput, SetTargetInput);
 
-        //GroundCheck
-        this.Subscribe(ActorEvent.UpdateActorGroundedStatus, (object[] args) => UpdateGroundedStatus());
         //velocity
         this.Subscribe(ActorEvent.ModifyActorVelocity, ModifyVelocity);
         this.Subscribe(ActorEvent.SetActorWeapon, (object[] args) => weaponController.SetWeapon((Weapon)args[0]));
@@ -90,19 +86,10 @@ public class Actor : Entity
     }
 
     //physics
-    void UpdateGroundedStatus()
-    {
-        //Ray ray = new Ray(this.transform.position + (Vector3.up * stepOverHeight), Vector3.down);
-
-        //offsetta lite uppåt för att få en mer reliable ground check
-        //isGrounded = Physics.Raycast(ray, stepOverHeight + groundCheckDistance);
-        this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * (stepOverHeight + collisionRadius)), collisionRadius, Vector3.down, out RaycastHit hit, stepOverHeight + groundCheckDistance);
-        //Debug.DrawRay(ray.origin, ray.direction * (characterStepOverHeight + groundCheckDistance), isGrounded ? Color.green : Color.red);
-    }
     protected void CheckCollision()
     {
         Vector3 pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
-        Vector3 pointB = this.transform.position + (Vector3.up * collisionRadius);
+        Vector3 pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
 
         Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity);
 
@@ -130,7 +117,7 @@ public class Actor : Entity
             CheckOverlap();
 
             pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
-            pointB = this.transform.position + (Vector3.up * collisionRadius);
+            pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
             Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out hit, this.Velocity.magnitude + skinWidth);
 
             counter++;
