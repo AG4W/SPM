@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "State/Player/Jump")]
-public class JumpState : FallState
+public class JumpState : GroundLostState
 {
     [SerializeField]float jumpInputModifier = .1f;
-
     [SerializeField]float jumpAcceleration = 7f;
+    [SerializeField]float jumpDuration = 1f;
     [SerializeField]AnimationCurve jumpCurve;
 
-    [SerializeField]float jumpDuration = 1f;
+    [SerializeField]float landThreshold = .75f;
+
     float jumpTimer;
     
     public override void Enter()
     {
         base.Enter();
         base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", true);
+
+        GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Jump);
 
         jumpTimer = 0f;
     }
@@ -26,18 +29,10 @@ public class JumpState : FallState
 
         if (jumpTimer >= jumpDuration)
         {
-            if (base.Actor.IsGrounded)
-            {
-                if (base.Actor.TargetInput.magnitude > .1f)
-                {
-                    if (Input.GetKey(KeyCode.LeftShift))
-                        base.TransitionTo<SprintState>();
-                    else
-                        base.TransitionTo<MoveState>();
-                }
-                else
-                    base.TransitionTo<IdleState>();
-            }
+            Debug.Log(base.DistanceToGround);
+
+            if (base.DistanceToGround <= landThreshold)
+                base.TransitionTo<LandState>();
             else
                 base.TransitionTo<FallState>();
         }
@@ -54,7 +49,6 @@ public class JumpState : FallState
     }
     public override void Exit()
     {
-        base.Exit();
-        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", false);
+        base.Get<Animator>().SetBool("isJumping", false);
     }
 }

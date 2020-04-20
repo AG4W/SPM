@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [Serializable]
 public class StateMachine
 {
-    [SerializeField]bool debugStateMachine = false;
+    bool debugStateMachine = true;
     Actor owner;
 
     readonly Stack<State> queue = new Stack<State>();
@@ -64,10 +64,10 @@ public class StateMachine
 
     public void TransitionTo<T>() where T : State // T måste vara ett State
     {
+        next = states[typeof(T)];
+
         if (this.debugStateMachine)
             Debug.Log(owner.name + ": " + Current.GetType() + " -> " + next.GetType());
-
-        next = states[typeof(T)];
     }
     public void Return()
     {

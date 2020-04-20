@@ -95,8 +95,7 @@ public enum GlobalEvent
     ToggleTorches,
 
     //camera
-    SetCameraAimMode,
-    SetCameraFOVMultiplier,
+    SetCameraMode,
 
     //ui
     OnInteractableStart,

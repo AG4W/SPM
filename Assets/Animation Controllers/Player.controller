@@ -675,10 +675,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: isGrounded
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: isJumping
+    m_ConditionEvent: isLanding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5949852128783090543}
@@ -686,7 +683,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.022587717
   m_TransitionOffset: 0
   m_ExitTime: 0.75
   m_HasExitTime: 0
@@ -954,6 +951,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: actualMagnitude
     m_EventTreshold: 0.1
+  - m_ConditionMode: 2
+    m_ConditionEvent: isLanding
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5972392303360242141}
   m_Solo: 0
@@ -963,7 +963,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.75
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -1393,6 +1393,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: isLanding
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   - m_Name: canStand
     m_Type: 4
     m_DefaultFloat: 0
@@ -1406,6 +1412,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: weaponIndex
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: distanceFromGround
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1653,21 +1665,24 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: isGrounded
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
     m_ConditionEvent: isJumping
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: isLanding
+    m_EventTreshold: 0
+  - m_ConditionMode: 3
+    m_ConditionEvent: distanceFromGround
+    m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1681303392497903943}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.02704683
   m_TransitionOffset: 0
   m_ExitTime: 0.75
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -1932,34 +1947,6 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 3
---- !u!1101 &2418481920173281161
-AnimatorStateTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: isGrounded
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: isJumping
-    m_EventTreshold: 0
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 5949852128783090543}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 3
-  m_TransitionDuration: 0.11315799
-  m_TransitionOffset: 0
-  m_ExitTime: 0.44766575
-  m_HasExitTime: 0
-  m_HasFixedDuration: 1
-  m_InterruptionSource: 0
-  m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
 --- !u!1102 &2452177398152848540
 AnimatorState:
   serializedVersion: 5
@@ -2112,6 +2099,31 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1101 &2847229696848797083
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: isLanding
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 5949852128783090543}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.49152547
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1101 &2944704840938600085
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2146,7 +2158,7 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1594922757434384927}
-  - {fileID: 2418481920173281161}
+  - {fileID: 2847229696848797083}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -2266,7 +2278,7 @@ AnimatorStateMachine:
     m_Position: {x: 540, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1681303392497903943}
-    m_Position: {x: -30, y: 100, z: 0}
+    m_Position: {x: -20, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5972392303360242141}
     m_Position: {x: 270, y: 160, z: 0}
@@ -2278,7 +2290,7 @@ AnimatorStateMachine:
     m_Position: {x: -70, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5949852128783090543}
-    m_Position: {x: -70, y: 170, z: 0}
+    m_Position: {x: -70, y: 160, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -2758,6 +2770,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 3
     m_ConditionEvent: actualMagnitude
     m_EventTreshold: 0.1
+  - m_ConditionMode: 2
+    m_ConditionEvent: isLanding
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4174482632808944378}
   m_Solo: 0
@@ -2767,7 +2782,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.09115499
   m_TransitionOffset: 0.45482436
   m_ExitTime: 0.74999994
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

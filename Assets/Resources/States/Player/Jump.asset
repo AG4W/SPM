@@ -21,9 +21,10 @@ MonoBehaviour:
   gravitationalConstant: 9.82
   airResistance: 0.5
   velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
-  fallMomentumDeceleration: 0.5
+  fallMomentumDeceleration: 0.15
   jumpInputModifier: 0.33
   jumpAcceleration: 15
+  jumpDuration: 1
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,4 +49,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpDuration: 1
+  landThreshold: 1

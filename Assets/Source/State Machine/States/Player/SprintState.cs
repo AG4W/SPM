@@ -7,6 +7,7 @@ public class SprintState : BaseLocomotionState
     {
         base.Enter();
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Sprint);
+        GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Sprint);
     }
     public override void Tick()
     {
@@ -25,5 +26,6 @@ public class SprintState : BaseLocomotionState
     public override void Exit()
     {
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Jog);
+        GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Default);
     }
 }

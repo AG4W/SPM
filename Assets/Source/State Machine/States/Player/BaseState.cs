@@ -13,6 +13,20 @@ public abstract class BaseState : State
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float airResistance = .5f;
 
+    public float DistanceToGround
+    {
+        get
+        {
+            if (this.Actor.IsGrounded)
+                return 0f;
+            else
+            {
+                Physics.Raycast(base.Actor.transform.position + (Vector3.up * .25f), Vector3.down, out RaycastHit hit, Mathf.Infinity);
+
+                return hit.transform != null ? base.Actor.transform.position.DistanceTo(hit.point) : Mathf.Infinity;
+            }
+        }
+    }
     public float GravitationalConstant { get { return gravitationalConstant; } }
     public float AirResistance { get { return airResistance; } }
 
@@ -34,8 +48,6 @@ public abstract class BaseState : State
     }
     public override void Tick()
     {
-        UpdateAnimatorIK();
-
         base.Actor.Raise(ActorEvent.SetActorTargetInput, new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")));
         // Ground Check
         base.Actor.Raise(ActorEvent.UpdateActorGroundedStatus);
@@ -44,8 +56,9 @@ public abstract class BaseState : State
 
         //rotation
         base.Actor.transform.rotation = Quaternion.Slerp(base.Actor.transform.rotation, Quaternion.Euler(0f, base.Get<CameraController>().transform.eulerAngles.y, 0f), rotationSpeed * (Time.deltaTime / Time.timeScale));
-    }
 
+        UpdateAnimatorIK();
+    }
     void UpdateAnimatorIK()
     {
         //Look at
