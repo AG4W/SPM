@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: fd9f330f264b44e4c958e32e533bc02c
+guid: 1aa2ad870d8acd24e96842ae6696aa8b
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Run Jump Down
+    second: Jump Land Standing Back
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,13 +35,13 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Run Jump Down
+      name: Jump Land Standing Back
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 35
-      lastFrame: 60
+      firstFrame: 0
+      lastFrame: 40
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: 180
       level: 0
       cycleOffset: 0
       loop: 0
@@ -53,7 +53,7 @@ ModelImporter:
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
