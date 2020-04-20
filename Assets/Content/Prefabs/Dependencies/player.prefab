@@ -812,7 +812,7 @@ MonoBehaviour:
   inputInterpolationSpeed: 2.5
   collisionRadius: 0.25
   stepOverHeight: 0.25
-  groundCheckDistance: 0.5
+  groundCheckDistance: 0.3
   skinWidth: 0.03
   staticFriction: 0.5
   dynamicFriction: 0.4
@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b54c7d0ab31fd4d899dcb54aecd37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 8aca0182ce35f8d4a9085ced298aea75, type: 2}
+  weapon: {fileID: 11400000, guid: 479ef70969d2a9c46b07b0e58d9d8c11, type: 2}
   anchorPoint: {fileID: 5571372997153340437}
   mask:
     serializedVersion: 2
