@@ -47,18 +47,18 @@ MonoBehaviour:
   profile: {fileID: 11400000, guid: f3494d946fadd384fa6b99e8f8ac17c2, type: 2}
   sensitivityX: 80
   sensitivityY: 80
-  translationSpeed: 10
+  translationSpeed: 15
   cameraTranslationSpeed: 2.5
   defaultPosition: {x: 0.75, y: 1.6, z: -1.15}
   ironSightPosition: {x: 0.4, y: 1.6, z: -0.75}
   jumpPosition: {x: 0, y: 1.7, z: -1.5}
-  sprintPosition: {x: 0.4, y: 1.6, z: -1.15}
+  sprintPosition: {x: 0, y: 1.6, z: -1.5}
   fallPosition: {x: 0, y: 0, z: 0}
   crouchOffset: {x: 0, y: 2, z: -4}
   defaultFOV: 75
   ironSightFOV: 45
   jumpFOV: 90
-  sprintFOV: 85
+  sprintFOV: 50
   fallFOV: 90
   maxCameraUpAngle: 30
   maxCameraDownAngle: 90
