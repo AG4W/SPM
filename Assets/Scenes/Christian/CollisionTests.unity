@@ -4021,6 +4021,16 @@ PrefabInstance:
       propertyPath: DynamicFriction
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7031882766095853029, guid: 2331723a1997c634e9e5db77e3718c50,
+        type: 3}
+      propertyPath: dynamicFriction
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7031882766095853029, guid: 2331723a1997c634e9e5db77e3718c50,
+        type: 3}
+      propertyPath: staticFriction
+      value: 0.95
+      objectReference: {fileID: 0}
     - target: {fileID: 9199550058994552007, guid: 2331723a1997c634e9e5db77e3718c50,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5212,7 +5222,7 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 15
+  m_Intensity: 200
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -5310,7 +5320,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.9869544, g: 0.99215686, b: 0.88235295, a: 1}
-  m_Intensity: 15
+  m_Intensity: 200
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
