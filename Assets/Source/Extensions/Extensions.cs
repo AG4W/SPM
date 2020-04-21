@@ -101,6 +101,10 @@ public static class Extensions
     {
         return origin - target;
     }
+    public static float Dot(this Vector3 lhs, Vector3 rhs)
+    {
+        return Vector3.Dot(lhs, rhs);
+    }
 
     public static float DistanceTo(this Vector3 origin, Vector3 target)
     {
@@ -120,12 +124,6 @@ public static class Extensions
         }
 
         return null;
-    }
-
-    //coroutines
-    public static void Run(this IEnumerator routine)
-    {
-        CoroutineSurrogate.instance.StartCoroutine(routine);
     }
 }
 public enum InterpolationMode

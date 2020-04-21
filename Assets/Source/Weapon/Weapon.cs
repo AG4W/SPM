@@ -57,19 +57,8 @@ public class Weapon : ScriptableObject
     {
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 
-        if (hit.transform != null)
-        {
-            Entity e = hit.transform.root.GetComponent<Entity>();
-
-            //hit something else, create hit marker or something    
-            if (e == null)
-            {
-                if (hit.transform.GetComponent<Rigidbody>())
-                    hit.transform.GetComponent<Rigidbody>().AddForce(heading.normalized * (this.StoppingPower / hit.point.DistanceTo(exitPoint.position)), ForceMode.Impulse);
-            }
-            else
-                e.Health.Update(-damage);
-        }
+        hit.transform?.GetComponent<IForceAffectable>()?.ModifyVelocity(heading.normalized * (this.StoppingPower / hit.point.DistanceTo(exitPoint.position)));
+        hit.transform?.GetComponent<IDamageable>()?.OnHit(-this.Damage);
 
         Debug.DrawLine(exitPoint.position, hit.transform != null ? hit.point : exitPoint.position + heading.normalized * 300f, Color.red);
 

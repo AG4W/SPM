@@ -1,26 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.AI;
 
 public class RigidBodyForceWrapper : MonoBehaviour, IForceAffectable
 {
-    Rigidbody[] rbs;
+    Rigidbody body;
 
-    void Awake()
-    {
-        rbs = this.GetComponentsInChildren<Rigidbody>();
-    }
+    void Awake() => body = this.GetComponent<Rigidbody>();
 
-    void IForceAffectable.ModifyVelocity(Vector3 change)
-    {
-        for (int i = 0; i < rbs.Length; i++)
-            rbs[i].AddForce(change, ForceMode.Force);
-    }
-    void IForceAffectable.SetVelocity(Vector3 velocity)
-    {
-        for (int i = 0; i < rbs.Length; i++)
-        {
-            rbs[i].velocity = velocity;
-            //rbs[i].angularVelocity = velocity;
-        }
-    }
+    void IForceAffectable.ModifyVelocity(Vector3 velocity) => body.AddForce(velocity, ForceMode.Impulse);
+    void IForceAffectable.SetVelocity(Vector3 velocity) => body.velocity = velocity;
 }

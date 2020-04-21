@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System;
 
-public class HumanoidPawn : HumanoidActor
+public class HumanoidPawn : HumanoidActor, IForceAffectable
 {
     [Range(1f, 100)][SerializeField]float sightRange = 30f;
     [Range(-1f, 1f)][SerializeField]float fieldOfView = 0f;
@@ -93,10 +93,20 @@ public class HumanoidPawn : HumanoidActor
     {
         Destroy(this.GetComponent<Collider>());
         Destroy(model);
-        
-        ragdoll.SetActive(true);
-        ragdoll.transform.SetParent(null);
+
+        //instansiera och lägg till wrappers för varje rigidbody i samma loop
+        foreach (Rigidbody rb in Instantiate(ragdoll, this.transform.position, this.transform.rotation, null).GetComponentsInChildren<Rigidbody>())
+            rb.gameObject.AddComponent<RagdollForceWrapper>();
 
         Destroy(this.gameObject);
+    }
+
+    void IForceAffectable.ModifyVelocity(Vector3 change)
+    {
+        base.Velocity += change;
+    }
+    void IForceAffectable.SetVelocity(Vector3 velocity)
+    {
+        base.Velocity = velocity;
     }
 }

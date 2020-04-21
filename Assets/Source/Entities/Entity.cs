@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class Entity : MonoBehaviour, IDamageable
 {
     [SerializeField]float maxHealth = 10f;
     [SerializeField]float healthRegenerationRate;
@@ -8,7 +8,7 @@ public class Entity : MonoBehaviour
 
     [SerializeField]bool isDestructible = true;
 
-    public Vital Health { get; private set; }
+    Vital health;
 
     //basklass
     //kommer lite skit här sen
@@ -18,12 +18,12 @@ public class Entity : MonoBehaviour
     }
     protected virtual void Initalize()
     {
-        Health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
-        Health.OnCurrentChanged += OnHealthChanged;
+        health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
+        health.OnCurrentChanged += OnHealthChanged;
     }
     void Update()
     {
-        Health.Tick();
+        health.Tick();
     }
 
     protected virtual void OnHealthChanged(float current)
@@ -38,5 +38,10 @@ public class Entity : MonoBehaviour
     {
         //this.GetComponentInChildren<Animator>()?.SetTrigger("Death");
         //Destroy(this.transform.gameObject);
+    }
+
+    void IDamageable.OnHit(float damage)
+    {
+        health.Update(damage);
     }
 }

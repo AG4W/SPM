@@ -96,7 +96,7 @@ public class WeaponController : MonoBehaviour
 
     public void SetWeapon(Weapon weapon)
     {
-        //create copy to avoid collision with multiple controllers on the same weapon
+        //create copy to avoid collision with multiple controllers pointing to the same weapon
         this.weapon = Instantiate(weapon);
 
         //delete old model
@@ -106,7 +106,7 @@ public class WeaponController : MonoBehaviour
         //create new
         model = Instantiate(weapon.Prefab, anchorPoint.position, anchorPoint.rotation, anchorPoint);
 
-        //grab relevant transforms and cache them
+        //update relevant transforms and cache them
         ExitPoint = model.transform.FindRecursively("exitPoint");
         this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
         uiController = model.GetComponentInChildren<WeaponWorldUIController>();
@@ -120,6 +120,7 @@ public class WeaponController : MonoBehaviour
     }
     public void OnDeath()
     {
-
+        //skapa en pickupable av nuvarande vapen
+        //så att spelaren kan ta upp det
     }
 }
