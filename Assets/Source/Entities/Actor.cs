@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Actor : Entity, IDamageable
+public class Actor : Entity
 {
     [Header("Actor Settings")]
     [Header("Behaviour Collection Filepath")]
@@ -84,6 +84,7 @@ public class Actor : Entity, IDamageable
     protected override void OnHealthZero()
     {
         base.OnHealthZero();
+
         Destroy(this);
     }
 
