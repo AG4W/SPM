@@ -11,8 +11,8 @@ public class Vital
     public float Max { get; }
 
     public float CurrentInPercent { get { return this.Current / this.Max; } }
-
     public VitalType Type { get; }
+    public bool HasReachedZero { get; private set; } = false;
 
     public Vital(VitalType type, float maxValue, float regenerationRate, float regenerationAmount)
     {
@@ -38,7 +38,14 @@ public class Vital
     public void Update(float change)
     {
         this.Current += change;
-        OnCurrentChanged?.Invoke(this.Current);
+
+        //har race conditions här ifall något gör damage flera gånger samma frame
+        //se till att vi bara triggar zero events en gång
+        if(!HasReachedZero)
+            OnCurrentChanged?.Invoke(this.Current);
+
+        if (this.Current <= 0f)
+            HasReachedZero = true;
     }
 
     public delegate void OnValueChanged(float change);

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Actor : Entity
+public class Actor : Entity, IDamageable
 {
     [Header("Actor Settings")]
     [Header("Behaviour Collection Filepath")]
@@ -24,6 +24,8 @@ public class Actor : Entity
 
     [Header("Equipment")]
     WeaponController weaponController;
+
+    Vital health;
 
     protected virtual float CurrentHeight => height;
     protected virtual float CurrentFeetOffset => 0f;
