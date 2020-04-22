@@ -94,8 +94,10 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
         Destroy(this.GetComponent<Collider>());
         Destroy(model);
 
+        GameObject rd = Instantiate(ragdoll, this.transform.position, this.transform.rotation, null);
+
         //instansiera och lägg till wrappers för varje rigidbody i samma loop
-        foreach (Rigidbody rb in Instantiate(ragdoll, this.transform.position, this.transform.rotation, null).GetComponentsInChildren<Rigidbody>())
+        foreach (Rigidbody rb in rd.GetComponentsInChildren<Rigidbody>())
             rb.gameObject.AddComponent<RagdollForceWrapper>();
 
         Destroy(this.gameObject);
