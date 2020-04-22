@@ -84,14 +84,15 @@ public class Panel : MonoBehaviour, IInteractable
     {
         while (current.HasBlinkEffect)
         {
-            yield return new WaitForSeconds(current.BlinkLength);
             OnBlink(false);
+            yield return new WaitForSeconds(current.BlinkLength);
 
-            yield return new WaitForSeconds(current.TimeBetweenBlinks);
             OnBlink(true);
 
             if (current.BlinkSFX.Length > 0)
                 source.PlayOneShot(current.BlinkSFX.Random());
+
+            yield return new WaitForSeconds(current.TimeBetweenBlinks);
         }
 
         OnBlink(true);
