@@ -11,7 +11,7 @@ public class SimpleDoor : MonoBehaviour
     [SerializeField]Transform closedPosition;
     [SerializeField]Transform openPosition;
 
-    [SerializeField]SimpleDoorState mode = SimpleDoorState.Closed;
+    [SerializeField]SimpleDoorState state = SimpleDoorState.Closed;
     SimpleDoorState last;
 
     [Header("Panel Configuration")]
@@ -45,21 +45,30 @@ public class SimpleDoor : MonoBehaviour
         Debug.Assert(closedPosition != null, this.name + " does not have a closedPosition assigned, did you forget to assign it?", this.gameObject);
         Debug.Assert(openPosition != null, this.name + " does not have a openPosition object assigned, did you forget to assign it?", this.gameObject);
         Debug.Assert(panels.Length > 0, this.name + " has no panels assigned and will not be interactable, remove this component if this is desired behaviour.", this.gameObject);
+        Debug.Assert(state != SimpleDoorState.Animating, this.name + " should not start in animating mode, please select a different mode.", this.gameObject);
 
         for (int i = 0; i < panels.Length; i++)
-            panels[i].OnInteract += OnInteract;
+        {
+            panels[i].SetState(states[(int)state]);
 
-        this.StartCoroutine(TransitionAsync(mode));
+            if(this.state != SimpleDoorState.Broken && this.state != SimpleDoorState.Locked)
+                panels[i].OnInteract += OnInteract;
+        }
+
+        door.transform.localPosition = state == SimpleDoorState.Opened ? openPosition.position : closedPosition.position;
+
+        if (this.state == SimpleDoorState.Broken || this.state == SimpleDoorState.Locked)
+        {
+            door.isStatic = true;
+            Destroy(this);
+        }
     }
 
     void OnInteract()
     {
-        if (mode == SimpleDoorState.Broken || mode == SimpleDoorState.Locked)
-            return;
-
         SimpleDoorState state;
 
-        switch (mode)
+        switch (this.state)
         {
             case SimpleDoorState.Closed:
                 state = SimpleDoorState.Animating;
@@ -77,8 +86,8 @@ public class SimpleDoor : MonoBehaviour
                 break;
         }
 
-        last = mode;
-        mode = state;
+        last = this.state;
+        this.state = state;
 
         this.StopAllCoroutines();
         this.StartCoroutine(TransitionAsync(state));

@@ -14,6 +14,7 @@ public class Panel : MonoBehaviour, IInteractable
     [SerializeField]Light[] lights;
 
     PanelState current;
+    AudioSource source;
 
     string IInteractable.Prompt => prompt;
     float IInteractable.InteractionDistance => interactionDistance;
@@ -41,11 +42,15 @@ public class Panel : MonoBehaviour, IInteractable
                 images[i].material = Instantiate(im);
         }
 
+        source = this.GetComponentInChildren<AudioSource>();
         this.gameObject.layer = LayerMask.NameToLayer("Interactable");
     }
 
     void IInteractable.Interact()
     {
+        if(current.InteractSFX.Length > 0)
+            source.PlayOneShot(current.InteractSFX.Random());
+
         OnInteract?.Invoke();
     }
 
@@ -104,6 +109,9 @@ public class Panel : MonoBehaviour, IInteractable
 
         for (int i = 0; i < lights.Length; i++)
             lights[i].gameObject.SetActive(status);
+
+        if(current.BlinkSFX.Length > 0)
+            source.PlayOneShot(current.BlinkSFX.Random());
     }
 
     public delegate void OnInteractEvent();

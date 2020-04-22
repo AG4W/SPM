@@ -365,7 +365,7 @@ MonoBehaviour:
   door: {fileID: 5148737561223563605}
   closedPosition: {fileID: 5148737559657604254}
   openPosition: {fileID: 5148737560150943830}
-  mode: 0
+  state: 0
   panels:
   - {fileID: 8303971878527414002}
   - {fileID: 3891422781742244699}
@@ -378,6 +378,9 @@ MonoBehaviour:
     blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: f731b3cdb7e1281429779d2187947211, type: 3}
+    blinkSFX: []
   openedState:
     text: OPEN
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -387,6 +390,9 @@ MonoBehaviour:
     blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: f731b3cdb7e1281429779d2187947211, type: 3}
+    blinkSFX: []
   animatingState:
     text: STANDBY
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -396,6 +402,8 @@ MonoBehaviour:
     blinkImages: 1
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
   lockedState:
     text: LOCKED
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -405,6 +413,9 @@ MonoBehaviour:
     blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: 5304d9f47fab3aa4e8384e524602c9fe, type: 3}
+    blinkSFX: []
   brokenState:
     text: ERROR
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -414,6 +425,10 @@ MonoBehaviour:
     blinkImages: 1
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: 5304d9f47fab3aa4e8384e524602c9fe, type: 3}
+    blinkSFX:
+    - {fileID: 8300000, guid: f731b3cdb7e1281429779d2187947211, type: 3}
   animationTime: 2
   animationMode: 3
 --- !u!1 &6582314710450070018

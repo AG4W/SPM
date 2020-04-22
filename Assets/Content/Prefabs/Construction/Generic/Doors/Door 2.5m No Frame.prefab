@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 21030741253119146}
   - component: {fileID: 6546136429857359088}
   m_Layer: 0
-  m_Name: Door_2.3m_NoFrame
+  m_Name: Door 2.5m No Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -237,7 +237,7 @@ MonoBehaviour:
   door: {fileID: 1643058072512778104}
   closedPosition: {fileID: 1643058074067215027}
   openPosition: {fileID: 1643058073587510907}
-  mode: 0
+  state: 0
   panels:
   - {fileID: 7964514448069035727}
   - {fileID: 6799646003704539404}
@@ -250,6 +250,9 @@ MonoBehaviour:
     blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: f731b3cdb7e1281429779d2187947211, type: 3}
+    blinkSFX: []
   openedState:
     text: OPEN
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -259,6 +262,9 @@ MonoBehaviour:
     blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: f731b3cdb7e1281429779d2187947211, type: 3}
+    blinkSFX: []
   animatingState:
     text: STANDBY
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -268,6 +274,8 @@ MonoBehaviour:
     blinkImages: 1
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
   lockedState:
     text: LOCKED
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -277,6 +285,9 @@ MonoBehaviour:
     blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: 5304d9f47fab3aa4e8384e524602c9fe, type: 3}
+    blinkSFX: []
   brokenState:
     text: ERROR
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
@@ -286,6 +297,10 @@ MonoBehaviour:
     blinkImages: 1
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
+    interactSFX:
+    - {fileID: 8300000, guid: 5304d9f47fab3aa4e8384e524602c9fe, type: 3}
+    blinkSFX:
+    - {fileID: 8300000, guid: f731b3cdb7e1281429779d2187947211, type: 3}
   animationTime: 2
   animationMode: 3
 --- !u!1001 &6458973669056364903

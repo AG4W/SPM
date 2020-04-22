@@ -21,6 +21,10 @@ public class PanelState
     [SerializeField]float blinkLength = .25f;
     [SerializeField]float timeBetweenBlinks = .25f;
 
+    [Header("Audio Settings")]
+    [SerializeField]AudioClip[] interactSFX;
+    [SerializeField]AudioClip[] blinkSFX;
+
     public string Text => text;
 
     public Sprite Sprite => sprite;
@@ -32,4 +36,7 @@ public class PanelState
     public bool BlinkImages => blinkImages;
     public float BlinkLength => blinkLength;
     public float TimeBetweenBlinks => timeBetweenBlinks;
+
+    public AudioClip[] InteractSFX => interactSFX;
+    public AudioClip[] BlinkSFX => blinkSFX;
 }
