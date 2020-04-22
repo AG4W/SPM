@@ -61,7 +61,11 @@ public class PlayerActor : HumanoidActor
     {
         base.OnAnimatorIK(layerIndex);
     }
-
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius)), base.CollisionRadius);
+    //    Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius)), base.CollisionRadius);
+    //}
     void DispatchInput()
     {
         if (Input.GetKeyDown(KeyCode.F))
