@@ -458,7 +458,7 @@ MonoBehaviour:
   door: {fileID: 1049776600722531604}
   closedPosition: {fileID: 1049776601283037407}
   openPosition: {fileID: 1049776601793184791}
-  state: 0
+  state: 4
   panels:
   - {fileID: 8303971878527414002}
   - {fileID: 2788156002454408350}
@@ -516,8 +516,8 @@ MonoBehaviour:
     tintIntensity: 8
     blinkText: 1
     blinkImages: 1
-    blinkLength: 0.25
-    timeBetweenBlinks: 0.25
+    blinkLength: 0.5
+    timeBetweenBlinks: 0.5
     interactSFX:
     - {fileID: 8300000, guid: 5304d9f47fab3aa4e8384e524602c9fe, type: 3}
     blinkSFX:

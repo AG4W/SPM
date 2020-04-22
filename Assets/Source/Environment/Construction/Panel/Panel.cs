@@ -84,11 +84,14 @@ public class Panel : MonoBehaviour, IInteractable
     {
         while (current.HasBlinkEffect)
         {
-            OnBlink(false);
             yield return new WaitForSeconds(current.BlinkLength);
+            OnBlink(false);
 
-            OnBlink(true);
             yield return new WaitForSeconds(current.TimeBetweenBlinks);
+            OnBlink(true);
+
+            if (current.BlinkSFX.Length > 0)
+                source.PlayOneShot(current.BlinkSFX.Random());
         }
 
         OnBlink(true);
@@ -109,9 +112,6 @@ public class Panel : MonoBehaviour, IInteractable
 
         for (int i = 0; i < lights.Length; i++)
             lights[i].gameObject.SetActive(status);
-
-        if(current.BlinkSFX.Length > 0)
-            source.PlayOneShot(current.BlinkSFX.Random());
     }
 
     public delegate void OnInteractEvent();

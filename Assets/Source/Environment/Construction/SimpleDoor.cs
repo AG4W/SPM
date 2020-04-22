@@ -55,7 +55,7 @@ public class SimpleDoor : MonoBehaviour
                 panels[i].OnInteract += OnInteract;
         }
 
-        door.transform.localPosition = state == SimpleDoorState.Opened ? openPosition.position : closedPosition.position;
+        door.transform.localPosition = state == SimpleDoorState.Opened ? openPosition.localPosition : closedPosition.localPosition;
 
         if (this.state == SimpleDoorState.Broken || this.state == SimpleDoorState.Locked)
         {
@@ -99,8 +99,8 @@ public class SimpleDoor : MonoBehaviour
 
         if(state == SimpleDoorState.Animating)
         {
-            Vector3 start = last == SimpleDoorState.Closed ? closedPosition.position : openPosition.position;
-            Vector3 end = last == SimpleDoorState.Closed ? openPosition.position : closedPosition.position;
+            Vector3 start = last == SimpleDoorState.Closed ? closedPosition.localPosition : openPosition.localPosition;
+            Vector3 end = last == SimpleDoorState.Closed ? openPosition.localPosition : closedPosition.localPosition;
 
             float t = 0f;
 
