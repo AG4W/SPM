@@ -5,7 +5,7 @@ public class InteractionPromptController : MonoBehaviour
 {
     [SerializeField]Text prompt;
 
-    IInteractable interactable;
+    IInteractable current;
 
     void Awake()
     {
@@ -23,17 +23,15 @@ public class InteractionPromptController : MonoBehaviour
     }
     void Update()
     {
-        if (interactable == null)
+        if (current == null)
             return;
 
-        //prompt.transform.position = Camera.main.WorldToScreenPoint(interactable.PromptPosition);
-
         if (Input.GetKeyDown(KeyCode.E))
-            interactable.Interact();
+            current.Interact();
     }
     void OpenInteractPrompt(IInteractable entity)
     {
-        interactable = entity;
+        current = entity;
 
         prompt.text = entity.Prompt;
         prompt.gameObject.SetActive(true);
@@ -41,6 +39,6 @@ public class InteractionPromptController : MonoBehaviour
     void CloseInteractPrompt()
     {
         prompt.gameObject.SetActive(false);
-        interactable = null;
+        current = null;
     }
 }
