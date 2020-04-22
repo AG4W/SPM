@@ -6,7 +6,7 @@ public class HumanoidActor : Actor
 {
     [Header("Bipedal Settings")]
     [SerializeField]float crouchHeight = 1.4f;
-    [SerializeField]float jumpFeetOffset = .5f;
+    [SerializeField]float jumpFeetOffset = .25f;
 
     [SerializeField]float stepOverHeight = .25f;
     [SerializeField]float groundCheckDistance = .5f;
