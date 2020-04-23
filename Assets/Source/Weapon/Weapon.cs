@@ -75,9 +75,13 @@ public class Weapon : ScriptableObject
 
             //dont create hit markers on actors 
             if (a == null)
-                Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), hit.transform);
+            {
+                GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
+                h.transform.SetParent(hit.transform);
+            }
 
-            Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), hit.transform);
+            GameObject g = Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
+            g.transform.SetParent(hit.transform);
         }
     }
     protected virtual void CreateShotSFX(AudioSource source)
