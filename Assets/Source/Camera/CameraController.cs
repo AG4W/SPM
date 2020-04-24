@@ -8,12 +8,13 @@ public class CameraController : MonoBehaviour
     [SerializeField]VolumeProfile profile;
     DepthOfField dof;
 
+    [Header("General Settings")]
     [SerializeField]float sensitivityX = 2f;
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = .25f;
-
     [SerializeField]float cameraTranslationSpeed = 5f;
 
+    [Header("Camera Positions")]
     [SerializeField]Vector3 defaultPosition;
     [SerializeField]Vector3 ironSightPosition;
     [SerializeField]Vector3 jumpPosition;
@@ -23,6 +24,11 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.75f, 0f);
 
+    [Header("Clip settings")]
+    [SerializeField]float cullDistance = 50f;
+    [SerializeField]float lodCullDistance = 2000f;
+
+    [Header("FOV Settings")]
     [SerializeField]float defaultFOV = 60;
     [SerializeField]float ironSightFOV = 30;
     [SerializeField]float jumpFOV = 80;
@@ -36,13 +42,14 @@ public class CameraController : MonoBehaviour
     float jigRotationX;
     float jigRotationY;
 
+    [Header("Depth of Field")]
     float targetDoFDistance;
     float actualDoFDistance;
     [SerializeField]float focusSpeed = 5f;
-
     [SerializeField]float defaultDoFStrength = .25f;
     [SerializeField]float ironSightDoFStrength = 7f;
 
+    [Header("Trauma")]
     float trauma;
     float shake { get { return trauma * trauma * trauma; } }
     [SerializeField]float traumaInterpolationSpeed = 5f;
@@ -63,6 +70,15 @@ public class CameraController : MonoBehaviour
         profile.TryGet(out dof);
         camera = this.GetComponentInChildren<Camera>();
         cameraRotation = camera.transform.localRotation;
+
+        //setup camera stuff
+        float[] cullingDistances = new float[32];
+
+        for (int i = 0; i < cullingDistances.Length; i++)
+            cullingDistances[i] = i == 31 ? 0f : cullDistance;
+
+        camera.layerCullDistances = cullingDistances;
+        camera.layerCullSpherical = true;
 
         target = FindObjectOfType<PlayerActor>().gameObject;
 

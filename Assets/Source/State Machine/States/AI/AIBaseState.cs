@@ -12,5 +12,6 @@ public abstract class AIBaseState : State
         base.Actor.Raise(ActorEvent.UpdateActorGroundedStatus);
         //Gravity
         base.Actor.Raise(ActorEvent.ModifyActorVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));
+        base.Actor.Raise(ActorEvent.SetActorAnimatorFloat, "targetMagnitude", base.Actor.TargetInput.magnitude);
     }
 }

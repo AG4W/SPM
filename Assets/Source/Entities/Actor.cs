@@ -22,6 +22,8 @@ public class Actor : Entity
 
     [SerializeField]float height;
 
+    [SerializeField]LayerMask collisionMask;
+
     [Header("Equipment")]
     WeaponController weaponController;
 
@@ -32,6 +34,8 @@ public class Actor : Entity
     protected float Height { get { return height; } }
     protected float CollisionRadius { get { return collisionRadius; } }
     protected float SkinWidth { get { return skinWidth; } }
+
+    protected LayerMask CollisionMask { get { return collisionMask; } }
 
     protected string Path { get { return path; } }
     protected WeaponController WeaponController { get { return weaponController; } }
@@ -70,7 +74,11 @@ public class Actor : Entity
     }
     protected virtual StateMachine InitializeStateMachine() => null;
 
-    protected virtual void Update() => Interpolate();
+    protected override void Update()
+    {
+        base.Update();
+        Interpolate();
+    }
     protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, targetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
     void SetTargetInput(object[] args)
@@ -94,7 +102,7 @@ public class Actor : Entity
         Vector3 pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
 
-        Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity);
+        Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity, collisionMask);
 
         float allowedMoveDistance;
 
@@ -121,7 +129,7 @@ public class Actor : Entity
 
             pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
             pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out hit, this.Velocity.magnitude + skinWidth);
+            Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out hit, this.Velocity.magnitude + skinWidth, collisionMask);
 
             counter++;
             if (counter == 11)

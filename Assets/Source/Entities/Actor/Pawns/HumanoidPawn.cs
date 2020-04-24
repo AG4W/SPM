@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System;
+using UnityEngine.AI;
 
 public class HumanoidPawn : HumanoidActor, IForceAffectable
 {
@@ -12,16 +13,22 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
 
     [Range(0f, 1f)][SerializeField]float accuracy = .5f;
 
+    [SerializeField]LayerMask sightMask;
+
     [SerializeField]GameObject model;
     [SerializeField]GameObject ragdoll;
 
+    Vector3 targetPosition;
     Quaternion targetRotation;
+
+    NavMeshAgent agent;
 
     protected float DistanceToTarget { get { return Vector3.Distance(this.transform.position, this.Target.transform.position); } }
     protected float AngleToTarget { get { return Vector3.Dot(this.transform.forward, this.HeadingToTarget.normalized); } }
 
     public float Accuracy { get { return accuracy; } }
     public Vector3 HeadingToTarget { get { return this.Target.transform.position - this.transform.position; } }
+    public Vector3 TargetPosition { get { return targetPosition; } }
 
     public bool CanSeeTarget { get; private set; }
 
@@ -31,10 +38,18 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
     {
         base.Initalize();
 
-        this.Subscribe(ActorEvent.SetActorTargetRotation, SetTargetRotation);
+        this.Subscribe(ActorEvent.SetActorTargetPosition, SetTargetPosition);
+        this.Subscribe(ActorEvent.UpdateActorAlertStatus, UpdateAlertStatus);
 
         this.Subscribe(ActorEvent.UpdateAITargetStatus, UpdateCanSeeTargetStatus);
+        
         this.Target = FindObjectOfType<PlayerActor>();
+
+        this.agent = this.GetComponent<NavMeshAgent>();
+        this.agent.updatePosition = false;
+        this.agent.updateRotation = false;
+
+        this.targetPosition = this.transform.position + this.transform.forward;
     }
     protected override StateMachine InitializeStateMachine()
     {
@@ -54,17 +69,47 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
         base.Update();
 
         UpdateRotation();
+        UpdateInput();
+
+        Debug.DrawLine(this.transform.position, this.targetPosition, Color.blue);
         Debug.DrawLine(base.FocusPoint.position, this.Target.FocusPoint.position, CanSeeTarget ? Color.green : Color.red);
     }
 
-    void SetTargetRotation(object[] args)
+    void SetTargetPosition(object[] args)
     {
-        if((Vector3)args[0] != Vector3.zero)
-            targetRotation = Quaternion.LookRotation((Vector3)args[0], Vector3.up);
+        float distance = 2f;
+        NavMesh.SamplePosition((Vector3)args[0], out NavMeshHit hit, distance, -1);
+
+        for (int i = 0; i < 5; i++)
+        {
+            distance += 2f;
+            NavMesh.SamplePosition((Vector3)args[0], out hit, distance, -1);
+
+            if (hit.hit)
+                break;
+        }
+
+        if (hit.hit)
+            targetPosition = hit.position;
+        else
+            targetPosition = this.transform.position;
+
+        this.agent.SetDestination(targetPosition);
     }
+
     void UpdateRotation()
     {
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        Vector3 dir = this.transform.position.DirectionTo(this.CanSeeTarget ? this.Target.transform.position : targetPosition).normalized;
+        
+        if(dir != Vector3.zero)
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(dir, Vector3.up), rotationSpeed * Time.deltaTime);
+    }
+    void UpdateInput()
+    {
+        if (this.transform.position.DistanceTo(this.TargetPosition) > .5f)
+            this.Raise(ActorEvent.SetActorTargetInput, this.agent.nextPosition.ToInput(this.transform));
+        else
+            this.Raise(ActorEvent.SetActorTargetInput, Vector3.zero);
     }
 
     void UpdateCanSeeTargetStatus(object[] args)
@@ -79,18 +124,23 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
             this.CanSeeTarget = false;
             return;
         }
-        if(Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position))
+        if(Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position, sightMask))
         {
-
             this.CanSeeTarget = false;
             return;
         }
 
         this.CanSeeTarget = true;
     }
+    void UpdateAlertStatus(object[] args)
+    {
+        this.Animator.SetBool("isAlert", (bool)args[0]);
+    }
 
     protected override void OnHealthZero()
     {
+        base.OnHealthZero();
+
         Destroy(this.GetComponent<Collider>());
         Destroy(model);
 

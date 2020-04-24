@@ -2,11 +2,25 @@
 
 public abstract class AIBaseLocomotionState : AIBaseState
 {
+    [Range(0f, 1f)][SerializeField]float total = 1f;
+    [Range(0f, 1f)][SerializeField]float body = .25f;
+    [Range(0f, 1f)][SerializeField]float head = 1f;
+    [Range(0f, 1f)][SerializeField]float eyes = 1f;
+    [Range(0f, 1f)][SerializeField]float clamp = 1f;
+
+    float[] weights;
+
+    protected override void OnInitialize()
+    {
+        base.OnInitialize();
+        weights = new float[] { total, body, head, eyes, clamp };
+    }
     public override void Tick()
     {
         base.Tick();
 
-        if (!base.Pawn.IsGrounded)
-            base.TransitionTo<AIFallState>();
+        base.Actor.Raise(ActorEvent.UpdateAITargetStatus);
+        base.Actor.Raise(ActorEvent.SetActorLookAtPosition, base.Pawn.Target.FocusPoint.position);
+        base.Actor.Raise(ActorEvent.SetActorLookAtWeights, weights);
     }
 }
