@@ -134,6 +134,13 @@ public class PlayerActor : HumanoidActor
             counter++;
         }
     }
+    protected override void OnHealthChanged(float change)
+    {
+        base.OnHealthChanged(change);
+
+        if(change < 0f)
+            GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .11f);
+    }
 }
 public enum MovementMode
 {

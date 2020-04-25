@@ -14,6 +14,6 @@ public class HealthController : MonoBehaviour
 
     void Update()
     {
-        bar.fillAmount = player.HealthInPercent;
+        bar.fillAmount = player.Health.CurrentInPercent;
     }
 }

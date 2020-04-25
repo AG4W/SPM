@@ -16,7 +16,7 @@ public class AITargetSpottedState : AIBaseLocomotionState
         //make decision?
         //find cover?
         //attack
-        base.TransitionTo<AILookForCover>();
+        base.TransitionTo<AIEngageTarget>();
     }
     public override void Exit()
     {

@@ -22,12 +22,5 @@ public class AItester : MonoBehaviour
                     pawns[i]?.Raise(ActorEvent.SetActorTargetPosition, hit.point);
             }
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            alertStatus = !alertStatus;
-
-            for (int i = 0; i < pawns.Length; i++)
-                pawns[i]?.Raise(ActorEvent.UpdateActorAlertStatus, alertStatus);
-        }
     }
 }

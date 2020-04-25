@@ -27,7 +27,7 @@ public class AIReloadState : AIBaseLocomotionState
         if (timer >= base.Get<WeaponController>().Weapon.ReloadTime)
         {
             reloadWasComplete = true;
-            base.Return();
+            base.TransitionTo<AILookForCover>();
         }
 
     }

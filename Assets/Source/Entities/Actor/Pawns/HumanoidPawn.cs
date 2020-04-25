@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 using System.Collections.Generic;
 using System;
-using UnityEngine.AI;
 
 public class HumanoidPawn : HumanoidActor, IForceAffectable
 {
@@ -18,9 +19,6 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
     [SerializeField]GameObject model;
     [SerializeField]GameObject ragdoll;
 
-    Vector3 targetPosition;
-    Quaternion targetRotation;
-
     NavMeshAgent agent;
 
     protected float DistanceToTarget { get { return Vector3.Distance(this.transform.position, this.Target.transform.position); } }
@@ -28,9 +26,11 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
 
     public float Accuracy { get { return accuracy; } }
     public Vector3 HeadingToTarget { get { return this.Target.transform.position - this.transform.position; } }
-    public Vector3 TargetPosition { get { return targetPosition; } }
+    public Vector3 TargetPosition { get; private set; }
+    public Vector3 LastKnownPositionOfTarget { get; private set; }
 
     public bool CanSeeTarget { get; private set; }
+    public bool HasBeenAlerted { get; private set; } = false;
 
     public HumanoidActor Target { get; private set; }
 
@@ -39,17 +39,18 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
         base.Initalize();
 
         this.Subscribe(ActorEvent.SetActorTargetPosition, SetTargetPosition);
-        this.Subscribe(ActorEvent.UpdateActorAlertStatus, UpdateAlertStatus);
 
         this.Subscribe(ActorEvent.UpdateAITargetStatus, UpdateCanSeeTargetStatus);
-        
+        this.Subscribe(ActorEvent.UpdateActorAlertStatus, UpdateAlertedStatus);
+
         this.Target = FindObjectOfType<PlayerActor>();
 
         this.agent = this.GetComponent<NavMeshAgent>();
         this.agent.updatePosition = false;
         this.agent.updateRotation = false;
+        this.agent.avoidancePriority = Random.Range(1, 99);
 
-        this.targetPosition = this.transform.position + this.transform.forward;
+        this.TargetPosition = this.transform.position;
     }
     protected override StateMachine InitializeStateMachine()
     {
@@ -71,7 +72,10 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
         UpdateRotation();
         UpdateInput();
 
-        Debug.DrawLine(this.transform.position, this.targetPosition, Color.blue);
+        if (HasBeenAlerted && CanSeeTarget)
+            UpdateLastKnownPositionOfTarget();
+
+        Debug.DrawLine(this.transform.position, this.TargetPosition, Color.blue);
         Debug.DrawLine(base.FocusPoint.position, this.Target.FocusPoint.position, CanSeeTarget ? Color.green : Color.red);
     }
 
@@ -90,17 +94,34 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
         }
 
         if (hit.hit)
-            targetPosition = hit.position;
+            this.TargetPosition = hit.position;
         else
-            targetPosition = this.transform.position;
+            this.TargetPosition = this.transform.position;
 
-        this.agent.SetDestination(targetPosition);
+        this.agent.SetDestination(this.TargetPosition);
     }
 
     void UpdateRotation()
     {
-        Vector3 dir = this.transform.position.DirectionTo(this.CanSeeTarget ? this.Target.transform.position : targetPosition).normalized;
-        
+        Vector3 dir;
+
+        if (CanSeeTarget)
+            dir = this.transform.position.DirectionTo(this.Target.transform.position);
+        else
+        {
+            if (HasBeenAlerted)
+                dir = this.transform.position.DirectionTo(LastKnownPositionOfTarget);
+            else
+            {
+                if (this.transform.position.DistanceTo(this.TargetPosition) > 1f)
+                    dir = this.transform.position.DirectionTo(this.TargetPosition);
+                else
+                    dir = this.transform.forward;
+            }
+        }
+
+        dir.Normalize();
+
         if(dir != Vector3.zero)
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(dir, Vector3.up), rotationSpeed * Time.deltaTime);
     }
@@ -110,6 +131,10 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
             this.Raise(ActorEvent.SetActorTargetInput, this.agent.nextPosition.ToInput(this.transform));
         else
             this.Raise(ActorEvent.SetActorTargetInput, Vector3.zero);
+    }
+    void UpdateLastKnownPositionOfTarget()
+    {
+        this.LastKnownPositionOfTarget = this.Target.FocusPoint.position;
     }
 
     void UpdateCanSeeTargetStatus(object[] args)
@@ -132,9 +157,8 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
 
         this.CanSeeTarget = true;
     }
-    void UpdateAlertStatus(object[] args)
+    void UpdateAlertedStatus(object[] args)
     {
-        this.Animator.SetBool("isAlert", (bool)args[0]);
     }
 
     protected override void OnHealthZero()
