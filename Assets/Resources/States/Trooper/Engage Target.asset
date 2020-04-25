@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b911eab30fcf44f46976e8b8a103fa18, type: 3}
+  m_Name: Engage Target
+  m_EditorClassIdentifier: 
+  gravitationalConstant: 9.82
+  total: 1
+  body: 0.25
+  head: 1
+  eyes: 1
+  clamp: 1
+  mode: 1

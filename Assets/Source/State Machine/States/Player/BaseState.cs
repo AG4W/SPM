@@ -13,6 +13,8 @@ public abstract class BaseState : State
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float airResistance = .5f;
 
+    LayerMask ikMask;
+
     public float DistanceToGround
     {
         get
@@ -59,7 +61,7 @@ public abstract class BaseState : State
         //Look at
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.NameToLayer("Default")))
             base.Actor.Raise(ActorEvent.SetActorLookAtPosition, hit.point);
         else
             base.Actor.Raise(ActorEvent.SetActorLookAtPosition, ray.GetPoint(10f));

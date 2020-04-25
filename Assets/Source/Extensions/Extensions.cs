@@ -92,6 +92,11 @@ public static class Extensions
             0f,
             Vector3.Dot(origin.transform.forward, (position - origin.transform.position)));
     }
+    public static Vector3 PointOnCircle(this Vector3 center, float radius, float angleInDegrees)
+    {
+        float a = angleInDegrees * Mathf.PI / 180f;
+        return center + (new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)) * radius);
+    }
 
     public static Vector3 DirectionTo(this Vector3 origin, Vector3 target)
     {

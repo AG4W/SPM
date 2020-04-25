@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 
-public class Entity : MonoBehaviour, IDamageable
+public class Entity : MonoBehaviour
 {
     [SerializeField]float maxHealth = 10f;
     [SerializeField]float healthRegenerationRate;
     [SerializeField]float healthRegenerationAmount;
 
     [SerializeField]bool isDestructible = true;
+    HitboxCallbackController[] hitboxes;
 
-    Vital health;
+    public Vital Health { get; private set; }
 
     //basklass
     //kommer lite skit här sen
@@ -18,20 +19,25 @@ public class Entity : MonoBehaviour, IDamageable
     }
     protected virtual void Initalize()
     {
-        health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
-        health.OnCurrentChanged += OnHealthChanged;
+        hitboxes = this.GetComponentsInChildren<HitboxCallbackController>();
+
+        for (int i = 0; i < hitboxes.Length; i++)
+            hitboxes[i].OnHit += OnHit;
+
+        Health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
+        Health.OnCurrentChanged += OnHealthChanged;
     }
-    void Update()
+    protected virtual void Update()
     {
-        health.Tick();
+        Health.Tick();
     }
 
-    protected virtual void OnHealthChanged(float current)
+    protected virtual void OnHealthChanged(float change)
     {
         if (!isDestructible)
             return;
 
-        if (current <= 0f)
+        if (Health.Current <= 0f)
             OnHealthZero();
     }
     protected virtual void OnHealthZero()
@@ -40,8 +46,8 @@ public class Entity : MonoBehaviour, IDamageable
         //Destroy(this.transform.gameObject);
     }
 
-    void IDamageable.OnHit(float damage)
+    void OnHit(float damage)
     {
-        health.Update(damage);
+        Health.Update(damage);
     }
 }

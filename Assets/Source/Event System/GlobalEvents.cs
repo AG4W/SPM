@@ -115,7 +115,9 @@ public enum ActorEvent
     SetActorTargetStance,
     SetActorMovementMode,
     SetActorTargetAimMode,
+    SetActorTargetPosition,
     SetActorTargetRotation,
+    UpdateActorAlertStatus,
 
     //animator actor
     SetActorAnimatorFloat,

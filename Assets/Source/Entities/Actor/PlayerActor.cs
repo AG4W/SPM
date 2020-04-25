@@ -19,11 +19,11 @@ public class PlayerActor : HumanoidActor
             Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
 
         //flytta detta till en separat controller sen, borde nog inte vara här
-        GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
-        {
-            for (int i = 0; i < torches.Length; i++)
-                torches[i].SetActive(!torches[i].activeSelf);
-        });
+        //GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
+        //{
+        //    for (int i = 0; i < torches.Length; i++)
+        //        torches[i].SetActive(!torches[i].activeSelf);
+        //});
         GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) =>
         {
             base.WeaponController.SetWeapon(args[0] as Weapon);
@@ -84,13 +84,13 @@ public class PlayerActor : HumanoidActor
         Vector3 hitDirection;
         float hitDist;
 
-        bool overlapCheckA = Physics.CheckSphere(pointA, base.CollisionRadius);
-        bool overlapCheckB = Physics.CheckSphere(pointB, base.CollisionRadius);
+        bool overlapCheckA = Physics.CheckSphere(pointA, base.CollisionRadius, base.CollisionMask);
+        bool overlapCheckB = Physics.CheckSphere(pointB, base.CollisionRadius, base.CollisionMask);
 
         int counter = 0;
         while (overlapCheckA == true || overlapCheckB == true)
         {
-            Collider[] overlapCollidersA = Physics.OverlapSphere(pointA, base.CollisionRadius);
+            Collider[] overlapCollidersA = Physics.OverlapSphere(pointA, base.CollisionRadius, base.CollisionMask);
             if (overlapCollidersA.Length > 0)
                 for (int i = 0; i < overlapCollidersA.Length; i++)
                 {
@@ -108,7 +108,7 @@ public class PlayerActor : HumanoidActor
                     pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius));
                 }
 
-            Collider[] overlapCollidersB = Physics.OverlapSphere(pointB, base.CollisionRadius);
+            Collider[] overlapCollidersB = Physics.OverlapSphere(pointB, base.CollisionRadius, base.CollisionMask);
             if (overlapCollidersB.Length > 0)
                 for (int i = 0; i < overlapCollidersB.Length; i++)
                 {
@@ -126,13 +126,20 @@ public class PlayerActor : HumanoidActor
                 }
 
             // Kolla overlap igen
-            overlapCheckA = Physics.CheckSphere(pointA, base.CollisionRadius);
-            overlapCheckB = Physics.CheckSphere(pointB, base.CollisionRadius);
+            overlapCheckA = Physics.CheckSphere(pointA, base.CollisionRadius, base.CollisionMask);
+            overlapCheckB = Physics.CheckSphere(pointB, base.CollisionRadius, base.CollisionMask);
 
             if (counter >= 100)
                 break;
             counter++;
         }
+    }
+    protected override void OnHealthChanged(float change)
+    {
+        base.OnHealthChanged(change);
+
+        if(change < 0f)
+            GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .11f);
     }
 }
 public enum MovementMode

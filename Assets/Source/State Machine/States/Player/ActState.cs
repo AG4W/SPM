@@ -27,7 +27,7 @@ public abstract class ActState : BaseLocomotionState
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
 
-            base.Get<WeaponController>().Fire(hit.transform != null ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude);
+            base.Get<WeaponController>().Fire(hit.transform != null && hit.transform.root != base.Get<Actor>().transform ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude);
 
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTraumaCapped, base.Get<WeaponController>().Weapon.TraumaValue);
         }

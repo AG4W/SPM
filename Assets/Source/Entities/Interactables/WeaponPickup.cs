@@ -11,11 +11,17 @@ public class WeaponPickup : MonoBehaviour, IInteractable
 
     void Awake()
     {
-        Instantiate(weapon.Prefab, this.transform.position, Quaternion.identity, this.transform);
+        GameObject g = Instantiate(weapon.Prefab, this.transform.position, Quaternion.identity, this.transform);
 
-        this.gameObject.AddComponent<BoxCollider>();
+        BoxCollider bc = this.gameObject.AddComponent<BoxCollider>();
+        bc.size = new Vector3(.5f, .2f, .2f);
+
         this.gameObject.AddComponent<Rigidbody>();
         this.gameObject.AddComponent<RigidBodyForceWrapper>();
+
+        //stäng av alla ljus
+        foreach (Light light in g.GetComponentsInChildren<Light>())
+            light.enabled = false;
     }
     public void Interact()
     {
