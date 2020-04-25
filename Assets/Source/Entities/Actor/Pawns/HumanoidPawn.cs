@@ -69,6 +69,8 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
     {
         base.Update();
 
+        this.agent.speed = this.Animator.velocity.magnitude;
+
         UpdateRotation();
         UpdateInput();
 

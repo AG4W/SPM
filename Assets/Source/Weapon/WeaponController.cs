@@ -66,8 +66,8 @@ public class WeaponController : MonoBehaviour
         else
         {
             shotsLeftInCurrentClip--;
-            uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
             this.weapon.Fire(target, heading, this.ExitPoint, source, mask);
+            uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
         }
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, weapon.NoiseValue);
