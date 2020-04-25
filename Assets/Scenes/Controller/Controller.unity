@@ -285,6 +285,75 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 235491df3476292459a32ba31d760c07, type: 3}
+--- !u!1001 &54721998
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.115
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.851
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -28.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945969, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 339789562203945982, guid: 3469484228af8d1479669bd7b128055f,
+        type: 3}
+      propertyPath: m_Name
+      value: Crate Medium
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3469484228af8d1479669bd7b128055f, type: 3}
 --- !u!1001 &56090772
 PrefabInstance:
   m_ObjectHideFlags: 0
