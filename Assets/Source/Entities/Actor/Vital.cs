@@ -42,7 +42,7 @@ public class Vital
         //har race conditions här ifall något gör damage flera gånger samma frame
         //se till att vi bara triggar zero events en gång
         if(!HasReachedZero)
-            OnCurrentChanged?.Invoke(this.Current);
+            OnCurrentChanged?.Invoke(change);
 
         if (this.Current <= 0f)
             HasReachedZero = true;

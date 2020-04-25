@@ -63,22 +63,22 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
+  stateMachine:
+    debugStateMachine: 0
   crouchHeight: 1.4
   jumpFeetOffset: 0.5
-  stepOverHeight: 0.5
   groundCheckDistance: 1
   mode: 2
   aimMode: 0
   actualAimStance: 0
   interpolationSpeed: 2.5
   stance: 1
-  targetStance: 0
   actualStance: 0
   targetLookAtPosition: {x: 0, y: 0, z: 0}
   actualLookAtPosition: {x: 0, y: 0, z: 0}
   lookAtInterpolationSpeed: 5
   sightRange: 30
-  fieldOfView: 0
+  fieldOfView: -0.5
   rotationSpeed: 5
   accuracy: 0.5
   sightMask:

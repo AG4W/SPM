@@ -28,6 +28,7 @@ public class Actor : Entity
     WeaponController weaponController;
 
     Vital health;
+    [SerializeField]StateMachine stateMachine;
 
     protected virtual float CurrentHeight => height;
     protected virtual float CurrentFeetOffset => 0f;
@@ -40,7 +41,7 @@ public class Actor : Entity
     protected string Path { get { return path; } }
     protected WeaponController WeaponController { get { return weaponController; } }
 
-    protected StateMachine StateMachine { get; private set; }
+    protected StateMachine StateMachine { get { return stateMachine; } private set { stateMachine = value; } }
 
     public Vector3 Velocity { get; protected set; }
     public Vector3 TargetInput { get { return targetInput; } }

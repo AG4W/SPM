@@ -8,7 +8,8 @@ public class HumanoidActor : Actor
     [SerializeField]float crouchHeight = 1.4f;
     [SerializeField]float jumpFeetOffset = .25f;
 
-    [SerializeField]float stepOverHeight = .25f;
+    //vad används denna för
+    //och gör dne vad den heter?
     [SerializeField]float groundCheckDistance = .5f;
 
     [Header("Animation")]
@@ -19,7 +20,6 @@ public class HumanoidActor : Actor
     [SerializeField]float interpolationSpeed = 2.5f;
 
     [SerializeField]Stance stance = Stance.Standing;
-    [SerializeField]float targetStance;
     [SerializeField]float actualStance;
 
     float[] targetLayerWeights;
@@ -92,6 +92,28 @@ public class HumanoidActor : Actor
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         base.CheckCollision();
 
+        //if (IsGrounded && this.TargetInput.magnitude > .1f)
+        //{
+        //    Vector3 velocityXZ = this.Velocity;
+        //    velocityXZ.y = 0f;
+
+        //    //kolla ifall vi träffar något grundplan, ifall sant, raycasta med vår stepIgnore eller liknande för att se ifall vi kan stiga över det.
+        //    if (Physics.Raycast(this.transform.position + (Vector3.up * .1f), velocityXZ.normalized, out RaycastHit botHit, stepOverDistance, base.CollisionMask))
+        //    {
+        //        if (!Physics.Raycast(this.transform.position + (Vector3.up * actualStepOverHeight), velocityXZ.normalized, out RaycastHit topHit, stepOverDistance, base.CollisionMask))
+        //        {
+        //            //base.Velocity += Vector3.up * actualStepOverHeight * (mode == MovementMode.Sprint ? 2f : 1f);
+        //            this.transform.position += Vector3.up * actualStepOverHeight;
+
+        //            Debug.Log("Ignoring step");
+        //        }
+
+        //        Debug.DrawRay(this.transform.position + (Vector3.up * .25f), velocityXZ.normalized * stepOverDistance, topHit.transform == null ? Color.red : Color.green);
+        //    }
+
+        //    Debug.DrawRay(this.transform.position + (Vector3.up * .1f), velocityXZ.normalized * stepOverDistance, botHit.transform == null ? Color.red : Color.green);
+        //}
+
         this.transform.position += base.Velocity * (Time.deltaTime / Time.timeScale);
     }
     protected virtual void OnAnimatorIK(int layerIndex)
@@ -116,7 +138,7 @@ public class HumanoidActor : Actor
     {
         base.Interpolate();
 
-        actualStance = Mathf.Lerp(actualStance, targetStance, interpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualStance = Mathf.Lerp(actualStance, (int)stance, interpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         for (int i = 0; i < targetLayerWeights.Length; i++)
@@ -179,7 +201,6 @@ public class HumanoidActor : Actor
     void SetTargetStance(object[] args)
     {
         stance = (Stance)args[0];
-        targetStance = (int)stance;
     }
     void SetTargetAimMode(object[] args) => aimMode = (AimMode)args[0];
 

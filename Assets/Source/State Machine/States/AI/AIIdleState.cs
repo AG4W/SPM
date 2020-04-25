@@ -18,7 +18,10 @@ public class AIIdleState : AIBaseLocomotionState
         base.Tick();
 
         if (base.Pawn.CanSeeTarget)
-            base.TransitionTo<AITargetSpottedState>();
+        {
+            base.Actor.Raise(ActorEvent.UpdateActorAlertStatus, true);
+            base.TransitionTo<AILookForCover>();
+        }
     }
     public override void Exit()
     {

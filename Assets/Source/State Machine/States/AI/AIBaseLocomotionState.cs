@@ -20,7 +20,7 @@ public abstract class AIBaseLocomotionState : AIBaseState
         base.Tick();
 
         base.Actor.Raise(ActorEvent.UpdateAITargetStatus);
-        base.Actor.Raise(ActorEvent.SetActorLookAtPosition, base.Pawn.Target.FocusPoint.position);
+        base.Actor.Raise(ActorEvent.SetActorLookAtPosition, base.Pawn.CanSeeTarget ? base.Pawn.Target.FocusPoint.position : (base.Pawn.transform.position + Vector3.up * 1.5f) + base.Pawn.transform.forward);
         base.Actor.Raise(ActorEvent.SetActorLookAtWeights, weights);
     }
 }

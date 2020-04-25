@@ -36,14 +36,14 @@ public class WeaponWorldUIController : MonoBehaviour
         for (int i = 0; i < texts.Length; i++)
         {
             texts[i].material.SetColor("_Color", c);
-            texts[i].material.SetColor("_Emission", c * 8f);
+            texts[i].material.SetColor("_Emission", c * 16f);
             texts[i].color = c;
             texts[i].text = shotsLeft == 0 ? "RELOAD" : shotsLeft.ToString();
         }
         for (int i = 0; i < images.Length; i++)
         {
             images[i].material.SetColor("_Color", c);
-            images[i].material.SetColor("_Emission", c * 8f);
+            images[i].material.SetColor("_Emission", c * 16f);
             images[i].color = c;
             images[i].fillAmount = shotsLeft / (float)clipSize;
         }

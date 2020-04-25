@@ -7,12 +7,9 @@ public class Entity : MonoBehaviour
     [SerializeField]float healthRegenerationAmount;
 
     [SerializeField]bool isDestructible = true;
-
-    Vital health;
-
     HitboxCallbackController[] hitboxes;
 
-    public float HealthInPercent { get { return health.CurrentInPercent; } }
+    public Vital Health { get; private set; }
 
     //basklass
     //kommer lite skit här sen
@@ -27,20 +24,20 @@ public class Entity : MonoBehaviour
         for (int i = 0; i < hitboxes.Length; i++)
             hitboxes[i].OnHit += OnHit;
 
-        health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
-        health.OnCurrentChanged += OnHealthChanged;
+        Health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
+        Health.OnCurrentChanged += OnHealthChanged;
     }
     protected virtual void Update()
     {
-        health.Tick();
+        Health.Tick();
     }
 
-    protected virtual void OnHealthChanged(float current)
+    protected virtual void OnHealthChanged(float change)
     {
         if (!isDestructible)
             return;
 
-        if (current <= 0f)
+        if (Health.Current <= 0f)
             OnHealthZero();
     }
     protected virtual void OnHealthZero()
@@ -51,6 +48,6 @@ public class Entity : MonoBehaviour
 
     void OnHit(float damage)
     {
-        health.Update(damage);
+        Health.Update(damage);
     }
 }

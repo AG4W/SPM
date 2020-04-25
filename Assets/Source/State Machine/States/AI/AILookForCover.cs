@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.AI;
 
 [CreateAssetMenu(menuName = "State/AI/Find Cover")]
 public class AILookForCover : AIBaseLocomotionState
 {
     [SerializeField]float searchRadius = 5f;
-    [SerializeField]float coverBufferDistance = 1f;
 
     [SerializeField]LayerMask mask;
 
@@ -15,7 +13,10 @@ public class AILookForCover : AIBaseLocomotionState
     {
         base.Enter();
 
-        position = GetSafePosition();
+        FindCover();
+        //check if we couldnt find valid cover
+        if (base.Actor.transform.position.DistanceTo(position) < 1f)
+            base.TransitionTo<AIEngageTarget>();
 
         base.Actor.Raise(ActorEvent.SetActorTargetPosition, position);
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Sprint);
@@ -24,7 +25,7 @@ public class AILookForCover : AIBaseLocomotionState
     {
         base.Tick();
 
-        if (base.Actor.transform.position.DistanceTo(position) < .5f)
+        if (base.Actor.transform.position.DistanceTo(position) < 1f)
             base.TransitionTo<AIEngageTarget>();
     }
     public override void Exit()
@@ -32,49 +33,42 @@ public class AILookForCover : AIBaseLocomotionState
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Jog);
     }
 
-    Vector3 GetSafePosition()
+    void FindCover()
     {
-        Vector3 pos = base.Actor.transform.position;
-        float d = Mathf.Infinity;
-        
-        //find suitable positions in circle around
-        for (int i = 0; i < 8; i++)
+        Collider[] candidates = Physics.OverlapSphere(base.Pawn.transform.position, searchRadius, mask);
+
+        if (candidates.Length == 0)
+            position = base.Pawn.transform.position;
+        else
         {
-            Vector3 samplePosition = base.Actor.transform.position.PointOnCircle(searchRadius, i * 45f);
-            //yuck
-            if (!ValidatePosition(samplePosition))
-                continue;
+            Collider bestZone = null;
+            float dot = -Mathf.Infinity;
 
-            NavMesh.FindClosestEdge(samplePosition, out NavMeshHit hit, -1);
-            float dot = Vector3.Dot(base.Pawn.Target.transform.position, hit.normal);
-
-            if (dot < d)
+            //find best cover
+            for (int i = 0; i < candidates.Length; i++)
             {
-                d = dot;
-                pos = hit.position;
+                //ignore cover that doesnt actually give cover
+                if (!Physics.Linecast(candidates[i].transform.position + Vector3.up * .5f, base.Pawn.Target.transform.position + Vector3.up * .5f))
+                    continue;
+
+                float d = Vector3.Dot(candidates[i].transform.forward, base.Pawn.transform.position.DirectionTo(base.Pawn.Target.transform.position));
+
+                if(d > dot)
+                {
+                    dot = d;
+                    bestZone = candidates[i];
+                }
             }
 
-            //Debug.DrawLine(base.Actor.transform.position, samplePosition, Color.yellow, 1f);
+            //get a random position within the cover zone
+            if (bestZone != null)
+                position = bestZone.transform.position + new Vector3(
+                    Random.Range(-bestZone.bounds.extents.x / 2, bestZone.bounds.extents.x / 2),
+                    0f,
+                    Random.Range(-bestZone.bounds.extents.z / 2, bestZone.bounds.extents.z / 2));
+            //should never happen, but if we somehow cant find a larger dot than mathf.infinity
+            else
+                position = base.Pawn.transform.position;
         }
-
-        return pos;
-    }
-    //make sure its actually cover and not just end of the map somewhere
-    bool ValidatePosition(Vector3 prospect)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            Vector3 sampleDirection = prospect.PointOnCircle(searchRadius, i * 45f);
-
-            if (Physics.Raycast(prospect + Vector3.up, prospect.DirectionTo(sampleDirection).normalized, 2f, mask))
-            {
-                //Debug.DrawRay(prospect + Vector3.up, prospect.DirectionTo(sampleDirection).normalized * 2f, Color.green, 1f);
-                return true;
-            }
-            //else
-            //    Debug.DrawRay(prospect + Vector3.up, prospect.DirectionTo(sampleDirection).normalized * 2f, Color.red, 1f);
-        }
-
-        return false;
     }
 }
