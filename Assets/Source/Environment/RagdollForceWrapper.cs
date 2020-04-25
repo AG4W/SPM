@@ -11,6 +11,6 @@ public class RagdollForceWrapper : MonoBehaviour, IForceAffectable
         body = this.GetComponent<Rigidbody>();
     }
 
-    void IForceAffectable.ModifyVelocity(Vector3 velocity) => body.AddForce(velocity / count, ForceMode.Impulse);
+    void IForceAffectable.ModifyVelocity(Vector3 velocity) => body.AddForce(velocity / (float)count, ForceMode.Impulse);
     void IForceAffectable.SetVelocity(Vector3 velocity) => body.velocity = velocity;
 }
