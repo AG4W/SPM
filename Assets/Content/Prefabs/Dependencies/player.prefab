@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594d27b40ed05224db6e27765aef4865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 500
   healthRegenerationRate: 0.01
   healthRegenerationAmount: 0.1
-  isDestructible: 1
+  isDestructible: 0
   path: States/Player
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
@@ -62,17 +62,17 @@ MonoBehaviour:
   height: 1.8
   collisionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 2147483649
+  stateMachine:
+    debugStateMachine: 0
   crouchHeight: 1.4
   jumpFeetOffset: 0.5
-  stepOverHeight: 0.25
   groundCheckDistance: 0.6
   mode: 2
   aimMode: 0
   actualAimStance: 0
   interpolationSpeed: 5
   stance: 1
-  targetStance: 0
   actualStance: 0
   targetLookAtPosition: {x: 0, y: 0, z: 0}
   actualLookAtPosition: {x: 0, y: 0, z: 0}
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b54c7d0ab31fd4d899dcb54aecd37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: c47175e3eb87b1845b779708544f2721, type: 2}
+  weapon: {fileID: 11400000, guid: 8aca0182ce35f8d4a9085ced298aea75, type: 2}
   anchorPoint: {fileID: 4890126775412894052}
   mask:
     serializedVersion: 2
