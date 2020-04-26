@@ -27,6 +27,8 @@ public class WeaponPickup : MonoBehaviour, IInteractable
         //stäng av alla ljus
         foreach (Light light in g.GetComponentsInChildren<Light>())
             light.enabled = false;
+
+        this.transform.FindRecursively("muzzleFlash").gameObject.SetActive(false);
     }
     public void Interact()
     {

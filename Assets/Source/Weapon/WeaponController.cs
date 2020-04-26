@@ -15,7 +15,7 @@ public class WeaponController : MonoBehaviour
 
     //cached stuff
     GameObject model;
-    Light muzzleFlash;
+    GameObject muzzleFlash;
     AudioSource source;
     WeaponWorldUIController uiController;
 
@@ -40,7 +40,7 @@ public class WeaponController : MonoBehaviour
             fireTimer += Time.deltaTime;
 
             if (fireTimer >= .03f)
-                muzzleFlash.gameObject.SetActive(false);
+                muzzleFlash.SetActive(false);
 
             if (fireTimer >= weapon.FireRate)
             {
@@ -56,7 +56,8 @@ public class WeaponController : MonoBehaviour
             return;
 
         this.CanFire = false;
-        muzzleFlash.gameObject.SetActive(true);
+        muzzleFlash.transform.localEulerAngles += new Vector3(0f, 0f, Random.Range(0f, 360f));
+        muzzleFlash.SetActive(true);
 
         Vector3 velocitySpread = new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude)) * .05f;
         Vector3 heading = ExitPoint.position.DirectionTo(target).normalized + velocitySpread;
@@ -110,8 +111,8 @@ public class WeaponController : MonoBehaviour
         ExitPoint = model.transform.FindRecursively("exitPoint");
         this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
         uiController = model.GetComponentInChildren<WeaponWorldUIController>();
-        muzzleFlash = model.transform.FindRecursively("muzzleFlash").GetComponent<Light>();
-        muzzleFlash.gameObject.SetActive(false);
+        muzzleFlash = model.transform.FindRecursively("muzzleFlash").gameObject;
+        muzzleFlash.SetActive(false);
         source = model.GetComponentInChildren<AudioSource>();
 
         //update counter and UI

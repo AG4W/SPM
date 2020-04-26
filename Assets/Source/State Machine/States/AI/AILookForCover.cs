@@ -4,8 +4,11 @@
 public class AILookForCover : AIBaseLocomotionState
 {
     [SerializeField]float searchRadius = 5f;
+    [SerializeField]float updateRate = 2.5f;
 
     [SerializeField]LayerMask mask;
+
+    float timer;
 
     Vector3 position;
 
@@ -15,18 +18,20 @@ public class AILookForCover : AIBaseLocomotionState
 
         FindCover();
         //check if we couldnt find valid cover
-        if (base.Actor.transform.position.DistanceTo(position) < 1f)
-            base.TransitionTo<AIEngageTarget>();
 
         base.Actor.Raise(ActorEvent.SetActorTargetPosition, position);
         base.Actor.Raise(ActorEvent.SetActorMovementMode, MovementMode.Sprint);
+
+        timer = 0f;
     }
     public override void Tick()
     {
         base.Tick();
 
-        if (base.Actor.transform.position.DistanceTo(position) < 1f)
-            base.TransitionTo<AIEngageTarget>();
+        timer += Time.deltaTime;
+
+        if(timer >= updateRate)
+            FindCover();
     }
     public override void Exit()
     {

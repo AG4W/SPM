@@ -145,7 +145,7 @@ public class PlayerActor : HumanoidActor
         base.OnHealthChanged(change);
 
         if(change < 0f)
-            GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .05f);
+            GlobalEvents.Raise(GlobalEvent.ModifyCameraTraumaCapped, .5f);
     }
     protected override void OnHealthZero()
     {

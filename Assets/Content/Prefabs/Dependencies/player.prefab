@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594d27b40ed05224db6e27765aef4865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 500
+  maxHealth: 200
   healthRegenerationRate: 0.01
-  healthRegenerationAmount: 0.1
+  healthRegenerationAmount: 0.2
   isDestructible: 1
   path: States/Player
   targetInput: {x: 0, y: 0, z: 0}
