@@ -5,7 +5,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class PostProcessController : MonoBehaviour
 {
-    [SerializeField]VolumeProfile profile;
+    VolumeProfile profile;
     CameraMode mode = CameraMode.Default;
 
     [Header("Depth of Field")]
@@ -35,8 +35,10 @@ public class PostProcessController : MonoBehaviour
 
     PaniniProjection panini;
 
-    void Start()
+    void Awake()
     {
+        profile = this.GetComponent<Volume>().profile;
+
         profile.TryGet(out depthOfField);
         profile.TryGet(out vignette);
         profile.TryGet(out abberation);

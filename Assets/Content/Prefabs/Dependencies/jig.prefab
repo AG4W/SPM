@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c034e4351da84e8cc628d3b2b6cfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profile: {fileID: 11400000, guid: f3494d946fadd384fa6b99e8f8ac17c2, type: 2}
   sensitivityX: 80
   sensitivityY: 80
   translationSpeed: 15
@@ -55,6 +54,8 @@ MonoBehaviour:
   sprintPosition: {x: 0, y: 1.6, z: -1.5}
   fallPosition: {x: 0, y: 2, z: -4}
   crouchOffset: {x: 0, y: -0.5, z: 0.1}
+  cullDistance: 50
+  lodCullDistance: 2000
   defaultFOV: 75
   ironSightFOV: 45
   jumpFOV: 90
@@ -62,9 +63,6 @@ MonoBehaviour:
   fallFOV: 90
   maxCameraUpAngle: 30
   maxCameraDownAngle: 30
-  focusSpeed: 2
-  defaultDoFStrength: 0.05
-  ironSightDoFStrength: 2
   traumaInterpolationSpeed: 0.01
 --- !u!1 &4975658104452451928
 GameObject:
@@ -123,7 +121,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 100
+  far clip plane: 250
   field of view: 60
   orthographic: 0
   orthographic size: 5
