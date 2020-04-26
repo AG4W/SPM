@@ -10,9 +10,7 @@ public class InteractionPromptController : MonoBehaviour
     void Awake()
     {
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
-            IInteractable entity = args[0] as IInteractable;
-
-            if (entity != null && entity.Prompt.Length > 0)
+            if (args[0] is IInteractable entity && entity.Prompt.Length > 0)
                 OpenInteractPrompt(entity);
             else
                 CloseInteractPrompt();
@@ -25,6 +23,8 @@ public class InteractionPromptController : MonoBehaviour
     {
         if (current == null)
             return;
+
+        prompt.transform.position = Camera.main.WorldToScreenPoint(current.Position);
 
         if (Input.GetKeyDown(KeyCode.E))
             current.Interact();

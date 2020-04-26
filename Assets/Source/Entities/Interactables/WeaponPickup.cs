@@ -4,7 +4,12 @@ public class WeaponPickup : MonoBehaviour, IInteractable
 {
     [SerializeField]Weapon weapon;
 
-    public string Prompt => weapon.name;
+    public string Prompt =>
+        weapon.name + "\n" +
+        "<size=10>DMG: " + weapon.Damage + "</size>\n" +
+        "<size=10>Clipsize: " + weapon.ClipSize + "</size>\n" +
+        "<size=10>Reload: " + weapon.ReloadTime + "s</size>\n\n" +
+        "[<color=teal>E</color>]: to equip";
     public float InteractionDistance => 4f;
 
     public Vector3 Position => this.transform.position;
