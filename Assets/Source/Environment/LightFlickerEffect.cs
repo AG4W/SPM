@@ -19,6 +19,8 @@ public class LightFlickerEffect : MonoBehaviour
 
     [SerializeField]float repetitionDelay = .01f;
 
+    [SerializeField]bool randomizeStart = true;
+
     float currentFlickerInterval;
     float flickerTimer;
 
@@ -35,6 +37,9 @@ public class LightFlickerEffect : MonoBehaviour
                 Debug.LogError("Warning, applying flicker effect to baked light(s) [" + lights[i].name + "] " +
                     "will produce weird artifacts, use realtime lights with LightFlickerEffect.cs >:(", this.gameObject);
 #endif
+
+        if (randomizeStart)
+            flickerTimer += Random.Range(0f, currentFlickerInterval);
     }
     void Update()
     {
