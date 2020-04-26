@@ -144,6 +144,8 @@ public class PlayerActor : HumanoidActor
     {
         base.OnHealthChanged(change);
 
+        GlobalEvents.Raise(GlobalEvent.PlayerHealthChanged, base.Health);
+
         if(change < 0f)
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTraumaCapped, .5f);
     }

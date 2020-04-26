@@ -1,13 +1,7 @@
 ﻿using UnityEngine;
 
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
-
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]VolumeProfile profile;
-    DepthOfField dof;
-
     [Header("General Settings")]
     [SerializeField]float sensitivityX = 2f;
     [SerializeField]float sensitivityY = 2f;
@@ -42,13 +36,6 @@ public class CameraController : MonoBehaviour
     float jigRotationX;
     float jigRotationY;
 
-    [Header("Depth of Field")]
-    float targetDoFDistance;
-    float actualDoFDistance;
-    [SerializeField]float focusSpeed = 5f;
-    [SerializeField]float defaultDoFStrength = .25f;
-    [SerializeField]float ironSightDoFStrength = 7f;
-
     [Header("Trauma")]
     float trauma;
     float shake { get { return trauma * trauma * trauma; } }
@@ -67,7 +54,6 @@ public class CameraController : MonoBehaviour
         positions = new Vector3[] { defaultPosition, ironSightPosition, jumpPosition, sprintPosition, fallPosition };
         fovs = new float[] { defaultFOV, ironSightFOV, jumpFOV, sprintFOV, fallFOV };
 
-        profile.TryGet(out dof);
         camera = this.GetComponentInChildren<Camera>();
         cameraRotation = camera.transform.localRotation;
 
@@ -130,15 +116,7 @@ public class CameraController : MonoBehaviour
         Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity);
 
         if (hit.transform != null)
-            targetDoFDistance = hit.distance;
-
-        actualDoFDistance = Mathf.Lerp(actualDoFDistance, targetDoFDistance, focusSpeed * (Time.deltaTime / Time.timeScale));
-
-        dof.farFocusStart.value = actualDoFDistance + 2f;
-        dof.farMaxBlur = mode == CameraMode.IronSight ? ironSightDoFStrength : defaultDoFStrength;
-
-        dof.nearFocusStart.value = mode == CameraMode.IronSight ? 1f : 0f;
-        dof.nearFocusEnd.value = mode == CameraMode.IronSight ? 1.5f : 0f;
+            GlobalEvents.Raise(GlobalEvent.UpdateDOFFocusDistance, hit.distance);
     }
 
     //JOOICE

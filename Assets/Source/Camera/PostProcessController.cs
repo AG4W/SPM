@@ -6,36 +6,72 @@ using UnityEngine.Rendering.HighDefinition;
 public class PostProcessController : MonoBehaviour
 {
     [SerializeField]VolumeProfile profile;
+    CameraMode mode = CameraMode.Default;
+
+    [Header("Depth of Field")]
+    [SerializeField]float focusSpeed = 5f;
+    [SerializeField]float defaultDoFStrength = .25f;
+    [SerializeField]float ironSightDoFStrength = 7f;
+
+    DepthOfField depthOfField;
+    float targetDoFDistance;
+    float actualDoFDistance;
 
     [Header("Vignette")]
-    Vignette vignette;
     [SerializeField]InterpolationMode vignetteMode = InterpolationMode.EaseOut;
 
     [SerializeField]Color vignetteStart = Color.black;
     [SerializeField]Color vignetteEnd = Color.red;
 
+    Vignette vignette;
+
     [Header("Chromatic Abberation")]
-    ChromaticAberration abberation;
     [SerializeField]InterpolationMode abberationMode = InterpolationMode.EaseOut;
 
+    ChromaticAberration abberation;
+
     [Header("Panini Projection")]
-    PaniniProjection panini;
     [SerializeField]InterpolationMode paniniMode = InterpolationMode.EaseOut;
 
-    Vital health;
+    PaniniProjection panini;
 
     void Start()
     {
+        profile.TryGet(out depthOfField);
         profile.TryGet(out vignette);
         profile.TryGet(out abberation);
         profile.TryGet(out panini);
 
-        health = FindObjectOfType<PlayerActor>().Health;
-        health.OnCurrentChanged += OnHealthChanged;
+        GlobalEvents.Subscribe(GlobalEvent.SetCameraMode, SetMode);
+        GlobalEvents.Subscribe(GlobalEvent.UpdateDOFFocusDistance, UpdateDepthOfField);
+
+        GlobalEvents.Subscribe(GlobalEvent.PlayerHealthChanged, OnHealthChanged);
+    }
+    void Update()
+    {
+        Interpolate();
+    }
+    void Interpolate()
+    {
+        actualDoFDistance = Mathf.Lerp(actualDoFDistance, targetDoFDistance, focusSpeed * (Time.deltaTime / Time.timeScale));
     }
 
-    void OnHealthChanged(float changed)
+    void SetMode(object[] args) => mode = (CameraMode)args[0];
+    void UpdateDepthOfField(object[] args)
     {
+        targetDoFDistance = (float)args[0];
+
+        depthOfField.farFocusStart.value = actualDoFDistance + 2f;
+        depthOfField.farMaxBlur = mode == CameraMode.IronSight ? ironSightDoFStrength : defaultDoFStrength;
+
+        depthOfField.nearFocusStart.value = mode == CameraMode.IronSight ? 1f : 0f;
+        depthOfField.nearFocusEnd.value = mode == CameraMode.IronSight ? 1.5f : 0f;
+    }
+
+    void OnHealthChanged(object[] args)
+    {
+        Vital health = args[0] as Vital;
+
         vignette.intensity.value = Mathf.Lerp(.2f, 1f, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
         vignette.color.value = Color.Lerp(vignetteStart, vignetteEnd, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
 
