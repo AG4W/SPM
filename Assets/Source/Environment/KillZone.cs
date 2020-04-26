@@ -17,6 +17,6 @@ public class KillZone : MonoBehaviour
     void Update()
     {
         if (box.bounds.Contains(player.transform.position))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            player.Health.Update(-Mathf.Infinity);
     }
 }

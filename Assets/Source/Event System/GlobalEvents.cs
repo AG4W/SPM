@@ -93,10 +93,12 @@ public static class GlobalEvents
 public enum GlobalEvent
 {
     SetPlayerWeapon,
+    PlayerHealthChanged,
     ToggleTorches,
 
-    //camera
+    //camera && post
     SetCameraMode,
+    UpdateDOFFocusDistance,
     ModifyCameraTrauma,
     ModifyCameraTraumaCapped,
 

@@ -5,6 +5,8 @@ public class HitboxCallbackController : MonoBehaviour, IDamageable
     [SerializeField]string optionalHeader = "replace me";
     [Range(0f, 5f)][SerializeField]float damageModifier = 1f;
 
+    bool IDamageable.CreateDecalsOnHit => false; 
+
     void Awake()
     {
         Debug.Assert(this.GetComponent<Collider>() != null, this.transform.name + " is missing a collider, a collider is required to detect hits!", this.gameObject);

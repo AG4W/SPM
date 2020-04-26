@@ -47,6 +47,13 @@ public class Vital
         if (this.Current <= 0f)
             HasReachedZero = true;
     }
+    public void Reset()
+    {
+        this.Current = this.Max;
+        this.HasReachedZero = false;
+
+        OnCurrentChanged?.Invoke(this.Current);
+    }
 
     public delegate void OnValueChanged(float change);
     public OnValueChanged OnCurrentChanged;

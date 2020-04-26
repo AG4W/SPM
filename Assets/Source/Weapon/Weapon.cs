@@ -69,24 +69,37 @@ public class Weapon : ScriptableObject
     {
         Instantiate(shots.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null).GetComponent<ProjectileEntity>().Initialize(hit);
 
-        if (hit.transform != null)
+        if(hit.transform != null)
         {
-            Actor a = hit.transform.GetComponent<Actor>();
+            IDamageable damageable = hit.transform.GetComponent<IDamageable>();
 
             //dont create hit markers on actors 
-            if (a == null)
+            if (damageable != null)
+            {
+                if (damageable.CreateDecalsOnHit)
+                {
+                    GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
+                    h.transform.SetParent(hit.transform);
+
+                    GameObject g = Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
+                    g.transform.SetParent(hit.transform);
+                }
+            }
+            else
             {
                 GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
                 h.transform.SetParent(hit.transform);
-            }
 
-            GameObject g = Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
-            g.transform.SetParent(hit.transform);
+                GameObject g = Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
+                g.transform.SetParent(hit.transform);
+            }
         }
     }
     protected virtual void CreateShotSFX(AudioSource source)
     {
+        source.Stop();
         source.pitch = Random.Range(minPitch, maxPitch);
-        source.PlayOneShot(shotSFX.Random());
+        source.clip = shotSFX.Random();
+        source.Play();
     }
 }

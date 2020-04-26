@@ -1,5 +1,29 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8430475431263744321
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b709909182ba0943abef2c49ed59205, type: 3}
+  m_Name: PaniniProjection
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  distance:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  cropToFit:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 1
 --- !u!114 &-7147138565296653018
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -170,97 +194,6 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 8
     min: 2
---- !u!114 &-5458552366464363707
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 384c4d03a551c44448145f4093304119, type: 3}
-  m_Name: ScreenSpaceReflection
-  m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
-  quality:
-    m_OverrideState: 0
-    m_Value: 1
-  rayTracing:
-    m_OverrideState: 0
-    m_Value: 0
-  minSmoothness:
-    m_OverrideState: 1
-    m_Value: 0.9
-    min: 0
-    max: 1
-  smoothnessFadeStart:
-    m_OverrideState: 1
-    m_Value: 0.9
-    min: 0
-    max: 1
-  reflectSky:
-    m_OverrideState: 0
-    m_Value: 1
-  depthBufferThickness:
-    m_OverrideState: 0
-    m_Value: 0.01
-    min: 0
-    max: 1
-  screenFadeDistance:
-    m_OverrideState: 0
-    m_Value: 0.1
-    min: 0
-    max: 1
-  layerMask:
-    m_OverrideState: 0
-    m_Value:
-      serializedVersion: 2
-      m_Bits: 4294967295
-  rayLength:
-    m_OverrideState: 0
-    m_Value: 10
-    min: 0.001
-    max: 50
-  clampValue:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0.001
-    max: 10
-  denoise:
-    m_OverrideState: 0
-    m_Value: 0
-  denoiserRadius:
-    m_OverrideState: 0
-    m_Value: 16
-    min: 1
-    max: 32
-  upscaleRadius:
-    m_OverrideState: 0
-    m_Value: 4
-  fullResolution:
-    m_OverrideState: 0
-    m_Value: 0
-  deferredMode:
-    m_OverrideState: 0
-    m_Value: 0
-  rayBinning:
-    m_OverrideState: 0
-    m_Value: 0
-  sampleCount:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 1
-    max: 32
-  bounceCount:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 1
-    max: 31
-  m_RayMaxIterations:
-    m_OverrideState: 0
-    m_Value: 32
 --- !u!114 &-5314933757131612938
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -279,7 +212,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0
   color:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 0, g: 0, b: 0, a: 1}
     hdr: 0
     showAlpha: 0
@@ -289,28 +222,28 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.191
+    m_Value: 0.2
     min: 0
     max: 1
   smoothness:
-    m_OverrideState: 0
-    m_Value: 0.2
+    m_OverrideState: 1
+    m_Value: 0.5
     min: 0.01
     max: 1
   roundness:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 0.629
     min: 0
     max: 1
   rounded:
-    m_OverrideState: 1
-    m_Value: 1
+    m_OverrideState: 0
+    m_Value: 0
   mask:
     m_OverrideState: 0
     m_Value: {fileID: 0}
   opacity:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 0
     min: 0
     max: 1
 --- !u!114 &-2102695091899109851
@@ -358,7 +291,8 @@ MonoBehaviour:
   - {fileID: 7917247240467470904}
   - {fileID: -6211672338906517537}
   - {fileID: -5314933757131612938}
-  - {fileID: -5458552366464363707}
+  - {fileID: 6178610765473588026}
+  - {fileID: -8430475431263744321}
 --- !u!114 &1724515690351719108
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -412,6 +346,36 @@ MonoBehaviour:
   m_HighQualityFiltering:
     m_OverrideState: 0
     m_Value: 1
+--- !u!114 &6178610765473588026
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598e2d32e2c7b0c418e030c3236d663a, type: 3}
+  m_Name: ChromaticAberration
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  quality:
+    m_OverrideState: 0
+    m_Value: 1
+  spectralLut:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  m_MaxSamples:
+    m_OverrideState: 0
+    m_Value: 6
+    min: 3
+    max: 24
 --- !u!114 &7917247240467470904
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -446,7 +410,7 @@ MonoBehaviour:
     min: 0
   farFocusStart:
     m_OverrideState: 1
-    m_Value: 2.6278946
+    m_Value: 30.338654
     min: 0
   farFocusEnd:
     m_OverrideState: 0
@@ -469,7 +433,7 @@ MonoBehaviour:
     max: 16
   m_FarMaxBlur:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.2
     min: 0
     max: 16
   m_HighQualityFiltering:

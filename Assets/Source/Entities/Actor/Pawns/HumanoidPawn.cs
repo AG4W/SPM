@@ -77,6 +77,9 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable
         if (HasBeenAlerted && CanSeeTarget)
             UpdateLastKnownPositionOfTarget();
 
+        if (this.agent.nextPosition.DistanceTo(this.transform.position) > 2f)
+            this.agent.nextPosition = this.transform.position;
+
         Debug.DrawLine(this.transform.position, this.TargetPosition, Color.blue);
         Debug.DrawLine(base.FocusPoint.position, this.Target.FocusPoint.position, CanSeeTarget ? Color.green : Color.red);
     }
