@@ -139,7 +139,12 @@ public class PlayerActor : HumanoidActor
         base.OnHealthChanged(change);
 
         if(change < 0f)
-            GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .11f);
+            GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .05f);
+    }
+    protected override void OnHealthZero()
+    {
+        //ladda om nuvarande scen ifall vi dör
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 }
 public enum MovementMode
