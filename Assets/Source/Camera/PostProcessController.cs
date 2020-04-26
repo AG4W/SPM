@@ -38,7 +38,6 @@ public class PostProcessController : MonoBehaviour
     void Awake()
     {
         profile = this.GetComponent<Volume>().profile;
-
         profile.TryGet(out depthOfField);
         profile.TryGet(out vignette);
         profile.TryGet(out abberation);
