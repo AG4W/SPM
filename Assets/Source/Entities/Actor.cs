@@ -149,9 +149,9 @@ public class Actor : Entity
 
             if (hit.distance <= this.Velocity.magnitude)
             {
-                Vector3 tnf = this.Velocity.GetNormalForce(hit.normal);
-                this.Velocity += tnf;
-                this.Velocity = Friction(this.Velocity, tnf);
+                Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
+                //this.Velocity = Friction(this.Velocity, tempNormalForce);
+                this.Velocity += tempNormalForce;
             }
 
             CheckOverlap();
@@ -186,7 +186,9 @@ public class Actor : Entity
             velocity.z = 0f;
             return velocity;
         }
-        else
+        else if (Vector3.Dot(velocity, Vector3.down) > 0.75f) // Om vi faller applicera inte friktion
+            return velocity;
+        else 
         {
             velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
             return velocity;
