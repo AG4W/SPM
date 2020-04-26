@@ -3,4 +3,5 @@
     Default,
     Reload,
     Force,
+    Fire
 }

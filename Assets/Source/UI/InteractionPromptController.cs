@@ -3,12 +3,13 @@ using UnityEngine.UI;
 
 public class InteractionPromptController : MonoBehaviour
 {
-    [SerializeField]Text prompt;
-
+    Text prompt;
     IInteractable current;
 
     void Awake()
     {
+        prompt = this.GetComponentInChildren<Text>();
+
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
             if (args[0] is IInteractable entity && entity.Prompt.Length > 0)
                 OpenInteractPrompt(entity);

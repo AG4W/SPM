@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
 using System.Collections.Generic;
+using System.Linq;
 using System;
 
 public class PlayerActor : HumanoidActor
 {
     [SerializeField]GameObject[] torches;
+
+    [SerializeField]Checkpoint[] checkpoints;
 
     Transform jig;
 
@@ -13,6 +16,7 @@ public class PlayerActor : HumanoidActor
     {
         base.Initalize();
 
+        checkpoints = FindObjectsOfType<Checkpoint>();
         jig = FindObjectOfType<CameraController>().transform;
 
         if (jig == null)
@@ -143,8 +147,9 @@ public class PlayerActor : HumanoidActor
     }
     protected override void OnHealthZero()
     {
-        //ladda om nuvarande scen ifall vi dör
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        //teleportera till nämrsta checkpoint
+        this.transform.position = checkpoints.OrderByDescending(t => t.transform.position.DistanceTo(this.transform.position)).First().transform.position + Vector3.up;
+        base.Health.Reset();
     }
 }
 public enum MovementMode
