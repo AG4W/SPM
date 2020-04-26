@@ -17,6 +17,8 @@ public class PlayerActor : HumanoidActor
         base.Initalize();
 
         checkpoints = FindObjectsOfType<Checkpoint>();
+        Debug.Assert(checkpoints != null && checkpoints.Length > 0, "Could not find any checkpoints, did you forget to drag the prefab into your scene?", this.gameObject);
+        
         jig = FindObjectOfType<CameraController>().transform;
 
         if (jig == null)
