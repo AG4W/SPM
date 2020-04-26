@@ -59,12 +59,12 @@ public class LightFlickerEffect : MonoBehaviour
         while (repetitions <= Random.Range(minRepetitions, maxRepetitions))
         {
             for (int i = 0; i < lights.Length; i++)
-                lights[i].gameObject.SetActive(!lights[i].gameObject.activeSelf);
+                lights[i].enabled = !lights[i].enabled;
 
             yield return new WaitForSeconds(baseLightDuration + Random.Range(minLightDurationRandomModifier, maxLightDurationRandomModifier));
 
             for (int i = 0; i < lights.Length; i++)
-                lights[i].gameObject.SetActive(!lights[i].gameObject.activeSelf);
+                lights[i].enabled = !lights[i].enabled;
 
             yield return new WaitForSeconds(repetitionDelay);
 
