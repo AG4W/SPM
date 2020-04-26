@@ -20,7 +20,7 @@ public class Actor : Entity
     [SerializeField]float staticFriction = .5f;
     [SerializeField]float dynamicFriction = .4f;
 
-    [SerializeField]float height;
+    [SerializeField]float height = 1.8f;
 
     [SerializeField]LayerMask collisionMask;
 
@@ -31,8 +31,11 @@ public class Actor : Entity
     [SerializeField]StateMachine stateMachine;
 
     protected virtual float CurrentHeight => height;
-    protected virtual float CurrentFeetOffset => 0f;
-    protected float Height { get { return height; } }
+    protected float Height { get { return height + heightOffset; } }
+    private float heightOffset = 0f;
+
+    protected virtual float CurrentFeetOffset => feetOffset;
+    private float feetOffset = 0f;
     protected float CollisionRadius { get { return collisionRadius; } }
     protected float SkinWidth { get { return skinWidth; } }
 
@@ -49,6 +52,10 @@ public class Actor : Entity
 
     public Transform FocusPoint { get; private set; }
 
+    //(Krulls)
+    //protected Transform pointAsphere { get; set; }
+    //protected Transform pointBsphere { get; set; }
+
     protected override void Initalize()
     {
         base.Initalize();
@@ -63,6 +70,12 @@ public class Actor : Entity
             this.FocusPoint.position = this.transform.position;
         }
 
+        //(Krulls)
+        //this.pointAsphere = this.transform.FindRecursively("pointAsphere");
+        //this.pointBsphere = this.transform.FindRecursively("pointBsphere");
+        //if (this.pointAsphere == null || this.pointBsphere == null)
+        //    Debug.LogWarning(this.name + " is missing a pointAspehere or pointBsphere!");
+
         weaponController = this.GetComponent<WeaponController>();
 
         this.Subscribe(ActorEvent.SetActorTargetInput, SetTargetInput);
@@ -73,6 +86,7 @@ public class Actor : Entity
 
         this.StateMachine = InitializeStateMachine();
     }
+
     protected virtual StateMachine InitializeStateMachine() => null;
 
     protected override void Update()
@@ -82,11 +96,22 @@ public class Actor : Entity
     }
     protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, targetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
+    public void SetFeetOffset(float value)
+    {
+        feetOffset = value;
+    }
+
+    public void SetHeightOffset(float value)
+    {
+        heightOffset = value;
+    }
+
     void SetTargetInput(object[] args)
     {
         targetInput = (Vector3)args[0];
         targetInput *= inputModifier;
     }
+
     protected void SetInputModifier(float modifier) => inputModifier = modifier;
 
     //vitals
@@ -100,8 +125,11 @@ public class Actor : Entity
     //physics
     protected void CheckCollision()
     {
-        Vector3 pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
+        Vector3 pointA = this.transform.position + (Vector3.up * (this.CurrentHeight - this.collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
+
+        //Vector3 pointA = this.pointAsphere.position;
+        //Vector3 pointB = this.pointBsphere.position;
 
         Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity, collisionMask);
 
@@ -130,6 +158,8 @@ public class Actor : Entity
 
             pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
             pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
+            //pointA = this.pointAsphere.position;
+            //pointB = this.pointBsphere.position;
             Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out hit, this.Velocity.magnitude + skinWidth, collisionMask);
 
             counter++;

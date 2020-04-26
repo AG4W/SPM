@@ -6,7 +6,7 @@ public class HumanoidActor : Actor
 {
     [Header("Bipedal Settings")]
     [SerializeField]float crouchHeight = 1.4f;
-    [SerializeField]float jumpFeetOffset = .25f;
+
 
     //vad används denna för
     //och gör dne vad den heter?
@@ -39,7 +39,7 @@ public class HumanoidActor : Actor
     [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
     protected override float CurrentHeight => Mathf.Lerp(crouchHeight, base.Height, actualStance);
-    protected override float CurrentFeetOffset => this.Animator.GetBool("isJumping") ? jumpFeetOffset : base.CurrentFeetOffset;
+    protected override float CurrentFeetOffset => base.CurrentFeetOffset;
     protected Animator Animator { get; private set; }
 
     public bool IsGrounded { get; set; }

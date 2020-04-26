@@ -9,6 +9,8 @@ public class JumpState : GroundLostState
     [SerializeField]AnimationCurve jumpCurve;
 
     [SerializeField]float landThreshold = .75f;
+    [SerializeField]float feetOffset = .9f;
+    [SerializeField]float heightOffset = .4f;
 
     float jumpTimer;
     
@@ -26,6 +28,9 @@ public class JumpState : GroundLostState
         base.Tick();
 
         jumpTimer += Time.deltaTime;
+
+        UpdateFeetOffset();
+        UpdateHeightOffset();
 
         if (jumpTimer >= jumpDuration)
         {
@@ -45,8 +50,27 @@ public class JumpState : GroundLostState
 
         base.Actor.Raise(ActorEvent.ModifyActorVelocity, velocity);
     }
+
+    void UpdateFeetOffset() // Needed for collision-adjustments in jumpmotion
+    {
+        if (jumpTimer < jumpDuration / 2f)
+            base.Actor.SetFeetOffset(Mathf.Lerp(0f, feetOffset, jumpTimer * 1.2f));
+        if (jumpTimer >= jumpDuration / 2f)
+            base.Actor.SetFeetOffset(Mathf.Lerp(feetOffset, 0f, jumpTimer * 0.8f));
+    }
+    void UpdateHeightOffset() // Needed for collision-adjustments in jumpmotion
+    {
+        if (jumpTimer < jumpDuration / 2f)
+            base.Actor.SetHeightOffset(Mathf.Lerp(0f, heightOffset, jumpTimer * 1.2f));
+        if (jumpTimer >= jumpDuration / 2f)
+            base.Actor.SetHeightOffset(Mathf.Lerp(heightOffset, 0f, jumpTimer * 0.8f));
+    }
+
     public override void Exit()
     {
+        base.Actor.SetFeetOffset(0f);
+        base.Actor.SetHeightOffset(0f);
+
         base.Get<Animator>().SetBool("isJumping", false);
     }
 }
