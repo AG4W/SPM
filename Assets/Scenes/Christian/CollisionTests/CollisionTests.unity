@@ -5688,12 +5688,12 @@ PrefabInstance:
     - target: {fileID: 7031882766095853029, guid: 2331723a1997c634e9e5db77e3718c50,
         type: 3}
       propertyPath: dynamicFriction
-      value: 0.9
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 7031882766095853029, guid: 2331723a1997c634e9e5db77e3718c50,
         type: 3}
       propertyPath: staticFriction
-      value: 0.95
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7031882766095853029, guid: 2331723a1997c634e9e5db77e3718c50,
         type: 3}
