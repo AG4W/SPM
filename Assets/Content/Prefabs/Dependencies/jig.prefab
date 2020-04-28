@@ -95,9 +95,10 @@ MonoBehaviour:
   sensitivityY: 80
   translationSpeed: 15
   cameraTranslationSpeed: 2.5
+  cameraSkinWidth: 0.8
   collisionMask:
     serializedVersion: 2
-    m_Bits: 268435457
+    m_Bits: 2147483649
   defaultPosition: {x: 0.6, y: 0.4, z: -1.1}
   ironSightPosition: {x: 0.4, y: 0.4, z: -0.75}
   jumpPosition: {x: 0, y: 0.5, z: -1.5}
