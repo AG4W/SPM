@@ -135,14 +135,8 @@ public class CameraController : MonoBehaviour
         //    }
         //}
 
-        if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask))
-        {
-            if (hit.distance <= (this.transform.position + desiredPosition).magnitude)
-            {
-                desiredPosition.z = -hit.distance * cameraSkinWidth;
-                //return desiredPosition;
-            }
-        }
+        if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask) && hit.distance <= (this.transform.position + desiredPosition).magnitude)
+            desiredPosition.z = -hit.distance * cameraSkinWidth;
         if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask))
         {
 
@@ -154,7 +148,7 @@ public class CameraController : MonoBehaviour
     void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
     void UpdateDepthOfField()
     {
-        Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity);
+        Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity, collisionMask);
 
         if (hit.transform != null)
             GlobalEvents.Raise(GlobalEvent.UpdateDOFFocusDistance, hit.distance);
