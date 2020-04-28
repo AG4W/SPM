@@ -8,6 +8,7 @@ using System;
 public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
 {
     [SerializeField]AICombatMode mode = AICombatMode.Cautious;
+    [SerializeField]AIStartState start = AIStartState.Idle;
 
     [Range(1f, 100)][SerializeField]float sightRange = 30f;
     [Range(-1f, 1f)][SerializeField]float fieldOfView = 0f;
@@ -44,6 +45,7 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
         this.agent.updatePosition = false;
         this.agent.updateRotation = false;
         this.agent.avoidancePriority = Random.Range(1, 99);
+
         targetRotation = this.transform.rotation;
 
         base.Initalize();
@@ -71,7 +73,7 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
                 [typeof(WeaponController)] = base.WeaponController,
                 [typeof(NavMeshAgent)] = this.agent
             },
-            typeof(AIIdleState));
+            start != AIStartState.Idle ? typeof(AISearchState) : typeof(AIIdleState));
     }
 
     protected override void Update()
@@ -129,7 +131,7 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
             this.CanSeeTarget = false;
             return;
         }
-        if(Physics.Linecast(base.FocusPoint.position, this.Target.FocusPoint.position, sightMask))
+        if(Physics.Linecast(base.EyePoint.position, this.Target.FocusPoint.position, sightMask))
         {
             this.CanSeeTarget = false;
             return;
@@ -175,4 +177,10 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
     {
         base.Velocity = velocity;
     }
+}
+public enum AIStartState
+{
+    Idle,
+    Patrol,
+    Search,
 }

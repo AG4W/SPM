@@ -41,7 +41,7 @@ public class AIAttackState : AIBaseLocomotionState
             timeSinceTargetLastSeen += Time.deltaTime;
 
             if (timeSinceTargetLastSeen >= baseMehTime * (int)base.Pawn.Mode)
-                base.TransitionTo<AIHuntState>();
+                base.TransitionTo<AISearchState>();
         }
         else
         {

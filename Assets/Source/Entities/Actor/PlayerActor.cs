@@ -164,7 +164,7 @@ public class PlayerActor : HumanoidActor
     protected override void OnHealthZero()
     {
         //teleportera till nämrsta checkpoint
-        this.transform.position = checkpoints.OrderByDescending(t => t.transform.position.DistanceTo(this.transform.position)).First().transform.position + Vector3.up;
+        this.transform.position = checkpoints.OrderBy(t => t.transform.position.DistanceTo(this.transform.position)).First().transform.position + Vector3.up;
         base.Health.Reset();
     }
 }

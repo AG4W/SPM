@@ -23,7 +23,7 @@ public class PushState : AbilityState
                 if (base.Debug)
                     UnityEngine.Debug.DrawLine(ray.origin, hits[i].point, Color.yellow);
 
-                hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(ray.origin.DirectionTo(hits[i].point).normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power));
+                hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(ray.direction.normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power));
             }
         }
     }

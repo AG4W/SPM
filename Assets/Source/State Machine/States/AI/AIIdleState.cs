@@ -18,7 +18,7 @@ public class AIIdleState : AIBaseLocomotionState
 
             //alert others
             GlobalEvents.Raise(GlobalEvent.AlertOthers, base.Actor, alertOthersDistance);
-            base.TransitionTo<AIHuntState>();
+            base.TransitionTo<AISearchState>();
         });
 
         GlobalEvents.Subscribe(GlobalEvent.AlertOthers, (object[] args) => {
@@ -27,7 +27,7 @@ public class AIIdleState : AIBaseLocomotionState
                 return;
 
             if (base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1])
-                base.TransitionTo<AIHuntState>();
+                base.TransitionTo<AISearchState>();
 
             Debug.DrawLine(base.Actor.transform.position, ((Actor)args[0]).transform.position, base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1] ? Color.green : Color.red, 2f);
         });

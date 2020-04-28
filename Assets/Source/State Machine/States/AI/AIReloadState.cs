@@ -35,7 +35,7 @@ public class AIReloadState : AIBaseLocomotionState
             if (base.Pawn.CanSeeTarget)
                 base.TransitionTo<AIAttackState>();
             else
-                base.TransitionTo<AIHuntState>();
+                base.TransitionTo<AISearchState>();
         }
 
         base.Actor.Raise(ActorEvent.SetTargetRotation, Quaternion.LookRotation(base.Actor.transform.position.DirectionTo(base.Pawn.LastKnownPositionOfTarget), Vector3.up));

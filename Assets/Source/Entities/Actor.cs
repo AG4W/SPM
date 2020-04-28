@@ -51,6 +51,7 @@ public class Actor : Entity
     public Vector3 ActualInput { get { return actualInput; } }
 
     public Transform FocusPoint { get; private set; }
+    public Transform EyePoint { get; private set; }
 
     //(Krulls)
     //protected Transform pointAsphere { get; set; }
@@ -61,6 +62,7 @@ public class Actor : Entity
         base.Initalize();
 
         this.FocusPoint = this.transform.FindRecursively("focusPoint");
+        this.EyePoint = this.transform.FindRecursively("eyePoint");
 
         if (this.FocusPoint == null)
         {
@@ -68,6 +70,13 @@ public class Actor : Entity
             this.FocusPoint = new GameObject("focusPoint").transform;
             this.FocusPoint.SetParent(this.transform);
             this.FocusPoint.position = this.transform.position;
+        }
+        if (this.EyePoint == null)
+        {
+            Debug.LogWarning(this.name + " is missing an eyePoint, using position of transform");
+            this.EyePoint = new GameObject("eyePoint").transform;
+            this.EyePoint.SetParent(this.transform);
+            this.EyePoint.position = this.transform.position;
         }
 
         //(Krulls)

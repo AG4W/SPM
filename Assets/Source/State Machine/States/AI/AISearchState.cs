@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "State/AI/Hunt")]
-public class AIHuntState : AIBaseLocomotionState
+[CreateAssetMenu(menuName = "State/AI/Search")]
+public class AISearchState : AIBaseLocomotionState
 {
     [SerializeField]float randomOffset = 5f;
 
@@ -56,7 +56,7 @@ public class AIHuntState : AIBaseLocomotionState
         switch (base.Pawn.Mode)
         {
             case AICombatMode.Aggressive:
-                base.Actor.Raise(ActorEvent.SetInputModifier, 2f);
+                base.Actor.Raise(ActorEvent.SetInputModifier, 1f);
                 break;
             case AICombatMode.Cautious:
                 base.Actor.Raise(ActorEvent.SetInputModifier, .5f);
