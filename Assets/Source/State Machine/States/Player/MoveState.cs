@@ -6,7 +6,7 @@ public class MoveState : ActState
     public override void Tick()
     {
         base.Tick();
-        base.Actor.Raise(ActorEvent.SetActorMovementMode, Input.GetKey(KeyCode.CapsLock) ? MovementMode.Walk : MovementMode.Jog);
+        base.Actor.Raise(ActorEvent.SetInputModifier, Input.GetKey(KeyCode.CapsLock) ? .5f : 1f);
 
         if (base.Actor.TargetInput.magnitude < .1f)
             base.TransitionTo<IdleState>();

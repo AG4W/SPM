@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 200
   healthRegenerationRate: 0.01
-  healthRegenerationAmount: 0.5
+  healthRegenerationAmount: 0.25
   isDestructible: 1
   path: States/Player
   targetInput: {x: 0, y: 0, z: 0}
@@ -66,9 +66,7 @@ MonoBehaviour:
   stateMachine:
     debugStateMachine: 0
   crouchHeight: 1.4
-  jumpFeetOffset: 0.5
   groundCheckDistance: 0.6
-  mode: 2
   aimMode: 0
   actualAimStance: 0
   interpolationSpeed: 5

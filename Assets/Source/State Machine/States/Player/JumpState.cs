@@ -17,7 +17,7 @@ public class JumpState : GroundLostState
     public override void Enter()
     {
         base.Enter();
-        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isJumping", true);
+        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isJumping", true);
 
         GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Jump);
 
@@ -48,7 +48,7 @@ public class JumpState : GroundLostState
         //velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
         velocity *= Mathf.Pow(base.AirResistance, (Time.deltaTime / Time.timeScale));
 
-        base.Actor.Raise(ActorEvent.ModifyActorVelocity, velocity);
+        base.Actor.Raise(ActorEvent.ModifyVelocity, velocity);
     }
 
     void UpdateFeetOffset() // Needed for collision-adjustments in jumpmotion

@@ -98,6 +98,13 @@ public static class Extensions
         return center + (new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)) * radius);
     }
 
+    public static Vector3 ToXZ(this Vector3 vector, float y = 0f)
+    {
+        vector.y = y;
+
+        return vector;
+    }
+
     public static Vector3 DirectionTo(this Vector3 origin, Vector3 target)
     {
         return target - origin;

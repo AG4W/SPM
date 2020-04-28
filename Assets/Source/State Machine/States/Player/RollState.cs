@@ -6,7 +6,7 @@ public class RollState : BaseState
     public override void Enter()
     {
         base.Enter();
-        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isRolling", true);
+        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isRolling", true);
     }
     public override void Tick()
     {

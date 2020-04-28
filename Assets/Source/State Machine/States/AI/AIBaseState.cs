@@ -6,12 +6,16 @@ public abstract class AIBaseState : State
 
     protected HumanoidPawn Pawn { get { return (HumanoidPawn)base.Actor; } }
 
+    protected override void OnInitialize()
+    {
+        base.OnInitialize();
+    }
     public override void Tick()
     {
         // Ground Check
-        base.Actor.Raise(ActorEvent.UpdateActorGroundedStatus);
+        base.Actor.Raise(ActorEvent.UpdateGroundedStatus);
         //Gravity
-        base.Actor.Raise(ActorEvent.ModifyActorVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));
-        base.Actor.Raise(ActorEvent.SetActorAnimatorFloat, "targetMagnitude", base.Actor.TargetInput.magnitude);
+        base.Actor.Raise(ActorEvent.ModifyVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));
+        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "targetMagnitude", base.Actor.TargetInput.magnitude);
     }
 }

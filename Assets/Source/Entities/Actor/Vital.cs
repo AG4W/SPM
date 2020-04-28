@@ -26,6 +26,9 @@ public class Vital
 
     public void Tick()
     {
+        if (regenerationAmount <= 0f)
+            return;
+
         regenerationTimer += Time.deltaTime;
 
         if(regenerationTimer >= regenerationRate)
@@ -37,7 +40,7 @@ public class Vital
 
     public void Update(float change)
     {
-        this.Current += change;
+        this.Current = Mathf.Clamp(this.Current + change, 0f, this.Max);
 
         //har race conditions här ifall något gör damage flera gånger samma frame
         //se till att vi bara triggar zero events en gång

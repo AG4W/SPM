@@ -7,14 +7,11 @@ public class HumanoidActor : Actor
     [Header("Bipedal Settings")]
     [SerializeField]float crouchHeight = 1.4f;
 
-
     //vad används denna för
     //och gör dne vad den heter?
     [SerializeField]float groundCheckDistance = .5f;
 
     [Header("Animation")]
-    [SerializeField]MovementMode mode = MovementMode.Jog;
-
     [SerializeField]AimMode aimMode = AimMode.Default;
     [SerializeField]float actualAimStance;
     [SerializeField]float interpolationSpeed = 2.5f;
@@ -55,24 +52,23 @@ public class HumanoidActor : Actor
         actualLayerWeights = new float[Enum.GetNames(typeof(AnimatorLayer)).Length];
 
         //Input
-        this.Subscribe(ActorEvent.SetActorMovementMode, SetMovementSpeed);
-        this.Subscribe(ActorEvent.SetActorTargetStance, SetTargetStance);
-        this.Subscribe(ActorEvent.SetActorTargetAimMode, SetTargetAimMode);
+        this.Subscribe(ActorEvent.SetTargetStance, SetTargetStance);
+        this.Subscribe(ActorEvent.SetTargetAimMode, SetTargetAimMode);
 
         //animator
-        this.Subscribe(ActorEvent.SetActorAnimatorFloat, SetAnimatorFloat);
-        this.Subscribe(ActorEvent.SetActorAnimatorTrigger, SetAnimatorTrigger);
-        this.Subscribe(ActorEvent.SetActorAnimatorBool, SetAnimatorBool);
-        this.Subscribe(ActorEvent.SetActorAnimatorLayer, SetAnimatorLayer);
+        this.Subscribe(ActorEvent.SetAnimatorFloat, SetAnimatorFloat);
+        this.Subscribe(ActorEvent.SetAnimatorTrigger, SetAnimatorTrigger);
+        this.Subscribe(ActorEvent.SetAnimatorBool, SetAnimatorBool);
+        this.Subscribe(ActorEvent.SetAnimatorLayer, SetAnimatorLayer);
 
         //IK
-        this.Subscribe(ActorEvent.SetActorLookAtPosition, SetLookAtPosition);
-        this.Subscribe(ActorEvent.SetActorLookAtWeights, SetLookAtWeights);
-        this.Subscribe(ActorEvent.SetActorLeftHandTarget, SetLeftHandTarget);
-        this.Subscribe(ActorEvent.SetActorLeftHandWeight, SetLeftHandWeight);
+        this.Subscribe(ActorEvent.SetLookAtPosition, SetLookAtPosition);
+        this.Subscribe(ActorEvent.SetLookAtWeights, SetLookAtWeights);
+        this.Subscribe(ActorEvent.SetLeftHandTarget, SetLeftHandTarget);
+        this.Subscribe(ActorEvent.SetLeftHandWeight, SetLeftHandWeight);
 
         //GroundCheck
-        this.Subscribe(ActorEvent.UpdateActorGroundedStatus, (object[] args) => UpdateGroundedStatus());
+        this.Subscribe(ActorEvent.UpdateGroundedStatus, (object[] args) => UpdateGroundedStatus());
 
         //exekveringsorder är relevant
         //vill regga events innan vi kallar basklassen
@@ -82,7 +78,10 @@ public class HumanoidActor : Actor
     protected override void Update()
     {
         base.Update();
+
         UpdateAnimator();
+
+        Debug.DrawLine(this.FocusPoint.position, actualLookAtPosition, Color.magenta);
     }
     protected virtual void OnAnimatorMove()
     {
@@ -175,33 +174,7 @@ public class HumanoidActor : Actor
             this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
     }
 
-    void SetMovementSpeed(object[] args)
-    {
-        mode = (MovementMode)args[0];
-
-        switch (mode)
-        {
-            case MovementMode.Crouch:
-                base.SetInputModifier(1f);
-                break;
-            case MovementMode.Walk:
-                base.SetInputModifier(.5f);
-                break;
-            case MovementMode.Jog:
-                base.SetInputModifier(1f);
-                break;
-            case MovementMode.Sprint:
-                base.SetInputModifier(2f);
-                break;
-            default:
-                base.SetInputModifier(.25f);
-                break;
-        }
-    }
-    void SetTargetStance(object[] args)
-    {
-        stance = (Stance)args[0];
-    }
+    void SetTargetStance(object[] args) => stance = (Stance)args[0];
     void SetTargetAimMode(object[] args) => aimMode = (AimMode)args[0];
 
     void SetAnimatorFloat(object[] args) => this.Animator.SetFloat((string)args[0], (float)args[1]);

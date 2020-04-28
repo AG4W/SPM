@@ -11,11 +11,11 @@ public class ReloadState : BaseState
     {
         base.Enter();
 
-        base.Actor.Raise(ActorEvent.SetActorAnimatorLayer, AnimatorLayer.Reload, 1f);
-        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 0f);
+        base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 1f);
+        base.Actor.Raise(ActorEvent.SetLeftHandWeight, 0f);
 
-        base.Actor.Raise(ActorEvent.SetActorAnimatorFloat, "playspeedMultiplier", base.Get<Animator>().GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
-        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isReloading", true);
+        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "playspeedMultiplier", base.Get<Animator>().GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
+        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", true);
 
         timer = 0f;
         reloadWasComplete = false;
@@ -39,7 +39,7 @@ public class ReloadState : BaseState
         if (Input.GetKeyDown(KeyCode.V))
             base.TransitionTo<RollState>();
 
-        base.Actor.Raise(ActorEvent.SetActorTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
+        base.Actor.Raise(ActorEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
 
         //kolla reloadtimer
         //ifall vi bailar utan att completa reload pga roll/hopp så yeetar vi
@@ -49,8 +49,8 @@ public class ReloadState : BaseState
         if (reloadWasComplete)
             base.Get<WeaponController>().Reload();
 
-        base.Actor.Raise(ActorEvent.SetActorAnimatorBool, "isReloading", false);
-        base.Actor.Raise(ActorEvent.SetActorAnimatorLayer, AnimatorLayer.Reload, 0f);
-        base.Actor.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
+        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", false);
+        base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 0f);
+        base.Actor.Raise(ActorEvent.SetLeftHandWeight, 1f);
     }
 }

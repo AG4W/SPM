@@ -47,7 +47,7 @@ public class Actor : Entity
     protected StateMachine StateMachine { get { return stateMachine; } private set { stateMachine = value; } }
 
     public Vector3 Velocity { get; protected set; }
-    public Vector3 TargetInput { get { return targetInput; } }
+    public Vector3 TargetInput { get { return targetInput * this.inputModifier; } }
     public Vector3 ActualInput { get { return actualInput; } }
 
     public Transform FocusPoint { get; private set; }
@@ -78,11 +78,12 @@ public class Actor : Entity
 
         weaponController = this.GetComponent<WeaponController>();
 
-        this.Subscribe(ActorEvent.SetActorTargetInput, SetTargetInput);
+        this.Subscribe(ActorEvent.SetTargetInput, SetTargetInput);
+        this.Subscribe(ActorEvent.SetInputModifier, SetInputModifier);
+        this.Subscribe(ActorEvent.SetWeapon, (object[] args) => weaponController.SetWeapon((Weapon)args[0]));
 
         //velocity
-        this.Subscribe(ActorEvent.ModifyActorVelocity, ModifyVelocity);
-        this.Subscribe(ActorEvent.SetActorWeapon, (object[] args) => weaponController.SetWeapon((Weapon)args[0]));
+        this.Subscribe(ActorEvent.ModifyVelocity, ModifyVelocity);
 
         this.StateMachine = InitializeStateMachine();
     }
@@ -92,33 +93,33 @@ public class Actor : Entity
     protected override void Update()
     {
         base.Update();
+
         Interpolate();
     }
-    protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, targetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+    protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, this.TargetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
+    //Denna borde flyttas till humanoidactor, alternativt döpas om till SetLowPoint
     public void SetFeetOffset(float value)
     {
         feetOffset = value;
     }
-
     public void SetHeightOffset(float value)
     {
         heightOffset = value;
     }
 
-    void SetTargetInput(object[] args)
+    void SetTargetInput(object[] args) => targetInput = (Vector3)args[0];
+    void SetInputModifier(object[] args) => inputModifier = (float)args[0];
+
+    protected override void OnHealthChanged(float change)
     {
-        targetInput = (Vector3)args[0];
-        targetInput *= inputModifier;
+        base.OnHealthChanged(change);
+        this.Raise(ActorEvent.OnActorHealthChanged, this.health);
     }
-
-    protected void SetInputModifier(float modifier) => inputModifier = modifier;
-
     //vitals
     protected override void OnHealthZero()
     {
         base.OnHealthZero();
-
         Destroy(this);
     }
 

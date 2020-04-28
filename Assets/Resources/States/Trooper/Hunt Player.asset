@@ -9,16 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6500826eca54a2744b023d00a91d8c58, type: 3}
-  m_Name: Find Cover
+  m_Script: {fileID: 11500000, guid: 1f14890ea88131f458e12fa78dabc56f, type: 3}
+  m_Name: Hunt Player
   m_EditorClassIdentifier: 
   gravitationalConstant: 9.82
   total: 1
   body: 0.25
   head: 1
   eyes: 1
-  clamp: 1
-  searchRadius: 25
-  mask:
-    serializedVersion: 2
-    m_Bits: 134217728
+  clamp: 0.5
+  randomOffset: 2

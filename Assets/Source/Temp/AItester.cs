@@ -19,7 +19,7 @@ public class AItester : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
                 for (int i = 0; i < pawns.Length; i++)
-                    pawns[i]?.Raise(ActorEvent.SetActorTargetPosition, hit.point);
+                    pawns[i]?.Raise(ActorEvent.SetTargetPosition, hit.point);
             }
         }
     }

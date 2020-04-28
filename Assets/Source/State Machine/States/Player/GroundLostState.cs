@@ -23,6 +23,6 @@ public abstract class GroundLostState : BaseState
         else
             velocityBeforeLosingGroundContact = Vector3.zero;
 
-        base.Actor.Raise(ActorEvent.ModifyActorVelocity, velocityBeforeLosingGroundContact);
+        base.Actor.Raise(ActorEvent.ModifyVelocity, velocityBeforeLosingGroundContact);
     }
 }

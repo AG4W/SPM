@@ -19,6 +19,6 @@ public abstract class BaseLocomotionState : BaseState
         if (Input.GetKeyDown(KeyCode.V))
             base.TransitionTo<RollState>();
 
-        base.Actor.Raise(ActorEvent.SetActorTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
+        base.Actor.Raise(ActorEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
     }
 }

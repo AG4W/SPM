@@ -73,7 +73,7 @@ public class PostProcessController : MonoBehaviour
     {
         Vital health = args[0] as Vital;
 
-        vignette.intensity.value = Mathf.Lerp(.2f, 1f, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
+        vignette.intensity.value = Mathf.Lerp(.2f, .7f, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
         vignette.color.value = Color.Lerp(vignetteStart, vignetteEnd, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
 
         abberation.intensity.value = Mathf.Lerp(0f, 1f, (1f - health.CurrentInPercent).Interpolate(abberationMode));

@@ -113,34 +113,40 @@ public enum GlobalEvent
 public enum ActorEvent
 {
     //actor input
-    SetActorTargetInput,
-    SetActorTargetStance,
-    SetActorMovementMode,
-    SetActorTargetAimMode,
-    SetActorTargetPosition,
-    SetActorTargetRotation,
-    UpdateActorAlertStatus,
+    SetTargetInput,
+    SetInputModifier,
+    SetTargetStance,
+    SetTargetAimMode,
+    SetTargetPosition,
+    SetTargetRotation,
+    UpdateAlertStatus,
 
     //animator actor
-    SetActorAnimatorFloat,
-    SetActorAnimatorTrigger,
-    SetActorAnimatorBool,
-    SetActorAnimatorLayer,
+    SetAnimatorFloat,
+    SetAnimatorTrigger,
+    SetAnimatorBool,
+    SetAnimatorLayer,
 
-    UpdateActorGroundedStatus,
+    UpdateGroundedStatus,
+
+    //vitals
+    OnActorHealthChanged,
 
     //weapon
-    SetActorWeapon,
+    SetWeapon,
 
     //velocity
-    ModifyActorVelocity,
+    ModifyVelocity,
 
     //IK
-    SetActorLookAtPosition,
-    SetActorLookAtWeights,
-    SetActorLeftHandTarget,
-    SetActorLeftHandWeight,
+    SetLookAtPosition,
+    SetLookAtWeights,
+    SetLeftHandTarget,
+    SetLeftHandWeight,
 
     //AI
-    UpdateAITargetStatus
+    UpdateAITargetStatus,
+    SetLastKnownPositionOfTarget,
+    OnAIForceAffectStart,
+    OnAIForceAffectEnd,
 }

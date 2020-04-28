@@ -36,11 +36,9 @@ public class PlayerActor : HumanoidActor
         {
             base.WeaponController.SetWeapon(args[0] as Weapon);
 
-            this.Raise(ActorEvent.SetActorLeftHandTarget, base.WeaponController.LeftHandIKTarget);
-            this.Raise(ActorEvent.SetActorLeftHandWeight, 1f);
+            this.Raise(ActorEvent.SetLeftHandTarget, base.WeaponController.LeftHandIKTarget);
+            this.Raise(ActorEvent.SetLeftHandWeight, 1f);
         });
-
-        base.Animator.SetBool("isAlert", true);
     }
     protected override StateMachine InitializeStateMachine()
     {
@@ -169,13 +167,6 @@ public class PlayerActor : HumanoidActor
         this.transform.position = checkpoints.OrderByDescending(t => t.transform.position.DistanceTo(this.transform.position)).First().transform.position + Vector3.up;
         base.Health.Reset();
     }
-}
-public enum MovementMode
-{
-    Crouch,
-    Walk,
-    Jog,
-    Sprint
 }
 public enum Stance
 {
