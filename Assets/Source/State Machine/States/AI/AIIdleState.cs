@@ -3,6 +3,8 @@
 [CreateAssetMenu(menuName = "State/AI/Relaxed Idle")]
 public class AIIdleState : AIBaseLocomotionState
 {
+    [SerializeField]float alertOthersDistance = 15f;
+
     float idleIndex;
     float idleTime;
     float timer = 0f;
@@ -14,7 +16,20 @@ public class AIIdleState : AIBaseLocomotionState
             if (!base.IsActiveState)
                 return;
 
+            //alert others
+            GlobalEvents.Raise(GlobalEvent.AlertOthers, base.Actor, alertOthersDistance);
             base.TransitionTo<AIHuntState>();
+        });
+
+        GlobalEvents.Subscribe(GlobalEvent.AlertOthers, (object[] args) => {
+                                        //dont alert myself, derp
+            if (!base.IsActiveState || ((Actor)args[0]) == base.Actor)
+                return;
+
+            if (base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1])
+                base.TransitionTo<AIHuntState>();
+
+            Debug.DrawLine(base.Actor.transform.position, ((Actor)args[0]).transform.position, base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1] ? Color.green : Color.red, 2f);
         });
     }
 
@@ -47,7 +62,11 @@ public class AIIdleState : AIBaseLocomotionState
         base.Get<Animator>().SetFloat("randomIndex", idleIndex, .25f, Time.deltaTime);
 
         if (base.Pawn.CanSeeTarget)
+        {
+            //alert other nearby pawns
+            GlobalEvents.Raise(GlobalEvent.AlertOthers, base.Actor, alertOthersDistance);
             base.TransitionTo<AIAttackState>();
+        }
     }
     public override void Exit()
     {

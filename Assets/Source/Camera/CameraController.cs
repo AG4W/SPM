@@ -7,6 +7,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = .25f;
     [SerializeField]float cameraTranslationSpeed = 5f;
+    float cameraZModifier;
+
+    [SerializeField]LayerMask collisionMask;
 
     [Header("Camera Positions")]
     [SerializeField]Vector3 defaultPosition;
@@ -66,7 +69,7 @@ public class CameraController : MonoBehaviour
         camera.layerCullDistances = cullingDistances;
         camera.layerCullSpherical = true;
 
-        target = FindObjectOfType<PlayerActor>().FocusPoint.gameObject;
+        target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
         if (target == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
@@ -107,7 +110,9 @@ public class CameraController : MonoBehaviour
 
     void UpdateCameraPosition()
     {
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
+        Vector3 targetPosition = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
+
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, targetPosition, cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
         camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, cameraTranslationSpeed * Time.deltaTime);
     }
     void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
@@ -139,12 +144,6 @@ public class CameraController : MonoBehaviour
     }
     void ModifyTrauma(object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);
     void ModifyTraumaCapped(object[] args) => trauma = Mathf.Clamp01(trauma + Mathf.Clamp01((float)args[0] - trauma));
-
-    //Collision
-    void CorrectCameraPosition(Vector3 desiredPosition)
-    {
-
-    }
 }
 
 public enum CameraMode

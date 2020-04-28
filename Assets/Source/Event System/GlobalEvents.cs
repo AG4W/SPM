@@ -109,6 +109,7 @@ public enum GlobalEvent
 
     //ai
     NoiseCreated,
+    AlertOthers,
 }
 public enum ActorEvent
 {

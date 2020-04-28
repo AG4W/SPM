@@ -34,7 +34,7 @@ public class Vital
         if(regenerationTimer >= regenerationRate)
         {
             regenerationTimer = 0f;
-            this.Update(regenerationAmount);
+            this.Update(regenerationAmount * (1f + (1f - this.CurrentInPercent)));
         }
     }
 
