@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = .25f;
     [SerializeField]float cameraTranslationSpeed = 5f;
+    [Range(0f, 1f)] [SerializeField] float cameraSkinWidth = 0.8f;
     [SerializeField]LayerMask collisionMask;
 
 
@@ -119,23 +120,35 @@ public class CameraController : MonoBehaviour
     //Collision
     Vector3 CorrectCameraDistance(Vector3 desiredPosition)
     {
+        Debug.DrawRay(camera.transform.position, camera.transform.right, Color.cyan);
+        Debug.DrawRay(camera.transform.position, -camera.transform.right, Color.cyan);
+        Debug.DrawRay(camera.transform.position, camera.transform.up, Color.red);
+        Debug.DrawRay(camera.transform.position, -camera.transform.up, Color.red);
 
-        Vector3 desiredPositionInWorldSpace = this.transform.TransformPoint(desiredPosition);
-        Debug.DrawLine(this.transform.position, desiredPositionInWorldSpace, Color.cyan);
+        RaycastHit hit;
+        //Vector3[] directions = new Vector3[] { camera.transform.right, -camera.transform.right, camera.transform.up, -camera.transform.up };
+        //for (int i = 0; i < directions.Length; i++)
+        //{
+        //    while(Physics.Raycast(camera.transform.position+desiredPosition, directions[i], out hit, 0.5f, collisionMask))
+        //    {
+        //        desiredPosition.z += 0.1f;
+        //    }
+        //}
 
-        if (Physics.Linecast(this.transform.position, desiredPositionInWorldSpace, out RaycastHit hit, collisionMask))
+        if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask))
         {
-            if (hit.distance <= desiredPositionInWorldSpace.magnitude)
+            if (hit.distance <= (this.transform.position + desiredPosition).magnitude)
             {
-                float allowedDistance = hit.distance * 0.9f;
-                Vector3 newPos = desiredPositionInWorldSpace.normalized * allowedDistance;
-                return newPos;
+                desiredPosition.z = -hit.distance * cameraSkinWidth;
+                //return desiredPosition;
             }
-            else
-                return desiredPosition;
         }
-        else
-            return desiredPosition;
+        if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask))
+        {
+
+        }
+
+        return desiredPosition;
     }
 
     void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));

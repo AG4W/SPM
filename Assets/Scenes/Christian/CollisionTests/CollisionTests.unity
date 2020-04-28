@@ -1127,6 +1127,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1439635035555953593, guid: 7ed573064e355424ebc1c92d600db249,
+        type: 3}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2475138507308495232, guid: 7ed573064e355424ebc1c92d600db249,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1192,6 +1197,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1193858396}
+    - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
+        type: 3}
+      propertyPath: collisionMask.m_Bits
+      value: 2147483904
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed573064e355424ebc1c92d600db249, type: 3}
 --- !u!4 &242908509 stripped
@@ -6402,7 +6412,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1336633249}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: statics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7446,7 +7456,7 @@ GameObject:
   - component: {fileID: 1488491378}
   - component: {fileID: 1488491380}
   - component: {fileID: 1488491379}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
