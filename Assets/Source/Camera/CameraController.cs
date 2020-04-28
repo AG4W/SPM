@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]float cameraTranslationSpeed = 5f;
     [Range(0f, 1f)] [SerializeField] float cameraSkinWidth = 0.8f;
     [SerializeField]LayerMask collisionMask;
+    float avoidance;
 
 
     [Header("Camera Positions")]
@@ -112,18 +113,18 @@ public class CameraController : MonoBehaviour
     void UpdateCameraPosition()
     {
         Vector3 desiredPos = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraDistance(desiredPos), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraPosition(desiredPos), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
 
         camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, cameraTranslationSpeed * Time.deltaTime);
     }
 
     //Collision
-    Vector3 CorrectCameraDistance(Vector3 desiredPosition)
+    Vector3 CorrectCameraPosition(Vector3 desiredPosition)
     {
-        Debug.DrawRay(camera.transform.position, camera.transform.right, Color.cyan);
-        Debug.DrawRay(camera.transform.position, -camera.transform.right, Color.cyan);
-        Debug.DrawRay(camera.transform.position, camera.transform.up, Color.red);
-        Debug.DrawRay(camera.transform.position, -camera.transform.up, Color.red);
+        //Debug.DrawRay(camera.transform.position, camera.transform.right, Color.cyan);
+        //Debug.DrawRay(camera.transform.position, -camera.transform.right, Color.cyan);
+        //Debug.DrawRay(camera.transform.position, camera.transform.up, Color.red);
+        //Debug.DrawRay(camera.transform.position, -camera.transform.up, Color.red);
 
         RaycastHit hit;
         //Vector3[] directions = new Vector3[] { camera.transform.right, -camera.transform.right, camera.transform.up, -camera.transform.up };
@@ -135,12 +136,9 @@ public class CameraController : MonoBehaviour
         //    }
         //}
 
-        if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask) && hit.distance <= (this.transform.position + desiredPosition).magnitude)
+        // this.transform.position + desiredPosition = kamerans position i worldspace
+        if (Physics.Linecast(this.transform.position, (this.transform.position + desiredPosition), out hit, collisionMask) && hit.distance <= (this.transform.position + desiredPosition).magnitude)
             desiredPosition.z = -hit.distance * cameraSkinWidth;
-        if (Physics.Linecast(this.transform.position, this.transform.position + desiredPosition, out hit, collisionMask))
-        {
-
-        }
 
         return desiredPosition;
     }
