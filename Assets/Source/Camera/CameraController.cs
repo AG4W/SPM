@@ -66,7 +66,7 @@ public class CameraController : MonoBehaviour
         camera.layerCullDistances = cullingDistances;
         camera.layerCullSpherical = true;
 
-        target = FindObjectOfType<PlayerActor>().gameObject;
+        target = FindObjectOfType<PlayerActor>().FocusPoint.gameObject;
 
         if (target == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");

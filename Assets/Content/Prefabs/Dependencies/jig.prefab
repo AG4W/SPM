@@ -93,23 +93,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivityX: 80
   sensitivityY: 80
-  translationSpeed: 15
+  translationSpeed: 5
   cameraTranslationSpeed: 2.5
-  defaultPosition: {x: 0.75, y: 1.6, z: -1.15}
-  ironSightPosition: {x: 0.4, y: 1.6, z: -0.75}
-  jumpPosition: {x: 0, y: 1.7, z: -1.5}
-  sprintPosition: {x: 0, y: 1.6, z: -1.5}
-  fallPosition: {x: 0, y: 2, z: -4}
-  crouchOffset: {x: 0, y: -0.5, z: 0.1}
+  defaultPosition: {x: 0.6, y: 0.3, z: -1}
+  ironSightPosition: {x: 0.4, y: 0.3, z: -0.75}
+  jumpPosition: {x: 0, y: 0.5, z: -1.5}
+  sprintPosition: {x: 0, y: 0.5, z: -1}
+  fallPosition: {x: 0, y: 0.6, z: -4}
+  crouchOffset: {x: 0, y: -0.25, z: 0.1}
   cullDistance: 50
   lodCullDistance: 2000
-  defaultFOV: 75
+  defaultFOV: 60
   ironSightFOV: 45
   jumpFOV: 90
   sprintFOV: 50
   fallFOV: 90
-  maxCameraUpAngle: 30
-  maxCameraDownAngle: 30
+  maxCameraUpAngle: 70
+  maxCameraDownAngle: 80
   traumaInterpolationSpeed: 0.01
 --- !u!1 &4975658104452451928
 GameObject:
