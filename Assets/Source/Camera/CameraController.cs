@@ -7,9 +7,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]float sensitivityY = 2f;
     [SerializeField]float translationSpeed = .25f;
     [SerializeField]float cameraTranslationSpeed = 5f;
-    float cameraZModifier;
-
     [SerializeField]LayerMask collisionMask;
+
 
     [Header("Camera Positions")]
     [SerializeField]Vector3 defaultPosition;
@@ -99,6 +98,7 @@ public class CameraController : MonoBehaviour
     }
     void UpdateCamera()
     {
+
         InterpolateTrauma();
         ApplyCameraShake();
 
@@ -110,11 +110,34 @@ public class CameraController : MonoBehaviour
 
     void UpdateCameraPosition()
     {
-        Vector3 targetPosition = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
+        Vector3 desiredPos = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraDistance(desiredPos), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
 
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, targetPosition, cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
         camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, cameraTranslationSpeed * Time.deltaTime);
     }
+
+    //Collision
+    Vector3 CorrectCameraDistance(Vector3 desiredPosition)
+    {
+
+        Vector3 desiredPositionInWorldSpace = this.transform.TransformPoint(desiredPosition);
+        Debug.DrawLine(this.transform.position, desiredPositionInWorldSpace, Color.cyan);
+
+        if (Physics.Linecast(this.transform.position, desiredPositionInWorldSpace, out RaycastHit hit, collisionMask))
+        {
+            if (hit.distance <= desiredPositionInWorldSpace.magnitude)
+            {
+                float allowedDistance = hit.distance * 0.9f;
+                Vector3 newPos = desiredPositionInWorldSpace.normalized * allowedDistance;
+                return newPos;
+            }
+            else
+                return desiredPosition;
+        }
+        else
+            return desiredPosition;
+    }
+
     void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
     void UpdateDepthOfField()
     {
@@ -144,6 +167,8 @@ public class CameraController : MonoBehaviour
     }
     void ModifyTrauma(object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);
     void ModifyTraumaCapped(object[] args) => trauma = Mathf.Clamp01(trauma + Mathf.Clamp01((float)args[0] - trauma));
+
+
 }
 
 public enum CameraMode
