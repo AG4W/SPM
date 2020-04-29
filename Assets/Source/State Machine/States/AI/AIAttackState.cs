@@ -59,7 +59,7 @@ public class AIAttackState : AIBaseLocomotionState
         if (base.Get<WeaponController>().NeedsReload)
             base.TransitionTo<AIReloadState>();
         if (base.Get<WeaponController>().CanFire && reactionTimer >= reactionSpeed)
-            base.Get<WeaponController>().Fire(base.Pawn.CanSeeTarget ? base.Pawn.Target.FocusPoint.position : base.Pawn.LastKnownPositionOfTarget + Vector3.up * 1.5f, base.Actor.ActualInput.magnitude / 2f);
+            base.Actor.Raise(ActorEvent.FireWeapon, (base.Pawn.CanSeeTarget ? base.Pawn.Target.FocusPoint.position : base.Pawn.LastKnownPositionOfTarget + Vector3.up * 1.5f), base.Actor.ActualInput.magnitude / 2f);
     }
     public override void Exit()
     {

@@ -78,6 +78,13 @@ public class CameraController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.SetCameraMode, SetMode);
         GlobalEvents.Subscribe(GlobalEvent.ModifyCameraTrauma, ModifyTrauma);
         GlobalEvents.Subscribe(GlobalEvent.ModifyCameraTraumaCapped, ModifyTraumaCapped);
+        GlobalEvents.Subscribe(GlobalEvent.PlayerHealthChanged, (object[] args) =>
+        {
+            Vital v = (Vital)args[0];
+
+            if(v.LatestChange < 0f)
+                this.ModifyTrauma(Mathf.Abs(v.LatestChange) / v.Current);
+        });
     }
     void Update()
     {
@@ -179,10 +186,8 @@ public class CameraController : MonoBehaviour
 
         camera.transform.localRotation = Quaternion.Euler(offset.x, offset.y, offset.z);
     }
-    void ModifyTrauma(object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);
-    void ModifyTraumaCapped(object[] args) => trauma = Mathf.Clamp01(trauma + Mathf.Clamp01((float)args[0] - trauma));
-
-
+    void ModifyTrauma(params object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);
+    void ModifyTraumaCapped(params object[] args) => trauma = Mathf.Clamp01(trauma + Mathf.Clamp01((float)args[0] - trauma));
 }
 
 public enum CameraMode

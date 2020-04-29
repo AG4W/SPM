@@ -53,14 +53,18 @@ public class Weapon : ScriptableObject
 
     public AudioClip[] ReloadSFX => reloadSFX;
 
-    public virtual void Fire(Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    public virtual void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
     {
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 
         hit.transform?.GetComponent<IForceAffectable>()?.ModifyVelocity(heading.normalized * (this.StoppingPower / hit.point.DistanceTo(exitPoint.position)));
         hit.transform?.GetComponent<IDamageable>()?.OnHit(-this.Damage);
 
-        Debug.DrawLine(exitPoint.position, hit.transform != null ? hit.point : exitPoint.position + heading.normalized * 300f, Color.red);
+        //Debug.DrawLine(exitPoint.position, hit.transform != null ? hit.point : exitPoint.position + heading.normalized * 300f, Color.red);
+        if (hit.transform?.GetComponent<IDamageable>() != null)
+            shooter.Raise(ActorEvent.ShotHit, hit.transform.GetComponent<IDamageable>());
+        else
+            shooter.Raise(ActorEvent.ShotMissed);
 
         CreateShotVFX(heading, hit, exitPoint);
         CreateShotSFX(source);

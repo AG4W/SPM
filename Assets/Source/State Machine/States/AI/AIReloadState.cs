@@ -43,7 +43,7 @@ public class AIReloadState : AIBaseLocomotionState
     public override void Exit()
     {
         if (reloadWasComplete)
-            base.Get<WeaponController>().Reload();
+            base.Actor.Raise(ActorEvent.ReloadWeapon);
 
         base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", false);
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 0f);
