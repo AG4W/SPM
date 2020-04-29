@@ -28,6 +28,8 @@ public class Actor : Entity
     WeaponController weaponController;
 
     Vital health;
+    AudioSource source;
+    
     [SerializeField]StateMachine stateMachine;
 
     protected virtual float CurrentHeight => height;
@@ -86,10 +88,18 @@ public class Actor : Entity
         //    Debug.LogWarning(this.name + " is missing a pointAspehere or pointBsphere!");
 
         weaponController = this.GetComponent<WeaponController>();
+        weaponController.Initialize(this);
+
+        source = this.transform.FindRecursively("voiceSource").GetComponent<AudioSource>();
 
         this.Subscribe(ActorEvent.SetTargetInput, SetTargetInput);
         this.Subscribe(ActorEvent.SetInputModifier, SetInputModifier);
-        this.Subscribe(ActorEvent.SetWeapon, (object[] args) => weaponController.SetWeapon((Weapon)args[0]));
+        this.Subscribe(ActorEvent.PlayAudio, (object[] args) => {
+            if(args.Length > 1)
+                source.pitch = Random.Range((float)args[1], (float)args[2]);
+
+            source.PlayOneShot((AudioClip)args[0]);
+        });
 
         //velocity
         this.Subscribe(ActorEvent.ModifyVelocity, ModifyVelocity);

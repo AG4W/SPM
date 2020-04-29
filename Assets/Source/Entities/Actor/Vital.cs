@@ -10,6 +10,8 @@ public class Vital
     public float Current { get; private set; }
     public float Max { get; }
 
+
+    public float LatestChange { get; private set; } = 0f;
     public float CurrentInPercent { get { return this.Current / this.Max; } }
     public VitalType Type { get; }
     public bool HasReachedZero { get; private set; } = false;
@@ -41,6 +43,7 @@ public class Vital
     public void Update(float change)
     {
         this.Current = Mathf.Clamp(this.Current + change, 0f, this.Max);
+        this.LatestChange = change;
 
         //har race conditions här ifall något gör damage flera gånger samma frame
         //se till att vi bara triggar zero events en gång
@@ -54,6 +57,7 @@ public class Vital
     {
         this.Current = this.Max;
         this.HasReachedZero = false;
+        this.LatestChange = this.Max;
 
         OnCurrentChanged?.Invoke(this.Current);
     }

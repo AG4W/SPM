@@ -13,6 +13,8 @@ public class WeaponController : MonoBehaviour
 
     [SerializeField]LayerMask mask;
 
+    Actor owner;
+
     //cached stuff
     GameObject model;
     GameObject muzzleFlash;
@@ -29,13 +31,19 @@ public class WeaponController : MonoBehaviour
     public bool CanFire { get; private set; }
     public bool NeedsReload { get { return shotsLeftInCurrentClip == 0; } }
 
-    void Awake()
+    public void Initialize(Actor owner)
     {
-        SetWeapon(weapon);
+        this.owner = owner;
+
+        GlobalEvents.Subscribe(owner, ActorEvent.FireWeapon, FireWeapon);
+        GlobalEvents.Subscribe(owner, ActorEvent.ReloadWeapon, ReloadWeapon);
+        GlobalEvents.Subscribe(owner, ActorEvent.SetWeapon, SetWeapon);
+
+        SetWeapon(this.weapon);
     }
     void Update()
     {
-        if (!CanFire)
+        if (!this.CanFire)
         {
             fireTimer += Time.deltaTime;
 
@@ -45,13 +53,16 @@ public class WeaponController : MonoBehaviour
             if (fireTimer >= weapon.FireRate)
             {
                 fireTimer = 0f;
-                CanFire = true;
+                this.CanFire = true;
             }
         }
     }
 
-    public void Fire(Vector3 target, float magnitude)
+    void FireWeapon(object[] args)
     {
+        Vector3 target = (Vector3)args[0];
+        float magnitude = (float)args[1];
+
         if (!CanFire || NeedsReload)
             return;
 
@@ -61,15 +72,15 @@ public class WeaponController : MonoBehaviour
         muzzleFlash.SetActive(true);
 
         Vector3 velocitySpread = new Vector3(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude)) * .05f;
-        Vector3 heading = ExitPoint.position.DirectionTo(target).normalized + velocitySpread;
+        Vector3 heading = this.ExitPoint.position.DirectionTo(target).normalized + velocitySpread;
 
         if (this.weapon.RepeatFirings > 1)
             this.StartCoroutine(FireAsync(target, heading, this.ExitPoint, source, mask));
         else
         {
             shotsLeftInCurrentClip--;
-            this.weapon.Fire(target, heading, this.ExitPoint, source, mask);
             uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+            this.weapon.OnFire(owner, target, heading, this.ExitPoint, source, mask);
         }
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, weapon.NoiseValue);
@@ -84,22 +95,21 @@ public class WeaponController : MonoBehaviour
             uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
 
             //apply velocity spread modifier
-            weapon.Fire(target, heading, exitPoint, source, mask);
+            weapon.OnFire(owner, target, heading, exitPoint, source, mask);
             yield return new WaitForSeconds(this.weapon.TimeBetweenFirings);
         }
     }
 
-    public void Reload()
+    void ReloadWeapon(object[] args)
     {
         shotsLeftInCurrentClip = weapon.ClipSize;
         uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
         source.PlayOneShot(this.weapon.ReloadSFX.Random());
     }
-
-    public void SetWeapon(Weapon weapon)
+    void SetWeapon(params object[] args)
     {
         //create copy to avoid collision with multiple controllers pointing to the same weapon
-        this.weapon = Instantiate(weapon);
+        this.weapon = Instantiate((Weapon)args[0]);
 
         //delete old model
         if (model != null)
@@ -109,18 +119,19 @@ public class WeaponController : MonoBehaviour
         model = Instantiate(weapon.Prefab, anchorPoint.position, anchorPoint.rotation, anchorPoint);
 
         //update relevant transforms and cache them
-        ExitPoint = model.transform.FindRecursively("exitPoint");
+        this.ExitPoint = model.transform.FindRecursively("exitPoint");
         this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
         uiController = model.GetComponentInChildren<WeaponWorldUIController>();
         muzzleFlash = model.transform.FindRecursively("muzzleFlash").gameObject;
-        muzzleFlash.SetActive(false);
         source = model.GetComponentInChildren<AudioSource>();
+
+        muzzleFlash.SetActive(false);
 
         //update counter and UI
         shotsLeftInCurrentClip = this.weapon.ClipSize;
         uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
     }
-    public void OnDeath()
+    void OnDeath()
     {
         //skapa en pickupable av nuvarande vapen
         //så att spelaren kan ta upp det

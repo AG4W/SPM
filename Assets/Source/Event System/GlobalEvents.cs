@@ -94,6 +94,8 @@ public enum GlobalEvent
 {
     SetPlayerWeapon,
     PlayerHealthChanged,
+    PlayerShotHit,
+    PlayerShotMissed,
     ToggleTorches,
 
     //camera && post
@@ -122,6 +124,8 @@ public enum ActorEvent
     SetTargetRotation,
     UpdateAlertStatus,
 
+    PlayAudio,
+
     //animator actor
     SetAnimatorFloat,
     SetAnimatorTrigger,
@@ -134,7 +138,11 @@ public enum ActorEvent
     OnActorHealthChanged,
 
     //weapon
+    FireWeapon,
+    ReloadWeapon,
     SetWeapon,
+    ShotHit,
+    ShotMissed,
 
     //velocity
     ModifyVelocity,

@@ -7,8 +7,7 @@ using System;
 public class PlayerActor : HumanoidActor
 {
     [SerializeField]Light[] torches;
-
-    [SerializeField]Checkpoint[] checkpoints;
+    Checkpoint[] checkpoints;
 
     Transform jig;
 
@@ -36,13 +35,14 @@ public class PlayerActor : HumanoidActor
             for (int i = 0; i < torches.Length; i++)
                 torches[i].enabled = !torches[i].enabled;
         });
-        GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) =>
-        {
-            base.WeaponController.SetWeapon(args[0] as Weapon);
-
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) => {
+            this.Raise(ActorEvent.SetWeapon, args[0] as Weapon);
             this.Raise(ActorEvent.SetLeftHandTarget, base.WeaponController.LeftHandIKTarget);
             this.Raise(ActorEvent.SetLeftHandWeight, 1f);
         });
+
+        this.Subscribe(ActorEvent.ShotHit, (object[] args) => GlobalEvents.Raise(GlobalEvent.PlayerShotHit, args));
+        this.Subscribe(ActorEvent.ShotMissed, (object[] args) => GlobalEvents.Raise(GlobalEvent.PlayerShotMissed, args));
     }
     protected override StateMachine InitializeStateMachine()
     {
@@ -159,11 +159,7 @@ public class PlayerActor : HumanoidActor
     protected override void OnHealthChanged(float change)
     {
         base.OnHealthChanged(change);
-
         GlobalEvents.Raise(GlobalEvent.PlayerHealthChanged, base.Health);
-
-        if(change < 0f)
-            GlobalEvents.Raise(GlobalEvent.ModifyCameraTraumaCapped, .5f);
     }
     protected override void OnHealthZero()
     {

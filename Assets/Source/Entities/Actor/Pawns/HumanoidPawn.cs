@@ -7,6 +7,7 @@ using System;
 
 public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
 {
+    [Header("Pawn Settings")]
     [SerializeField]AICombatMode mode = AICombatMode.Cautious;
     [SerializeField]AIStartState start = AIStartState.Idle;
 
