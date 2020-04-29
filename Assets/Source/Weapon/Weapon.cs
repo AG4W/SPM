@@ -97,9 +97,7 @@ public class Weapon : ScriptableObject
     }
     protected virtual void CreateShotSFX(AudioSource source)
     {
-        source.Stop();
         source.pitch = Random.Range(minPitch, maxPitch);
-        source.clip = shotSFX.Random();
-        source.Play();
+        source.PlayOneShot(shotSFX.Random());
     }
 }

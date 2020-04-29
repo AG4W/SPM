@@ -2,6 +2,8 @@
 
 public abstract class ActState : BaseLocomotionState
 {
+    [SerializeField]LayerMask aimMask;
+
     protected override void OnInitialize()
     {
         base.OnInitialize();
@@ -25,9 +27,9 @@ public abstract class ActState : BaseLocomotionState
 
             //skjut ifrån kamera
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-            Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity);
+            Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, aimMask);
 
-            base.Get<WeaponController>().Fire(hit.transform != null && hit.transform.root != base.Get<Actor>().transform ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude);
+            base.Get<WeaponController>().Fire(hit.transform != null && hit.transform.root != base.Get<Actor>().transform ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude / 2f);
 
             //base.Actor.Raise(ActorEvent.SetActorAnimatorLayer, AnimatorLayer.Fire, 1f);
             //base.Actor.Raise(ActorEvent.SetActorAnimatorFloat, "recoil", 1f);

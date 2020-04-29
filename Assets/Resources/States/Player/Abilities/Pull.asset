@@ -20,13 +20,15 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
+  aimMask:
+    serializedVersion: 2
+    m_Bits: 268435457
   hotkey: 50
   animationIndex: 0
   debug: 0
   radius: 4
   distance: 15
   power: 10
-  originPointDistanceFromCamera: 5
   initialAcceleration:
     serializedVersion: 2
     m_Curve:
