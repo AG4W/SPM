@@ -127,6 +127,7 @@ public class CameraController : MonoBehaviour
         //Debug.DrawRay(camera.transform.position, -camera.transform.up, Color.red);
 
         RaycastHit hit;
+        float desiredZ = desiredPosition.z;
         //Vector3[] directions = new Vector3[] { camera.transform.right, -camera.transform.right, camera.transform.up, -camera.transform.up };
         //for (int i = 0; i < directions.Length; i++)
         //{
@@ -135,11 +136,19 @@ public class CameraController : MonoBehaviour
         //        desiredPosition.z += 0.1f;
         //    }
         //}
+        Vector3 positionInWorldSpace = transform.TransformPoint(desiredPosition);
+        Vector3 directionToDesiredPos = this.transform.position.DirectionTo(positionInWorldSpace);
+
+        Debug.DrawLine(this.transform.position, positionInWorldSpace, Color.blue); // Rätt
+        //Debug.DrawRay(this.transform.position, directionToDesiredPos, Color.black); // Rätt
 
         // this.transform.position + desiredPosition = kamerans position i worldspace
-        if (Physics.Linecast(this.transform.position, (this.transform.position + desiredPosition), out hit, collisionMask) && hit.distance <= (this.transform.position + desiredPosition).magnitude)
+        if (Physics.Raycast(this.transform.position, directionToDesiredPos, out hit, collisionMask) && hit.distance <= directionToDesiredPos.magnitude)
             desiredPosition.z = -hit.distance * cameraSkinWidth;
+        if (Physics.Raycast(camera.transform.position, positionInWorldSpace, out hit, collisionMask))
+            desiredPosition.z += 0.05f;
 
+        desiredPosition.z = Mathf.Clamp(desiredPosition.z, desiredZ, 0f);
         return desiredPosition;
     }
 
