@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b54c7d0ab31fd4d899dcb54aecd37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 8aca0182ce35f8d4a9085ced298aea75, type: 2}
+  weapon: {fileID: 11400000, guid: 479ef70969d2a9c46b07b0e58d9d8c11, type: 2}
   anchorPoint: {fileID: 7955781002194181418}
   mask:
     serializedVersion: 2
@@ -167,6 +167,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9199550058994552007}
     m_Modifications:
+    - target: {fileID: 14368630, guid: 4c1567518f2045547848f96745254c64, type: 3}
+      propertyPath: m_Intensity
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4243225092857188810, guid: 4c1567518f2045547848f96745254c64,
         type: 3}
       propertyPath: m_Name

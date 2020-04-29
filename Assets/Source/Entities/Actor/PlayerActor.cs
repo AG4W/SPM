@@ -6,7 +6,7 @@ using System;
 
 public class PlayerActor : HumanoidActor
 {
-    [SerializeField]GameObject[] torches;
+    [SerializeField]Light[] torches;
 
     [SerializeField]Checkpoint[] checkpoints;
 
@@ -26,12 +26,16 @@ public class PlayerActor : HumanoidActor
         if (jig == null)
             Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
 
+        torches = new Light[] {
+            this.transform.FindRecursively("torch").GetComponentInChildren<Light>() 
+        };
+
         //flytta detta till en separat controller sen, borde nog inte vara här
-        //GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
-        //{
-        //    for (int i = 0; i < torches.Length; i++)
-        //        torches[i].SetActive(!torches[i].activeSelf);
-        //});
+        GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
+        {
+            for (int i = 0; i < torches.Length; i++)
+                torches[i].enabled = !torches[i].enabled;
+        });
         GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) =>
         {
             base.WeaponController.SetWeapon(args[0] as Weapon);

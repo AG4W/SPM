@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clipSize: 50
   damage: 10
-  fireRate: 0.125
+  fireRate: 0.075
   stoppingPower: 20
   spread: 0.01
   reloadTime: 4
@@ -28,7 +28,7 @@ MonoBehaviour:
   hits:
   - {fileID: 6711929911472907694, guid: 562f5f4e42daa7349be3d292f39f7a24, type: 3}
   shotSFX:
-  - {fileID: 8300000, guid: 82b0615bc3d80d74896bb2df3db244c4, type: 3}
+  - {fileID: 8300000, guid: ab61210295c246c4ebfb04739416f89f, type: 3}
   minPitch: 0.95
   maxPitch: 1.05
   reloadSFX:
