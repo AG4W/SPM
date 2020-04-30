@@ -8,6 +8,8 @@ public class AIAttackState : AIBaseLocomotionState
     [SerializeField]float baseMehTime = 4f;
     //250ms är peak human average
     [SerializeField]float reactionSpeed = .25f;
+    //distans krävd för att AIn inte ska anta att spelaren är på en position längre (mellan spelarens faktiska position och vart AIn tror att den är
+    [SerializeField]float assumePositionDistance = 3f;
 
     float timeSinceTargetLastSeen = 0f;
     float reactionTimer = 0f;
@@ -37,10 +39,9 @@ public class AIAttackState : AIBaseLocomotionState
 
         if (!base.Pawn.CanSeeTarget)
         {
-            reactionTimer = 0f;
             timeSinceTargetLastSeen += Time.deltaTime;
 
-            if (timeSinceTargetLastSeen >= baseMehTime * (int)base.Pawn.Mode)
+            if (timeSinceTargetLastSeen >= (baseMehTime * (int)base.Pawn.Mode))
                 base.TransitionTo<AISearchState>();
         }
         else
@@ -58,7 +59,7 @@ public class AIAttackState : AIBaseLocomotionState
 
         if (base.Get<WeaponController>().NeedsReload)
             base.TransitionTo<AIReloadState>();
-        if (base.Get<WeaponController>().CanFire && reactionTimer >= reactionSpeed)
+        if (base.Get<WeaponController>().CanFire && reactionTimer >= reactionSpeed && timeSinceTargetLastSeen <= 2f)
             base.Actor.Raise(ActorEvent.FireWeapon, (base.Pawn.CanSeeTarget ? base.Pawn.Target.FocusPoint.position : base.Pawn.LastKnownPositionOfTarget + Vector3.up * 1.5f), base.Actor.ActualInput.magnitude / 2f);
     }
     public override void Exit()

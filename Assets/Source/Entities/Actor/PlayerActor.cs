@@ -9,7 +9,7 @@ public class PlayerActor : HumanoidActor
     [SerializeField]Light[] torches;
     Checkpoint[] checkpoints;
 
-    [SerializeField]Transform primaryAnchorPoint;
+    Transform primaryAnchorPoint;
 
     Transform jig;
 
@@ -22,6 +22,8 @@ public class PlayerActor : HumanoidActor
         
         jig = FindObjectOfType<CameraController>().transform;
         Debug.Assert(jig != null, "LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
+
+        primaryAnchorPoint = this.transform.FindRecursively("primaryAnchorPoint");
 
         torches = new Light[] {
             this.transform.FindRecursively("torch").GetComponentInChildren<Light>() 
