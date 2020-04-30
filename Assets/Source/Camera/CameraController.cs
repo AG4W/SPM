@@ -17,11 +17,12 @@ public class CameraController : MonoBehaviour
     [Tooltip("The distance which the camera should keep away from colliders")]
     [Range(0f, 1f)][SerializeField] float cameraSkinWidth = 0.2f;
 
-    [Tooltip("The closest distance to which the camera will go behind the character")]
+    [Tooltip("The closest distance to which the camera will go behind the character. " +
+        "A small value can push the camera into the head/body, while a big value will keep the camera behind walls")]
     [Range(0, .5f)][SerializeField]float minDistanceBehindCharacter = .4f;
 
     [Tooltip("The speed which the camera will move during collision. Should be higher than normal")]
-    [SerializeField]float cameraCollisionTranslationSpeed = 25f;
+    [SerializeField]float cameraCollisionTranslationSpeed = 20f;
 
     [Header("Camera Positions")]
     [SerializeField]Vector3 defaultPosition = new Vector3(.6f, .4f, -1.1f);
@@ -141,59 +142,43 @@ public class CameraController : MonoBehaviour
     //Collision
     Vector3 CorrectCameraPosition(Vector3 desiredPositionILS) // ILS = In Local Space, IWS = In World Space
     {
-        //Debug.DrawRay(camera.transform.position, camera.transform.right, Color.cyan);
-        //Debug.DrawRay(camera.transform.position, -camera.transform.right, Color.cyan);
-        //Debug.DrawRay(camera.transform.position, camera.transform.up, Color.red);
-        //Debug.DrawRay(camera.transform.position, -camera.transform.up, Color.red);
-
-        //Vector3[] directions = new Vector3[] { camera.transform.right, -camera.transform.right, camera.transform.up, -camera.transform.up };
-        //for (int i = 0; i < directions.Length; i++)
-        //{
-        //    while(Physics.Raycast(camera.transform.position+desiredPosition, directions[i], out hit, 0.5f, collisionMask))
-        //    {
-        //        desiredPosition.z += 0.1f;
-        //    }
-        //}
-
         RaycastHit hit;
+        //float zMove = 0f; // (NOTE krulls) Känns bättre utan denna tror jag
         float desiredZ = desiredPositionILS.z;
         Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
         Vector3 directionToDesiredPosIWS = this.transform.position.DirectionTo(desiredPositionIWS);
         Vector3 lineCastEndPos = this.transform.position + directionToDesiredPosIWS.normalized * (directionToDesiredPosIWS.magnitude + cameraSkinWidth);
 
-        Debug.DrawRay(camera.transform.position, camera.transform.right * .5f, Color.cyan);
-        Debug.DrawRay(camera.transform.position, -camera.transform.right * .5f, Color.cyan);
-        //Debug.DrawLine(this.transform.position, desiredPositionIWS, Color.blue); // Rätt
-        //Debug.DrawRay(this.transform.position, directionToDesiredPosIWS, Color.black); // Rätt
-        Debug.DrawLine(this.transform.position, lineCastEndPos, Color.blue); // Rätt
+        //Debug.DrawRay(camera.transform.position, camera.transform.right * .5f, Color.cyan); // Use when debugging
+        //Debug.DrawRay(camera.transform.position, -camera.transform.right * .5f, Color.cyan); // Use when debugging
+        //Debug.DrawLine(this.transform.position, lineCastEndPos, Color.blue); // Use when debugging
 
-        //Debug.DrawLine(this.transform.position, (this.transform.position - desiredPosition), Color.blue); // Blir fel..
-        // this.transform.position + desiredPosition = kamerans position i worldspace
         if (Physics.Linecast(this.transform.position, lineCastEndPos, out hit, collisionMask))// && hit.distance <= directionToDesiredPos.magnitude
         {
             currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
 
             desiredPositionIWS = new Vector3(hit.point.x + hit.normal.x * cameraSkinWidth, desiredPositionIWS.y, hit.point.z + hit.normal.z * cameraSkinWidth);
-            float zMove = directionToDesiredPosIWS.magnitude - hit.distance;
-            desiredPositionILS.z += zMove;
+            //zMove = directionToDesiredPosIWS.magnitude - hit.distance; // (NOTE krulls) Känns bättre utan denna tror jag
 
-        } // (KRULLS) Måste ändra sen så att dessa inte är else. Utan else skakar kameran mellan höger/vänster
+        }
+
         if (Physics.Raycast(camera.transform.position, camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
         {
-            //Debug.Log("Kamera krockar till Höger");
+            //Debug.Log("Camera collision to the right");
             currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
             desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
 
         }
         else if (Physics.Raycast(camera.transform.position, -camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
         {
-            //Debug.Log("Kamera krockar till Vänster");
+            //Debug.Log("Camera collision to the left");
             currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
             desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
 
         }
 
         desiredPositionILS = transform.InverseTransformPoint(desiredPositionIWS);
+        //desiredPositionILS.z += zMove; // (NOTE krulls) Känns bättre utan denna tror jag
         desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZ, -minDistanceBehindCharacter);
 
         return desiredPositionILS;

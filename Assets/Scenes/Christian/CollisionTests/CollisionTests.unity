@@ -1244,7 +1244,7 @@ PrefabInstance:
     - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
         type: 3}
       propertyPath: jumpFOV
-      value: 80
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
         type: 3}
@@ -1264,12 +1264,22 @@ PrefabInstance:
     - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
         type: 3}
       propertyPath: cameraCollisionTranslationSpeed
-      value: 25
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
         type: 3}
       propertyPath: minDistanceBehindCharacter
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
+        type: 3}
+      propertyPath: sprintFOV
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
+        type: 3}
+      propertyPath: crouchOffset.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed573064e355424ebc1c92d600db249, type: 3}
