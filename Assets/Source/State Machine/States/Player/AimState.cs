@@ -7,9 +7,8 @@ public class AimState : ActState
     {
         base.Enter();
 
-        base.Actor.Raise(ActorEvent.SetInputModifier, (float).5f);
+        //base.Actor.Raise(ActorEvent.SetInputModifier, (float).5f);
         base.Actor.Raise(ActorEvent.SetTargetAimMode, AimMode.IronSight);
-
         GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.IronSight);
     }
     public override void Tick()

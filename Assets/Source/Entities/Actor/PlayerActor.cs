@@ -9,25 +9,26 @@ public class PlayerActor : HumanoidActor
     [SerializeField]Light[] torches;
     Checkpoint[] checkpoints;
 
+    [SerializeField]Transform primaryAnchorPoint;
+
     Transform jig;
 
     private float collisionRadiusModifier = 0.9f;
 
     protected override void Initalize()
     {
-        base.Initalize();
-
         checkpoints = FindObjectsOfType<Checkpoint>();
         Debug.Assert(checkpoints != null && checkpoints.Length > 0, "Could not find any checkpoints, did you forget to drag the prefab into your scene?", this.gameObject);
         
         jig = FindObjectOfType<CameraController>().transform;
-
-        if (jig == null)
-            Debug.LogError("LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
+        Debug.Assert(jig != null, "LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
 
         torches = new Light[] {
             this.transform.FindRecursively("torch").GetComponentInChildren<Light>() 
         };
+
+        this.Subscribe(ActorEvent.ShotHit, (object[] args) => GlobalEvents.Raise(GlobalEvent.PlayerShotHit, args));
+        this.Subscribe(ActorEvent.ShotMissed, (object[] args) => GlobalEvents.Raise(GlobalEvent.PlayerShotMissed, args));
 
         //flytta detta till en separat controller sen, borde nog inte vara här
         GlobalEvents.Subscribe(GlobalEvent.ToggleTorches, (object[] args) =>
@@ -36,13 +37,30 @@ public class PlayerActor : HumanoidActor
                 torches[i].enabled = !torches[i].enabled;
         });
         GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) => {
-            this.Raise(ActorEvent.SetWeapon, args[0] as Weapon);
-            this.Raise(ActorEvent.SetLeftHandTarget, base.WeaponController.LeftHandIKTarget);
-            this.Raise(ActorEvent.SetLeftHandWeight, 1f);
+            //rensa gammal modell
+            for (int i = 0; i < primaryAnchorPoint.childCount; i++)
+                Destroy(primaryAnchorPoint.GetChild(i).gameObject);
+
+            Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
+
+            if (Player.GetWeapon(WeaponSlot.Primary) != null)
+            {
+                GameObject g = Instantiate(Player.GetWeapon(WeaponSlot.Primary).Prefab, primaryAnchorPoint.position, primaryAnchorPoint.rotation, primaryAnchorPoint);
+
+                //disable stuff
+                g.transform.FindRecursively("muzzleFlash").gameObject.SetActive(false);
+                g.transform.FindRecursively("world UI").gameObject.SetActive(false);
+
+                //remove ui controller
+                Destroy(g.GetComponentInChildren<WeaponWorldUIController>());
+            }
+
+            this.Raise(ActorEvent.SetWeapon, args[0]);
         });
 
-        this.Subscribe(ActorEvent.ShotHit, (object[] args) => GlobalEvents.Raise(GlobalEvent.PlayerShotHit, args));
-        this.Subscribe(ActorEvent.ShotMissed, (object[] args) => GlobalEvents.Raise(GlobalEvent.PlayerShotMissed, args));
+        base.Initalize();
+        //cache current weapon in savedata
+        //Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
     }
     protected override StateMachine InitializeStateMachine()
     {
@@ -84,9 +102,10 @@ public class PlayerActor : HumanoidActor
     {
         if (Input.GetKeyDown(KeyCode.F))
             GlobalEvents.Raise(GlobalEvent.ToggleTorches);
-
         if (Input.GetKey(KeyCode.O))
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, 1f);
+        if(Input.GetKeyDown(KeyCode.Z))
+            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon == null ? Player.GetWeapon(WeaponSlot.Primary) : null);
     }
 
     protected override void CheckOverlap()

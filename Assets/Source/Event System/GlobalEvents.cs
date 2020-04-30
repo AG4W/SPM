@@ -120,6 +120,7 @@ public enum ActorEvent
     SetInputModifier,
     SetTargetStance,
     SetTargetAimMode,
+    SetTargetWeaponIndex,
     SetTargetPosition,
     SetTargetRotation,
     UpdateAlertStatus,

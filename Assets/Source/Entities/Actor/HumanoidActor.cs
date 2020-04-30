@@ -22,9 +22,12 @@ public class HumanoidActor : Actor
     float[] targetLayerWeights;
     float[] actualLayerWeights;
 
+    WeaponIndex targetWeaponIndex;
+    float actualWeaponIndex;
+
     [Header("IK")]
-    [SerializeField]Vector3 targetLookAtPosition;
-    [SerializeField]Vector3 actualLookAtPosition;
+    [SerializeField] Vector3 targetLookAtPosition;
+    [SerializeField] Vector3 actualLookAtPosition;
 
     float[] targetLookAtWeights = new float[5];
     float[] actualLookAtWeights = new float[5];
@@ -33,7 +36,7 @@ public class HumanoidActor : Actor
     float targetLeftHandWeight;
     float actualLeftHandWeight;
 
-    [SerializeField]float lookAtInterpolationSpeed = 1.5f;
+    [SerializeField] float lookAtInterpolationSpeed = 1.5f;
 
     protected override float CurrentHeight => Mathf.Lerp(crouchHeight, base.Height, actualStance);
     protected override float CurrentFeetOffset => base.CurrentFeetOffset;
@@ -54,6 +57,7 @@ public class HumanoidActor : Actor
         //Input
         this.Subscribe(ActorEvent.SetTargetStance, SetTargetStance);
         this.Subscribe(ActorEvent.SetTargetAimMode, SetTargetAimMode);
+        this.Subscribe(ActorEvent.SetTargetWeaponIndex, SetTargetWeaponIndex);
 
         //animator
         this.Subscribe(ActorEvent.SetAnimatorFloat, SetAnimatorFloat);
@@ -66,6 +70,11 @@ public class HumanoidActor : Actor
         this.Subscribe(ActorEvent.SetLookAtWeights, SetLookAtWeights);
         this.Subscribe(ActorEvent.SetLeftHandTarget, SetLeftHandTarget);
         this.Subscribe(ActorEvent.SetLeftHandWeight, SetLeftHandWeight);
+
+        this.Subscribe(ActorEvent.SetWeapon, (object[] args) => {
+            this.Raise(ActorEvent.SetTargetWeaponIndex, args[0] == null ? WeaponIndex.Unarmed : ((Weapon)args[0]).Index);
+            
+        });
 
         //GroundCheck
         this.Subscribe(ActorEvent.UpdateGroundedStatus, (object[] args) => UpdateGroundedStatus());
@@ -139,6 +148,7 @@ public class HumanoidActor : Actor
 
         actualStance = Mathf.Lerp(actualStance, (int)stance, interpolationSpeed * (Time.deltaTime / Time.timeScale));
         actualAimStance = Mathf.Lerp(actualAimStance, (int)aimMode, lookAtInterpolationSpeed * (Time.deltaTime / Time.timeScale));
+        actualWeaponIndex = Mathf.Lerp(actualWeaponIndex, (int)targetWeaponIndex, interpolationSpeed * (Time.deltaTime / Time.timeScale));
 
         for (int i = 0; i < targetLayerWeights.Length; i++)
             actualLayerWeights[i] = Mathf.Lerp(actualLayerWeights[i], targetLayerWeights[i], interpolationSpeed * (Time.deltaTime / Time.timeScale));
@@ -157,6 +167,7 @@ public class HumanoidActor : Actor
 
         this.Animator.SetFloat("stance", actualStance);
         this.Animator.SetFloat("aimStance", actualAimStance);
+        this.Animator.SetFloat("weaponIndex", actualWeaponIndex);
 
         this.Animator.SetFloat("targetMagnitude", base.TargetInput.magnitude);
         this.Animator.SetFloat("actualMagnitude", base.ActualInput.magnitude);
@@ -176,6 +187,7 @@ public class HumanoidActor : Actor
 
     void SetTargetStance(object[] args) => stance = (Stance)args[0];
     void SetTargetAimMode(object[] args) => aimMode = (AimMode)args[0];
+    void SetTargetWeaponIndex(object[] args) => targetWeaponIndex = (WeaponIndex)args[0];
 
     void SetAnimatorFloat(object[] args) => this.Animator.SetFloat((string)args[0], (float)args[1]);
     void SetAnimatorTrigger(object[] args) => this.Animator.SetTrigger((string)args[0]);

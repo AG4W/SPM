@@ -53,6 +53,8 @@ public class Weapon : ScriptableObject
 
     public AudioClip[] ReloadSFX => reloadSFX;
 
+    public WeaponIndex Index => WeaponIndex.Ranged;
+
     public virtual void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
     {
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
@@ -104,4 +106,10 @@ public class Weapon : ScriptableObject
         source.pitch = Random.Range(minPitch, maxPitch);
         source.PlayOneShot(shotSFX.Random());
     }
+}
+public enum WeaponIndex
+{
+    Unarmed,
+    Ranged,
+    Melee //shhhhh, it's a secret ;)
 }

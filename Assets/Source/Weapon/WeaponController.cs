@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class WeaponController : MonoBehaviour
 {
@@ -35,15 +36,16 @@ public class WeaponController : MonoBehaviour
     {
         this.owner = owner;
 
-        GlobalEvents.Subscribe(owner, ActorEvent.FireWeapon, FireWeapon);
-        GlobalEvents.Subscribe(owner, ActorEvent.ReloadWeapon, ReloadWeapon);
-        GlobalEvents.Subscribe(owner, ActorEvent.SetWeapon, SetWeapon);
+        owner.Subscribe(ActorEvent.FireWeapon, FireWeapon);
+        owner.Subscribe(ActorEvent.ReloadWeapon, ReloadWeapon);
+        owner.Subscribe(ActorEvent.SetWeapon, SetWeapon);
 
-        SetWeapon(this.weapon);
+        //inita
+        owner.Raise(ActorEvent.SetWeapon, this.weapon);
     }
     void Update()
     {
-        if (!this.CanFire)
+        if (!this.CanFire && this.Weapon != null)
         {
             fireTimer += Time.deltaTime;
 
@@ -108,28 +110,38 @@ public class WeaponController : MonoBehaviour
     }
     void SetWeapon(params object[] args)
     {
-        //create copy to avoid collision with multiple controllers pointing to the same weapon
-        this.weapon = Instantiate((Weapon)args[0]);
-
         //delete old model
         if (model != null)
             Destroy(model);
 
-        //create new
-        model = Instantiate(weapon.Prefab, anchorPoint.position, anchorPoint.rotation, anchorPoint);
+        if (args[0] == null)
+            this.weapon = null;
+        else
+        {
+            //create copy to avoid collision with multiple controllers pointing to the same weapon
+            this.weapon = Instantiate((Weapon)args[0]);
 
-        //update relevant transforms and cache them
-        this.ExitPoint = model.transform.FindRecursively("exitPoint");
-        this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
-        uiController = model.GetComponentInChildren<WeaponWorldUIController>();
-        muzzleFlash = model.transform.FindRecursively("muzzleFlash").gameObject;
-        source = model.GetComponentInChildren<AudioSource>();
+            //create new
+            model = Instantiate(weapon.Prefab, anchorPoint.position, anchorPoint.rotation, anchorPoint);
 
-        muzzleFlash.SetActive(false);
+            //update relevant transforms and cache them
+            this.ExitPoint = model.transform.FindRecursively("exitPoint");
+            this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
+            uiController = model.GetComponentInChildren<WeaponWorldUIController>();
+            muzzleFlash = model.transform.FindRecursively("muzzleFlash").gameObject;
+            source = model.GetComponentInChildren<AudioSource>();
 
-        //update counter and UI
-        shotsLeftInCurrentClip = this.weapon.ClipSize;
-        uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+            muzzleFlash.SetActive(false);
+
+            //update counter and UI
+            shotsLeftInCurrentClip = this.weapon.ClipSize;
+            uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+        }
+
+        owner.Raise(ActorEvent.SetLeftHandTarget, args[0] == null ? null : this.LeftHandIKTarget);
+        owner.Raise(ActorEvent.SetLeftHandWeight, args[0] == null ? 0f : 1f);
+
+        this.CanFire = this.weapon != null;
     }
     void OnDeath()
     {
