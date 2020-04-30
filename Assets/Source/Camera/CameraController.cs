@@ -3,28 +3,35 @@
 public class CameraController : MonoBehaviour
 {
     [Header("General Settings")]
-    [SerializeField]float sensitivityX = 2f;
-    [SerializeField]float sensitivityY = 2f;
+    [SerializeField]float sensitivityX = 80f;
+    [SerializeField]float sensitivityY = 80f;
     [SerializeField]float jigTranslationSpeed = 15f;
-    [SerializeField]float cameraTranslationSpeed = 3f;
+    [SerializeField]float cameraTranslationSpeed = 2.5f;
 
     float currentCameraTranslationSpeed; // used by the collisionhandler to switch between cameraTranslationSpeed/cameraCollisionTranslationSpeed
 
     [Header("Collision Settings")]
+    [Tooltip("Layers the camera should collide with")]
     [SerializeField]LayerMask collisionMask;
+
+    [Tooltip("The distance which the camera should keep away from colliders")]
     [Range(0f, 1f)][SerializeField] float cameraSkinWidth = 0.2f;
+
+    [Tooltip("The closest distance to which the camera will go behind the character")]
     [Range(0, .5f)][SerializeField]float minDistanceBehindCharacter = .4f;
-    [SerializeField]float cameraCollisionTranslationSpeed = 30f;
+
+    [Tooltip("The speed which the camera will move during collision. Should be higher than normal")]
+    [SerializeField]float cameraCollisionTranslationSpeed = 25f;
 
     [Header("Camera Positions")]
-    [SerializeField]Vector3 defaultPosition;
-    [SerializeField]Vector3 ironSightPosition;
-    [SerializeField]Vector3 jumpPosition;
-    [SerializeField]Vector3 sprintPosition;
-    [SerializeField]Vector3 fallPosition;
+    [SerializeField]Vector3 defaultPosition = new Vector3(.6f, .4f, -1.1f);
+    [SerializeField]Vector3 ironSightPosition = new Vector3(.5f, .45f, -.75f);
+    [SerializeField]Vector3 jumpPosition = new Vector3(.3f, .5f, -1.4f);
+    [SerializeField]Vector3 sprintPosition = new Vector3(.3f, .5f, -1.4f);
+    [SerializeField]Vector3 fallPosition = new Vector3(0f, .6f, -4f);
     Vector3[] positions;
 
-    [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.75f, 0f);
+    [SerializeField]Vector3 crouchOffset = new Vector3(0f, -.4f, 0f);
 
     [Header("Clip settings")]
     [SerializeField]float cullDistance = 50f;
@@ -32,14 +39,14 @@ public class CameraController : MonoBehaviour
 
     [Header("FOV Settings")]
     [SerializeField]float defaultFOV = 60;
-    [SerializeField]float ironSightFOV = 30;
-    [SerializeField]float jumpFOV = 80;
-    [SerializeField]float sprintFOV = 70;
+    [SerializeField]float ironSightFOV = 40;
+    [SerializeField]float jumpFOV = 70;
+    [SerializeField]float sprintFOV = 65;
     [SerializeField]float fallFOV = 90;
     float[] fovs;
 
-    [SerializeField]float maxCameraUpAngle;
-    [SerializeField]float maxCameraDownAngle;
+    [SerializeField]float maxCameraUpAngle = 70;
+    [SerializeField]float maxCameraDownAngle = 80;
 
     float jigRotationX;
     float jigRotationY;
@@ -132,7 +139,7 @@ public class CameraController : MonoBehaviour
     }
 
     //Collision
-    Vector3 CorrectCameraPosition(Vector3 desiredPositionILS)
+    Vector3 CorrectCameraPosition(Vector3 desiredPositionILS) // ILS = In Local Space, IWS = In World Space
     {
         //Debug.DrawRay(camera.transform.position, camera.transform.right, Color.cyan);
         //Debug.DrawRay(camera.transform.position, -camera.transform.right, Color.cyan);
@@ -152,14 +159,17 @@ public class CameraController : MonoBehaviour
         float desiredZ = desiredPositionILS.z;
         Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
         Vector3 directionToDesiredPosIWS = this.transform.position.DirectionTo(desiredPositionIWS);
+        Vector3 lineCastEndPos = this.transform.position + directionToDesiredPosIWS.normalized * (directionToDesiredPosIWS.magnitude + cameraSkinWidth);
 
         Debug.DrawRay(camera.transform.position, camera.transform.right * .5f, Color.cyan);
         Debug.DrawRay(camera.transform.position, -camera.transform.right * .5f, Color.cyan);
-        Debug.DrawLine(this.transform.position, desiredPositionIWS, Color.blue); // Rätt
-        //Debug.DrawRay(this.transform.position, directionToDesiredPos, Color.black); // Rätt
+        //Debug.DrawLine(this.transform.position, desiredPositionIWS, Color.blue); // Rätt
+        //Debug.DrawRay(this.transform.position, directionToDesiredPosIWS, Color.black); // Rätt
+        Debug.DrawLine(this.transform.position, lineCastEndPos, Color.blue); // Rätt
+
         //Debug.DrawLine(this.transform.position, (this.transform.position - desiredPosition), Color.blue); // Blir fel..
         // this.transform.position + desiredPosition = kamerans position i worldspace
-        if (Physics.Linecast(this.transform.position, desiredPositionIWS, out hit, collisionMask))// && hit.distance <= directionToDesiredPos.magnitude
+        if (Physics.Linecast(this.transform.position, lineCastEndPos, out hit, collisionMask))// && hit.distance <= directionToDesiredPos.magnitude
         {
             currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
 
@@ -168,14 +178,14 @@ public class CameraController : MonoBehaviour
             desiredPositionILS.z += zMove;
 
         } // (KRULLS) Måste ändra sen så att dessa inte är else. Utan else skakar kameran mellan höger/vänster
-        else if (Physics.Raycast(camera.transform.position, camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2*cameraSkinWidth)
+        if (Physics.Raycast(camera.transform.position, camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
         {
             //Debug.Log("Kamera krockar till Höger");
             currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
             desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
 
         }
-        else if (Physics.Raycast(camera.transform.position, -camera.transform.right, out hit, .5f, collisionMask) && hit.distance < cameraSkinWidth)
+        else if (Physics.Raycast(camera.transform.position, -camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
         {
             //Debug.Log("Kamera krockar till Vänster");
             currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
