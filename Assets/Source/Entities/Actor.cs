@@ -81,7 +81,7 @@ public class Actor : Entity
             this.EyePoint.position = this.transform.position;
         }
 
-        //(Krulls)
+        //(Krulls) Testar med punkter på karaktären som referens vid kollisionshantering
         //this.pointAsphere = this.transform.FindRecursively("pointAsphere");
         //this.pointBsphere = this.transform.FindRecursively("pointBsphere");
         //if (this.pointAsphere == null || this.pointBsphere == null)
@@ -117,12 +117,11 @@ public class Actor : Entity
     }
     protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, this.TargetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
-    //Denna borde flyttas till humanoidactor, alternativt döpas om till SetLowPoint
-    public void SetFeetOffset(float value)
+    public void SetCollisionLowPoint(float value)
     {
         feetOffset = value;
     }
-    public void SetHeightOffset(float value)
+    public void SetCollisionHighPoint(float value)
     {
         heightOffset = value;
     }
@@ -135,6 +134,7 @@ public class Actor : Entity
         base.OnHealthChanged(change);
         this.Raise(ActorEvent.OnActorHealthChanged, this.health);
     }
+
     //vitals
     protected override void OnHealthZero()
     {
@@ -154,23 +154,33 @@ public class Actor : Entity
         Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity, collisionMask);
 
         float allowedMoveDistance;
+        float hitSurfaceSteepness;
 
         int counter = 1;
         while (hit.transform != null)
         {
+            hitSurfaceSteepness = Vector3.Dot(Vector3.down, hit.normal); // Plan mark blir -1. Vertikal vägg blir 0. Plant tak blir 1.
             allowedMoveDistance = skinWidth / Vector3.Dot(this.Velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
             allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
 
             if (allowedMoveDistance > this.Velocity.magnitude * (Time.deltaTime / Time.timeScale))
-                break;  // fritt fram att röra sig om distansen är större än vad vi kommer röra oss denna frame
+                break;  // fritt fram att röra sig om distansen till träffytan är större än vad vi kommer röra oss denna frame
 
-            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, så vill vi flytta karaktären fram dit
+            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, och över noll, så vill vi flytta karaktären fram dit
                 this.transform.position += this.Velocity.normalized * allowedMoveDistance;
 
-            if (hit.distance <= this.Velocity.magnitude)
+            if (hit.distance <= this.Velocity.magnitude * (Time.deltaTime / Time.timeScale) + skinWidth) // Applicera normalkraft och friktion om vi kommer träffa en yta
             {
+
                 Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
                 this.Velocity += tempNormalForce;
+                
+                if (hitSurfaceSteepness > -.8f && stateMachine.Current.GetType() != typeof(JumpState) && stateMachine.Current.GetType() != typeof(FallState)) // Tar bort velocity.y om man träffat en brant backe och inte hoppar/faller
+                    this.Velocity = new Vector3(this.Velocity.x, 0f, this.Velocity.z);
+
+                if(stateMachine.Current.GetType() == typeof(JumpState)) // Minskar velocity.y vid hopp för att slippa boost vid kollisioner
+                    this.Velocity = new Vector3(this.Velocity.x, this.Velocity.y * .75f, this.Velocity.z);
+
                 this.Velocity = Friction(this.Velocity, tempNormalForce);
             }
 
@@ -189,6 +199,7 @@ public class Actor : Entity
 
         if(counter < 2)
             CheckOverlap(); // ifall vi breakar ur while-loopen vill vi fortfarande kolla overlap
+
     }
     protected virtual void CheckOverlap()
     {

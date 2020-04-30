@@ -29,6 +29,7 @@ public class JumpState : GroundLostState
 
         jumpTimer += Time.deltaTime;
 
+        // For collisionbox
         UpdateFeetOffset();
         UpdateHeightOffset();
 
@@ -42,34 +43,35 @@ public class JumpState : GroundLostState
 
         Vector3 velocity = Vector3.zero;
         velocity += Vector3.up * jumpCurve.Evaluate(jumpTimer) * jumpAcceleration * (Time.deltaTime / Time.timeScale);
-        //lägg till väldigt lite styrfart för spelaren i luften
 
+        //lägg till väldigt lite styrfart för spelaren i luften
         velocity += ((base.Actor.transform.right * base.Actor.TargetInput.x) + (base.Actor.transform.forward * base.Actor.TargetInput.z)) * (jumpInputModifier * (jumpDuration - jumpTimer)); //minska inputpåverkan längre in i hoppet
+        
         //velocity += velocityBeforeLosingGroundContact / fallForwardVelocityDivider;
         velocity *= Mathf.Pow(base.AirResistance, (Time.deltaTime / Time.timeScale));
 
         base.Actor.Raise(ActorEvent.ModifyVelocity, velocity);
     }
 
-    void UpdateFeetOffset() // Needed for collision-adjustments in jumpmotion
+    void UpdateFeetOffset() // Needed for collisionbox-adjustments in jumpmotion
     {
         if (jumpTimer < jumpDuration / 2f)
-            base.Actor.SetFeetOffset(Mathf.Lerp(0f, feetOffset, jumpTimer * 1.2f));
+            base.Actor.SetCollisionLowPoint(Mathf.Lerp(0f, feetOffset, jumpTimer * 1.2f));
         if (jumpTimer >= jumpDuration / 2f)
-            base.Actor.SetFeetOffset(Mathf.Lerp(feetOffset, 0f, jumpTimer * 0.8f));
+            base.Actor.SetCollisionLowPoint(Mathf.Lerp(feetOffset, 0f, jumpTimer * 0.8f));
     }
-    void UpdateHeightOffset() // Needed for collision-adjustments in jumpmotion
+    void UpdateHeightOffset() // Needed for collisionbox-adjustments in jumpmotion
     {
         if (jumpTimer < jumpDuration / 2f)
-            base.Actor.SetHeightOffset(Mathf.Lerp(0f, heightOffset, jumpTimer * 1.2f));
+            base.Actor.SetCollisionHighPoint(Mathf.Lerp(0f, heightOffset, jumpTimer * 1.2f));
         if (jumpTimer >= jumpDuration / 2f)
-            base.Actor.SetHeightOffset(Mathf.Lerp(heightOffset, 0f, jumpTimer * 0.8f));
+            base.Actor.SetCollisionHighPoint(Mathf.Lerp(heightOffset, 0f, jumpTimer * 0.8f));
     }
 
     public override void Exit()
     {
-        base.Actor.SetFeetOffset(0f);
-        base.Actor.SetHeightOffset(0f);
+        base.Actor.SetCollisionLowPoint(0f);
+        base.Actor.SetCollisionHighPoint(0f);
 
         base.Get<Animator>().SetBool("isJumping", false);
     }

@@ -9,6 +9,7 @@ public class HumanoidActor : Actor
 
     //vad används denna för
     //och gör dne vad den heter?
+    //(KRULLS) gör väl grounded till true vid det avståndet?
     [SerializeField]float groundCheckDistance = .5f;
 
     [Header("Animation")]
