@@ -55,7 +55,7 @@ public class Weapon : ScriptableObject
 
     public WeaponIndex Index => WeaponIndex.Ranged;
 
-    public virtual void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    public virtual void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, LayerMask mask)
     {
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 

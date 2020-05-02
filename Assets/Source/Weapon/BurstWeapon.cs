@@ -10,7 +10,7 @@ public class BurstWeapon : Weapon
     public override int RepeatFirings => roundsPerBurst;
     public override float TimeBetweenFirings => interBurstTime;
 
-    public override void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    public override void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, LayerMask mask)
     {
         Vector3 h = heading + new Vector3(Random.Range(-base.Spread, base.Spread), Random.Range(-base.Spread, base.Spread), Random.Range(-base.Spread, base.Spread));
         Physics.Raycast(exitPoint.position, h, out RaycastHit hit, Mathf.Infinity, mask);

@@ -7,6 +7,14 @@ using System;
 //dåligt namn
 public static class BulletAudioController 
 {
+    static float[] timestamps;
+    //styr hur länge vi väntar mellan varje ljud
+    static float[] intervals = new float[] 
+    {
+        .05f,
+        .1f
+    };
+
     static AudioClip[][] impacts;
 
     static GameObject shotPrefab;
@@ -16,6 +24,7 @@ public static class BulletAudioController
 
     public static void Initialize()
     {
+        timestamps = new float[Enum.GetNames(typeof(SFXType)).Length];
         impacts = new AudioClip[Enum.GetNames(typeof(BulletImpactSound)).Length][];
 
         for (int i = 0; i < impacts.Length; i++)
@@ -31,6 +40,11 @@ public static class BulletAudioController
     }
     static void PlayShotSFX(object[] args)
     {
+        if (!CanPlayClip(SFXType.Shot, Time.time))
+            return;
+
+        timestamps[(int)SFXType.Shot] = Time.time;
+
         GameObject g = Object.Instantiate(shotPrefab, ((Transform)args[0]).position, Quaternion.identity, null);
         AudioSource source = g.GetComponent<AudioSource>();
         AudioClip clip = args[3] as AudioClip;
@@ -42,6 +56,11 @@ public static class BulletAudioController
     }
     static void PlayImpactSFX(object[] args)
     {
+        if (!CanPlayClip(SFXType.Impact, Time.time))
+            return;
+
+        timestamps[(int)SFXType.Impact] = Time.time;
+
         RaycastHit hit = (RaycastHit)args[0];
 
         //culla skit långt bort
@@ -70,6 +89,16 @@ public static class BulletAudioController
 
         return impacts[(int)BulletImpactSound.Generic].Random();
     }
+
+    static bool CanPlayClip(SFXType type, float time)
+    {
+        return (time - timestamps[(int)type]) >= intervals[(int)type];
+    }
+}
+public enum SFXType
+{
+    Shot,
+    Impact,
 }
 public enum BulletImpactSound
 {
