@@ -23,14 +23,14 @@ MonoBehaviour:
   velocityBeforeLosingGroundContact: {x: 0, y: 0, z: 0}
   fallMomentumDeceleration: 0.15
   jumpInputModifier: 0.33
-  jumpAcceleration: 15
+  jumpAcceleration: 19
   jumpDuration: 1
   jumpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.8005791
       inSlope: 0.08436378
       outSlope: 0.08436378
       tangentMode: 0
@@ -50,3 +50,5 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   landThreshold: 1
+  feetOffset: 0.9
+  heightOffset: 0.4

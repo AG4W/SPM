@@ -78,13 +78,14 @@ public static class Extensions
     {
         // Skalärprodukten mellan vektorn velocity och (normaliserade) vektorn normal
         float dot = Vector3.Dot(velocity, normal);
-        // Om vår hastighet och normal pekar åt samma håll (dot = positiv), bör det inte finnas någon normalkraft.
-        if (dot > 0f)
+        
+        if (dot > 0f) // Om vår hastighet och normal pekar åt samma håll (dot = positiv), bör det inte finnas någon normalkraft.
             return Vector3.zero;
 
         Vector3 projection = dot * normal; // (Skalärprodukten mellan vektorn velocity och normaliserade vektorn normal) * normaliserade vektorn normal
+
         return -projection; // The normal force returned
-    } // Calculation of the normal force
+    }
     public static Vector3 ToInput(this Vector3 position, Transform origin)
     {
         return new Vector3(
