@@ -23,7 +23,7 @@ Material:
   m_Name: Sign Ica
   m_Shader: {fileID: -6465566751694194690, guid: b11f4859673bef249b16dc99764ea61a,
     type: 3}
-  m_ShaderKeywords: _BLENDMODE_ALPHA _DISABLE_SSR _DOUBLESIDED_ON _SURFACE_TYPE_TRANSPARENT
+  m_ShaderKeywords: _ALPHATEST_ON _BLENDMODE_ALPHA _DISABLE_SSR _DOUBLESIDED_ON _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -42,6 +42,10 @@ Material:
     m_TexEnvs:
     - Texture2D_34B6901A:
         m_Texture: {fileID: 2800000, guid: 19f0dce4dd36e0d4fbf346907376ebd5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_656881EB:
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_81079FC4:
@@ -138,14 +142,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_1FE87DD3: 0.1
-    - Vector1_9F212EFA: 0.96
+    - Vector1_81924208: 0.068
+    - Vector1_9F212EFA: 1
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
     - _AlphaCutoff: 0.7
-    - _AlphaCutoffEnable: 0
+    - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
@@ -256,12 +261,13 @@ Material:
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 4
-    - _ZTestGBuffer: 4
+    - _ZTestGBuffer: 3
     - _ZTestModeDistortion: 4
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
     - Color_C89049AF: {r: 406.66525, g: 6.379063, b: 63.79063, a: 1}
+    - Vector2_1394A000: {r: 2, g: -1, b: 0, a: 0}
     - Vector2_B17AE139: {r: 0, g: 1, b: 0, a: 0}
     - Vector2_CB353F6: {r: 1, g: 1, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
