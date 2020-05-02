@@ -25,6 +25,6 @@ public class SpreadWeapon : Weapon
             base.CreateShotVFX(h, hit, exitPoint);
         }
 
-        base.CreateShotSFX(source);
+        base.CreateShotSFX(exitPoint);
     }
 }

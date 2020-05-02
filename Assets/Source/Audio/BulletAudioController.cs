@@ -3,11 +3,15 @@ using Random = UnityEngine.Random;
 using Object = UnityEngine.Object;
 
 using System;
-using UnityEngine.Audio;
 
+//dåligt namn
 public static class BulletAudioController 
 {
     static AudioClip[][] impacts;
+
+    static GameObject shotPrefab;
+    static GameObject impactPrefab;
+
     static GameObject player;
 
     public static void Initialize()
@@ -17,12 +21,26 @@ public static class BulletAudioController
         for (int i = 0; i < impacts.Length; i++)
             impacts[i] = Resources.LoadAll<AudioClip>("Audio/Bullet Impacts/" + (BulletImpactSound)i);
 
+        shotPrefab = Resources.Load<GameObject>("Audio/Prefabs/shotSFX");
+        impactPrefab = Resources.Load<GameObject>("Audio/Prefabs/impactSFX");
+
         player = Object.FindObjectOfType<PlayerActor>().gameObject;
 
-        GlobalEvents.Subscribe(GlobalEvent.PlayBulletImpactSFX, PlayImpact);
+        GlobalEvents.Subscribe(GlobalEvent.PlayImpactSFX, PlayImpactSFX);
+        GlobalEvents.Subscribe(GlobalEvent.PlayShotSFX, PlayShotSFX);
     }
+    static void PlayShotSFX(object[] args)
+    {
+        GameObject g = Object.Instantiate(shotPrefab, ((Transform)args[0]).position, Quaternion.identity, null);
+        AudioSource source = g.GetComponent<AudioSource>();
+        AudioClip clip = args[3] as AudioClip;
 
-    static void PlayImpact(object[] args)
+        source.pitch = Random.Range((float)args[1], (float)args[2]);
+        source.PlayOneShot(clip);
+
+        Object.Destroy(g, clip.length);
+    }
+    static void PlayImpactSFX(object[] args)
     {
         RaycastHit hit = (RaycastHit)args[0];
 
@@ -30,31 +48,27 @@ public static class BulletAudioController
         if (player.transform.position.DistanceTo(hit.point) > 25f)
             return;
 
-        GameObject g = new GameObject("audio sfx", typeof(AudioSource));
+        GameObject g = Object.Instantiate(impactPrefab, hit.point, Quaternion.identity, null);
         AudioSource source = g.GetComponent<AudioSource>();
+        AudioClip clip = GetAudioClip(hit.collider.material);
 
-        source.volume = 2f;
+        source.volume = 1f;
         source.spatialBlend = 1f;
-        //source.spread = 45f;
+        source.spread = 45f;
         source.pitch = Random.Range(.8f, 1.2f);
-        source.PlayOneShot(GetAudioClip(hit.collider.material));
+        source.PlayOneShot(clip);
 
-        Object.Destroy(g, 2f);
+        Object.Destroy(g, clip.length);
     }
 
     static AudioClip GetAudioClip(PhysicMaterial material)
     {
-        //lös detta så att vi inte använder stringchecks
-        Debug.Log(material.name);
-        switch (material.name)
-        {
-            case "Metal (Instance)":
-                return impacts[(int)BulletImpactSound.Metal].Random();
-            case "Glass":
-                return impacts[(int)BulletImpactSound.Glass].Random();
-            default:
-                return impacts[(int)BulletImpactSound.Generic].Random();
-        }
+        //yucky yuck
+        for (int i = 0; i < impacts.Length; i++)
+            if (material.name.Contains(((BulletImpactSound)i).ToString()))
+                return impacts[i].Random();
+
+        return impacts[(int)BulletImpactSound.Generic].Random();
     }
 }
 public enum BulletImpactSound

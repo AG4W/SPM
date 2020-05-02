@@ -103,7 +103,8 @@ public enum GlobalEvent
     UpdateForce,
 
     //audio stuff
-    PlayBulletImpactSFX,
+    PlayShotSFX,
+    PlayImpactSFX,
 
     //camera && post
     SetCameraMode,

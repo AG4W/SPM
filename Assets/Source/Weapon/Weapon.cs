@@ -69,7 +69,7 @@ public class Weapon : ScriptableObject
             shooter.Raise(ActorEvent.ShotMissed);
 
         CreateShotVFX(heading, hit, exitPoint);
-        CreateShotSFX(source);
+        CreateShotSFX(exitPoint);
     }
     protected virtual void CreateShotVFX(Vector3 heading, RaycastHit hit, Transform exitPoint)
     {
@@ -77,7 +77,7 @@ public class Weapon : ScriptableObject
 
         if(hit.transform != null)
         {
-            GlobalEvents.Raise(GlobalEvent.PlayBulletImpactSFX, hit);
+            GlobalEvents.Raise(GlobalEvent.PlayImpactSFX, hit);
 
             IDamageable damageable = hit.transform.GetComponent<IDamageable>();
 
@@ -103,11 +103,7 @@ public class Weapon : ScriptableObject
             }
         }
     }
-    protected virtual void CreateShotSFX(AudioSource source)
-    {
-        source.pitch = Random.Range(minPitch, maxPitch);
-        source.PlayOneShot(shotSFX.Random());
-    }
+    protected virtual void CreateShotSFX(Transform exitPoint) => GlobalEvents.Raise(GlobalEvent.PlayShotSFX, exitPoint, minPitch, maxPitch, shotSFX.Random());
 }
 public enum WeaponIndex
 {

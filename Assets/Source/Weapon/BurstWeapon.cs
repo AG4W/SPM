@@ -25,6 +25,6 @@ public class BurstWeapon : Weapon
 
         //Debug.DrawLine(base.ExitPoint.position, hit.transform != null ? hit.point : base.ExitPoint.position + h.normalized * 50f, hit.transform != null ? Color.red : Color.yellow, .5f);
         base.CreateShotVFX(h, hit, exitPoint);
-        base.CreateShotSFX(source);
+        base.CreateShotSFX(exitPoint);
     }
 }
