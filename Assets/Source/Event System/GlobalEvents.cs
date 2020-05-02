@@ -92,11 +92,15 @@ public static class GlobalEvents
 //ifall en ny enum läggs till, så ni behöver manuellt gå tillbaka och rätta till dem
 public enum GlobalEvent
 {
+    //player
     SetPlayerWeapon,
     PlayerHealthChanged,
+    PlayerForceChanged,
     PlayerShotHit,
     PlayerShotMissed,
     ToggleTorches,
+    OnAbilityActivated,
+    UpdateForce,
 
     //camera && post
     SetCameraMode,

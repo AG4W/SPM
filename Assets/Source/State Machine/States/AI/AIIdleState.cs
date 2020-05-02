@@ -21,16 +21,16 @@ public class AIIdleState : AIBaseLocomotionState
             base.TransitionTo<AISearchState>();
         });
 
-        GlobalEvents.Subscribe(GlobalEvent.AlertOthers, (object[] args) => {
-                                        //dont alert myself, derp
-            if (!base.IsActiveState || ((Actor)args[0]) == base.Actor)
-                return;
+        //GlobalEvents.Subscribe(GlobalEvent.AlertOthers, (object[] args) => {
+        //                                //dont alert myself, derp
+        //    if (!base.IsActiveState || args[0] == null || ((Actor)args[0]) == base.Actor)
+        //        return;
 
-            if (base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1])
-                base.TransitionTo<AISearchState>();
+        //    if (base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1])
+        //        base.TransitionTo<AISearchState>();
 
-            Debug.DrawLine(base.Actor.transform.position, ((Actor)args[0]).transform.position, base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1] ? Color.green : Color.red, 2f);
-        });
+        //    Debug.DrawLine(base.Actor.transform.position, ((Actor)args[0]).transform.position, base.Actor.transform.position.DistanceTo(((Actor)args[0]).transform.position) <= (float)args[1] ? Color.green : Color.red, 2f);
+        //});
     }
 
     public override void Enter()

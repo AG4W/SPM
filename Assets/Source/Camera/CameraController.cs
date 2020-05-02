@@ -36,7 +36,6 @@ public class CameraController : MonoBehaviour
 
     [Header("Clip settings")]
     [SerializeField]float cullDistance = 50f;
-    [SerializeField]float lodCullDistance = 2000f;
 
     [Header("FOV Settings")]
     [SerializeField]float defaultFOV = 60;
@@ -54,8 +53,9 @@ public class CameraController : MonoBehaviour
 
     [Header("Trauma")]
     float trauma;
-    float shake { get { return trauma * trauma * trauma; } }
+    float Shake { get { return trauma * trauma * trauma; } }
     [SerializeField]float traumaInterpolationSpeed = 5f;
+
     Quaternion cameraRotation;
 
     Camera camera;
@@ -80,7 +80,7 @@ public class CameraController : MonoBehaviour
             cullingDistances[i] = i == 31 ? 0f : cullDistance;
 
         camera.layerCullDistances = cullingDistances;
-        camera.layerCullSpherical = true;
+        //camera.layerCullSpherical = true;
 
         target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
@@ -98,7 +98,7 @@ public class CameraController : MonoBehaviour
                 this.ModifyTrauma(Mathf.Abs(v.LatestChange) / v.Current);
         });
     }
-    void Update()
+    void LateUpdate()
     {
         UpdateCamera();
         UpdateJig();
@@ -119,7 +119,6 @@ public class CameraController : MonoBehaviour
     }
     void UpdateCamera()
     {
-
         InterpolateTrauma();
         ApplyCameraShake();
 
@@ -133,9 +132,8 @@ public class CameraController : MonoBehaviour
     {
         currentCameraTranslationSpeed = cameraTranslationSpeed;
 
-        Vector3 desiredPos = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraPosition(desiredPos), currentCameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
-
+        //CorrectCameraPosition()
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero), currentCameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
         camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, currentCameraTranslationSpeed * Time.deltaTime);
     }
 
@@ -161,7 +159,6 @@ public class CameraController : MonoBehaviour
             //zMove = directionToDesiredPosIWS.magnitude - hit.distance; // (NOTE krulls) Känns bättre utan denna tror jag
 
         }
-
         if (Physics.Raycast(camera.transform.position, camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
         {
             //Debug.Log("Camera collision to the right");
@@ -204,8 +201,8 @@ public class CameraController : MonoBehaviour
         float s0 = Random.Range(0f, int.MaxValue);
 
         Vector3 offset = new Vector3(
-                (4f * shake * Mathf.PerlinNoise(s0, Time.deltaTime)) * Random.Range(-1f, 1f),
-                (4f * shake * Mathf.PerlinNoise(s0 + 1, Time.deltaTime)) * Random.Range(-1f, 1f),
+                (4f * Shake * Mathf.PerlinNoise(s0, Time.deltaTime)) * Random.Range(-1f, 1f),
+                (4f * Shake * Mathf.PerlinNoise(s0 + 1, Time.deltaTime)) * Random.Range(-1f, 1f),
                 0f//traumaSqRd * Mathf.PerlinNoise(s0, Time.deltaTime) * Random.Range(-1, 1)
             );
 

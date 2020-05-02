@@ -41,6 +41,7 @@ public class PostProcessController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.UpdateDOFFocusDistance, UpdateDepthOfField);
 
         GlobalEvents.Subscribe(GlobalEvent.PlayerHealthChanged, OnHealthChanged);
+        GlobalEvents.Subscribe(GlobalEvent.PlayerForceChanged, OnForceChanged);
     }
     void Update()
     {
@@ -69,7 +70,11 @@ public class PostProcessController : MonoBehaviour
 
         vignette.intensity.value = Mathf.Lerp(.2f, .6f, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
         vignette.color.value = Color.Lerp(vignetteStart, vignetteEnd, (1f - health.CurrentInPercent).Interpolate(vignetteMode));
+    }
+    void OnForceChanged(object[] args)
+    {
+        Vital force = args[0] as Vital;
 
-        abberation.intensity.value = Mathf.Lerp(0f, 1f, (1f - health.CurrentInPercent).Interpolate(abberationMode));
+        abberation.intensity.value = Mathf.Lerp(0f, 1f, (1f - force.CurrentInPercent) * (1f - force.CurrentInPercent) * (1f - force.CurrentInPercent));
     }
 }

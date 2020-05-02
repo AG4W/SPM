@@ -5,12 +5,15 @@ public abstract class AbilityState : ActState
     [SerializeField]KeyCode hotkey = KeyCode.Alpha0;
     [SerializeField]AbilityAnimationIndex animationIndex;
 
-    [SerializeField]bool debug = true;
+    [Tooltip("Gets divided by deltaTime")][SerializeField]float castingCost = 1f;
+    [SerializeField]float maxTrauma = .4f;
+
+    [SerializeField]AudioClip[] activateSounds;
 
     protected float Timer { get; set; }
 
     public AbilityAnimationIndex AnimationIndex { get { return animationIndex; } }
-    public bool Debug { get { return debug; } }
+    public AudioClip[] ActivateSounds => activateSounds;
 
     public override void Enter()
     {
@@ -22,13 +25,17 @@ public abstract class AbilityState : ActState
         base.Actor.Raise(ActorEvent.SetAnimatorFloat, "castIndex", (float)this.animationIndex);
         base.Actor.Raise(ActorEvent.SetAnimatorBool, "isCasting", true);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 0f);
+
+        GlobalEvents.Raise(GlobalEvent.OnAbilityActivated, this);
     }
     public override void Tick()
     {
         base.Tick();
         this.Timer += Time.deltaTime / Time.timeScale;
 
-        if (!Input.GetKey(hotkey))
+        base.Player.Force.Update(-castingCost * (Time.deltaTime / Time.timeScale));
+
+        if (!Input.GetKey(hotkey) || base.Player.Force.CurrentInPercent <= .01f)
             base.Return();
     }
 

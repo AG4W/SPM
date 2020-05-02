@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 using System.Collections;
 
@@ -15,6 +16,9 @@ public class Panel : MonoBehaviour, IInteractable
 
     PanelState current;
     AudioSource source;
+
+    [Header("Event Triggers")]
+    [SerializeField]UnityEvent events;
 
     string IInteractable.Prompt => prompt;
     float IInteractable.InteractionDistance => interactionDistance;
@@ -51,6 +55,7 @@ public class Panel : MonoBehaviour, IInteractable
         if(current.InteractSFX.Length > 0)
             source.PlayOneShot(current.InteractSFX.Random());
 
+        events?.Invoke();
         OnInteract?.Invoke();
     }
 

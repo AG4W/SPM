@@ -3,7 +3,6 @@
 public class Entity : MonoBehaviour
 {
     [SerializeField]float maxHealth = 10f;
-    [SerializeField]float healthRegenerationRate;
     [SerializeField]float healthRegenerationAmount;
 
     [SerializeField]bool isDestructible = true;
@@ -24,7 +23,7 @@ public class Entity : MonoBehaviour
         for (int i = 0; i < hitboxes.Length; i++)
             hitboxes[i].OnHit += OnHit;
 
-        Health = new Vital(VitalType.Health, maxHealth, healthRegenerationRate, healthRegenerationAmount);
+        Health = new Vital(VitalType.Health, maxHealth, healthRegenerationAmount);
         Health.OnCurrentChanged += OnHealthChanged;
     }
     protected virtual void Update()

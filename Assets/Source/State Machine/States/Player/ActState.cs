@@ -2,6 +2,8 @@
 
 public abstract class ActState : BaseLocomotionState
 {
+    [Header("ActState settings")]
+    [Range(0.01f, 1f)][SerializeField]float minimumForceRequiredToEnterForceState = .2f;
     [SerializeField]LayerMask aimMask;
 
     protected override void OnInitialize()
@@ -41,11 +43,14 @@ public abstract class ActState : BaseLocomotionState
             base.TransitionTo<ReloadState>();
 
         //abilities
-        if (Input.GetKey(KeyCode.Alpha1))
-            base.TransitionTo<PushState>();
-        if (Input.GetKey(KeyCode.Alpha2))
-            base.TransitionTo<PullState>();
-        if (Input.GetKey(KeyCode.Alpha3))
-            base.TransitionTo<TimeDilationState>();
+        if(base.Player.Force.CurrentInPercent >= minimumForceRequiredToEnterForceState)
+        {
+            if (Input.GetKey(KeyCode.Alpha1))
+                base.TransitionTo<PushState>();
+            if (Input.GetKey(KeyCode.Alpha2))
+                base.TransitionTo<PullState>();
+            if (Input.GetKey(KeyCode.Alpha3))
+                base.TransitionTo<TimeDilationState>();
+        }
     }
 }

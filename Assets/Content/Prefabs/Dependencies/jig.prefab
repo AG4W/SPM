@@ -93,12 +93,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivityX: 80
   sensitivityY: 80
-  translationSpeed: 15
+  jigTranslationSpeed: 15
   cameraTranslationSpeed: 2.5
-  cameraSkinWidth: 0.8
   collisionMask:
     serializedVersion: 2
     m_Bits: 2147483649
+  cameraSkinWidth: 0.8
+  minDistanceBehindCharacter: 0.4
+  cameraCollisionTranslationSpeed: 20
   defaultPosition: {x: 0.6, y: 0.4, z: -1.1}
   ironSightPosition: {x: 0.4, y: 0.4, z: -0.75}
   jumpPosition: {x: 0, y: 0.5, z: -1.5}
@@ -106,7 +108,6 @@ MonoBehaviour:
   fallPosition: {x: 0, y: 0.6, z: -4}
   crouchOffset: {x: 0, y: -0.5, z: 0.1}
   cullDistance: 50
-  lodCullDistance: 2000
   defaultFOV: 60
   ironSightFOV: 40
   jumpFOV: 90
@@ -172,7 +173,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 250
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 5

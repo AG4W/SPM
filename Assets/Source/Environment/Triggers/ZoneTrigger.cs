@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
-public class Toggler : MonoBehaviour
+public class ZoneTrigger : MonoBehaviour
 {
     [Header("Leave this empty to use player")]
     [SerializeField]GameObject triggeringObject;
-    [Header("Objects to be toggled.")]
-    [SerializeField]GameObject[] objects;
+    [Header("On trigger")]
+    [SerializeField]UnityEvent events;
 
     Collider zone;
 
     void Awake()
     {
         triggeringObject = triggeringObject == null ? FindObjectOfType<PlayerActor>().gameObject : triggeringObject;
-
-        Debug.Assert(objects != null && objects.Length > 0, this.name + " has no objects assigned to it and is useless, please fix.", this.gameObject);
 
         zone = this.GetComponent<Collider>();
         zone.isTrigger = true;
@@ -23,11 +22,8 @@ public class Toggler : MonoBehaviour
     {
         if(zone.bounds.Contains(triggeringObject.transform.position))
         {
-            for (int i = 0; i < objects.Length; i++)
-            {
-                objects[i].SetActive(!objects[i].activeSelf);
-                Destroy(this.gameObject);
-            }
+            events?.Invoke();
+            Destroy(this.gameObject);
         }
     }
 }
