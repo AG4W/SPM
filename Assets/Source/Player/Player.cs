@@ -7,7 +7,7 @@ public static class Player
     //behöver lazy load när vi inte har en default starting screen där vi kan inita
     static bool hasInitialized = false;
 
-    static void Initialize(SaveData save)
+    public static void Initialize(SaveData save)
     {
         slots = new Weapon[Enum.GetNames(typeof(WeaponSlot)).Length];
         hasInitialized = true;
