@@ -77,6 +77,8 @@ public class Weapon : ScriptableObject
 
         if(hit.transform != null)
         {
+            GlobalEvents.Raise(GlobalEvent.PlayBulletImpactSFX, hit);
+
             IDamageable damageable = hit.transform.GetComponent<IDamageable>();
 
             //dont create hit markers on actors 

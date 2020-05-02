@@ -102,6 +102,9 @@ public enum GlobalEvent
     OnAbilityActivated,
     UpdateForce,
 
+    //audio stuff
+    PlayBulletImpactSFX,
+
     //camera && post
     SetCameraMode,
     UpdateDOFFocusDistance,

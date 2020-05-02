@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   master: {fileID: 24300002, guid: 5a8ab887b8c90f7449bc524953a00d9c, type: 2}
-  minLowPassFrequency: 2500
+  minLowPassFrequency: 100
   maxLowPassFrequency: 22000
 --- !u!1 &2606008871184092082
 GameObject:
