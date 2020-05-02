@@ -24,7 +24,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: b11f4859673bef249b16dc99764ea61a,
     type: 3}
   m_ShaderKeywords: _BLENDMODE_ALPHA _DISABLE_SSR _DOUBLESIDED_ON _SURFACE_TYPE_TRANSPARENT
-  m_LightmapFlags: 4
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: 3000
@@ -40,6 +40,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_34B6901A:
+        m_Texture: {fileID: 2800000, guid: 19f0dce4dd36e0d4fbf346907376ebd5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_81079FC4:
         m_Texture: {fileID: 2800000, guid: 495d1246c59ada941ab51b9757458ce0, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -257,8 +261,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_C89049AF: {r: 76.150085, g: 0, b: 10.465974, a: 1}
+    - Color_C89049AF: {r: 406.66525, g: 6.379063, b: 63.79063, a: 1}
     - Vector2_B17AE139: {r: 0, g: 1, b: 0, a: 0}
+    - Vector2_CB353F6: {r: 1, g: 1, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
