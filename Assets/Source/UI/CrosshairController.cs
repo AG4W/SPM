@@ -9,6 +9,8 @@ public class CrosshairController : MonoBehaviour
     [SerializeField]float hitFadeTime = .25f;
     [SerializeField]InterpolationMode mode = InterpolationMode.EaseOut;
 
+    [SerializeField]float maxCrosshairSize = 1.25f;
+
     float fadeTimer = 0f;
 
     void Awake()
