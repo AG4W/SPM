@@ -64,7 +64,9 @@ public class Weapon : ScriptableObject
 
         //Debug.DrawLine(exitPoint.position, hit.transform != null ? hit.point : exitPoint.position + heading.normalized * 300f, Color.red);
         if (hit.transform?.GetComponent<IDamageable>() != null)
+        {
             shooter.Raise(ActorEvent.ShotHit, hit.transform.GetComponent<IDamageable>());
+        }
         else
             shooter.Raise(ActorEvent.ShotMissed);
 
@@ -73,6 +75,7 @@ public class Weapon : ScriptableObject
     }
     protected virtual void CreateShotVFX(Vector3 heading, RaycastHit hit, Transform exitPoint)
     {
+        //instantiate projectile prefab
         Instantiate(shots.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null).GetComponent<ProjectileEntity>().Initialize(hit);
 
         if(hit.transform != null)
@@ -83,16 +86,7 @@ public class Weapon : ScriptableObject
 
             //dont create hit markers on actors 
             if (damageable != null)
-            {
-                if (damageable.CreateDecalsOnHit)
-                {
-                    GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
-                    h.transform.SetParent(hit.transform);
-
-                    GameObject g = Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
-                    g.transform.SetParent(hit.transform);
-                }
-            }
+                GlobalEvents.Raise(GlobalEvent.OnIDamageableHit, hit.transform.GetComponent<IDamageable>(), hit.point, hit.normal);
             else
             {
                 GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);

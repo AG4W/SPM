@@ -102,6 +102,9 @@ public enum GlobalEvent
     OnAbilityActivated,
     UpdateForce,
 
+    //generic
+    OnIDamageableHit,
+
     //audio stuff
     PlayShotSFX,
     PlayImpactSFX,

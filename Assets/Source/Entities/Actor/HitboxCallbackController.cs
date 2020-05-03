@@ -5,7 +5,7 @@ public class HitboxCallbackController : MonoBehaviour, IDamageable
     [SerializeField]string optionalHeader = "replace me";
     [Range(0f, 5f)][SerializeField]float damageModifier = 1f;
 
-    bool IDamageable.CreateDecalsOnHit => false; 
+    IDamageableType IDamageable.Type => IDamageableType.Organic;
 
     void Awake()
     {

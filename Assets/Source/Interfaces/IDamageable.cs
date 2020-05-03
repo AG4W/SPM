@@ -2,7 +2,12 @@
 
 public interface IDamageable
 {
-    bool CreateDecalsOnHit { get; }
+    IDamageableType Type { get; }
 
     void OnHit(float damage);
+}
+public enum IDamageableType
+{
+    Organic,
+    Metallic
 }

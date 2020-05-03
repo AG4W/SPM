@@ -6,6 +6,7 @@ public class Initializer : MonoBehaviour
     {
         Player.Initialize(null);
 
-        BulletAudioController.Initialize();
+        GeneralAudioController.Initialize();
+        DamageableController.Initialize();
     }
 }

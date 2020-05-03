@@ -24,7 +24,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: b11f4859673bef249b16dc99764ea61a,
     type: 3}
   m_ShaderKeywords: _ALPHATEST_ON _BLENDMODE_ALPHA _DISABLE_SSR _DOUBLESIDED_ON _SURFACE_TYPE_TRANSPARENT
-  m_LightmapFlags: 1
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: 3000
@@ -142,7 +142,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_1FE87DD3: 0.1
-    - Vector1_81924208: 0.068
+    - Vector1_81924208: 0.01
     - Vector1_9F212EFA: 1
     - _AORemapMax: 1
     - _AORemapMin: 0
