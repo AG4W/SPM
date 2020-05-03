@@ -90271,6 +90271,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: jig
       objectReference: {fileID: 0}
+    - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
+        type: 3}
+      propertyPath: cameraSkinWidth
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107210734596482233, guid: 7ed573064e355424ebc1c92d600db249,
+        type: 3}
+      propertyPath: minDistBehindPlayer
+      value: 0.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed573064e355424ebc1c92d600db249, type: 3}
 --- !u!4 &1933651201 stripped
