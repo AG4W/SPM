@@ -14,21 +14,19 @@ public class PullState : AbilityState
         base.Tick();
 
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-        Vector3 fp = ray.GetPoint(2f);
+        Vector3 fp = ray.origin + (ray.direction.normalized * 4f);
+        fp += Vector3.up;
 
         RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance);
 
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].transform.GetComponent<IForceAffectable>() != null)
+            if (hits[i].transform.GetComponent<IForceAffectable>() != null && Vector3.Dot(base.Actor.transform.forward, base.Actor.transform.position.DirectionTo(hits[i].transform.position)) >= -.25f)
             {
-                if (base.Actor.transform.forward.Dot(fp.DirectionTo(hits[i].point).normalized) < .5f)
-                    continue;
+                hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(hits[i].transform.position.DirectionTo(fp).normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power) + base.Actor.Velocity);
 
-                if (hits[i].point.DistanceTo(fp) <= 3f)
-                    hits[i].transform.GetComponent<IForceAffectable>().SetVelocity(Vector3.zero);
-                else
-                    hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(hits[i].point.DirectionTo(fp).normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power));
+                if (hits[i].transform.position.DistanceTo(fp) <= 2f)
+                    hits[i].transform.GetComponent<IForceAffectable>().SetVelocity(base.Actor.Velocity);
             }
         }
     }

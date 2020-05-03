@@ -6,18 +6,27 @@ using System;
 
 public class PlayerActor : HumanoidActor
 {
-    [SerializeField]Light[] torches;
+    [Header("Player Configuration")]
+    [SerializeField]float maxForce = 200f;
+    [SerializeField]float forceRegenerationAmount = .01f;
+
+    Light[] torches;
     Checkpoint[] checkpoints;
 
+    //animation setuff
     Transform primaryAnchorPoint;
-
     Transform jig;
 
     [Header("Player Actor Collision Settings")]
     [Range(0f, 1f)][SerializeField]float overlapRadiusModifier = 0.9f;
 
+    public Vital Force { get; private set; }
+
     protected override void Initalize()
     {
+        this.Force = new Vital(VitalType.Force, maxForce, forceRegenerationAmount, false);
+        this.Force.OnCurrentChanged += OnForceChanged;
+
         checkpoints = FindObjectsOfType<Checkpoint>();
         Debug.Assert(checkpoints != null && checkpoints.Length > 0, "Could not find any checkpoints, did you forget to drag the prefab into your scene?", this.gameObject);
         
@@ -83,7 +92,8 @@ public class PlayerActor : HumanoidActor
     {
         base.Update();
         DispatchInput();
-        //Debug.DrawRay(this.transform.position + (Vector3.up * 1.8f), this.Velocity);
+
+        this.Force.Tick();
     }
     protected override void OnAnimatorMove()
     {
@@ -183,11 +193,17 @@ public class PlayerActor : HumanoidActor
         base.OnHealthChanged(change);
         GlobalEvents.Raise(GlobalEvent.PlayerHealthChanged, base.Health);
     }
+    void OnForceChanged(float change)
+    {
+        GlobalEvents.Raise(GlobalEvent.PlayerForceChanged, this.Force);
+    }
     protected override void OnHealthZero()
     {
         //teleportera till nämrsta checkpoint
         this.transform.position = checkpoints.OrderBy(t => t.transform.position.DistanceTo(this.transform.position)).First().transform.position + Vector3.up;
+
         base.Health.Reset();
+        this.Force.Reset();
     }
 }
 public enum Stance

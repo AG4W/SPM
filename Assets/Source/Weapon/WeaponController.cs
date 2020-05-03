@@ -77,17 +77,17 @@ public class WeaponController : MonoBehaviour
         Vector3 heading = this.ExitPoint.position.DirectionTo(target).normalized + velocitySpread;
 
         if (this.weapon.RepeatFirings > 1)
-            this.StartCoroutine(FireAsync(target, heading, this.ExitPoint, source, mask));
+            this.StartCoroutine(FireAsync(target, heading, this.ExitPoint, mask));
         else
         {
             shotsLeftInCurrentClip--;
             uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
-            this.weapon.OnFire(owner, target, heading, this.ExitPoint, source, mask);
+            this.weapon.OnFire(owner, target, heading, this.ExitPoint, mask);
         }
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, weapon.NoiseValue);
     }
-    IEnumerator FireAsync(Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    IEnumerator FireAsync(Vector3 target, Vector3 heading, Transform exitPoint, LayerMask mask)
     {
         int count = shotsLeftInCurrentClip > this.weapon.RepeatFirings ? this.weapon.RepeatFirings : shotsLeftInCurrentClip;
 
@@ -97,7 +97,7 @@ public class WeaponController : MonoBehaviour
             uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
 
             //apply velocity spread modifier
-            weapon.OnFire(owner, target, heading, exitPoint, source, mask);
+            weapon.OnFire(owner, target, heading, exitPoint, mask);
             yield return new WaitForSeconds(this.weapon.TimeBetweenFirings);
         }
     }

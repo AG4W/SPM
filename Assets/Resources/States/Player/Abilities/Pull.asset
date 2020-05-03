@@ -20,27 +20,49 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
+  minimumForceRequiredToEnterForceState: 0.2
   aimMask:
     serializedVersion: 2
     m_Bits: 268435457
   hotkey: 50
   animationIndex: 0
-  debug: 0
-  radius: 4
+  castingCost: 20
+  maxTrauma: 0.5
+  activateSounds:
+  - {fileID: 8300000, guid: 94064da778be66d4a8d5367d17ebf60b, type: 3}
+  radius: 2
   distance: 15
-  power: 10
+  power: 25
   initialAcceleration:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
+    - serializedVersion: 3
+      time: 0.118175775
+      value: 0.30596647
+      inSlope: 4.1174707
+      outSlope: 4.1174707
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.024194643
+    - serializedVersion: 3
+      time: 0.30702376
+      value: 0.8420084
+      inSlope: 0.70869946
+      outSlope: 0.70869946
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.061083127
     - serializedVersion: 3
       time: 1
       value: 1

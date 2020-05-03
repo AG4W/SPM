@@ -15,6 +15,8 @@ public abstract class BaseState : State
 
     LayerMask ikMask;
 
+    protected PlayerActor Player => (PlayerActor)base.Actor;
+
     public float DistanceToGround
     {
         get

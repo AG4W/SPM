@@ -2,24 +2,21 @@
 
 public class Vital
 {
-    float regenerationRate;
     float regenerationAmount;
-
-    float regenerationTimer;
+    bool stopOnZero;
 
     public float Current { get; private set; }
     public float Max { get; }
-
 
     public float LatestChange { get; private set; } = 0f;
     public float CurrentInPercent { get { return this.Current / this.Max; } }
     public VitalType Type { get; }
     public bool HasReachedZero { get; private set; } = false;
 
-    public Vital(VitalType type, float maxValue, float regenerationRate, float regenerationAmount)
+    public Vital(VitalType type, float maxValue, float regenerationAmount, bool stopOnZero = true)
     {
-        this.regenerationRate = regenerationRate;
         this.regenerationAmount = regenerationAmount;
+        this.stopOnZero = stopOnZero;
 
         this.Type = type;
         this.Max = maxValue;
@@ -31,13 +28,7 @@ public class Vital
         if (regenerationAmount <= 0f)
             return;
 
-        regenerationTimer += Time.deltaTime;
-
-        if(regenerationTimer >= regenerationRate)
-        {
-            regenerationTimer = 0f;
-            this.Update(regenerationAmount * (1f + (1f - this.CurrentInPercent)));
-        }
+        this.Update(regenerationAmount);
     }
 
     public void Update(float change)
@@ -50,7 +41,7 @@ public class Vital
         if(!HasReachedZero)
             OnCurrentChanged?.Invoke(change);
 
-        if (this.Current <= 0f)
+        if (stopOnZero && this.Current <= 0f)
             HasReachedZero = true;
     }
     public void Reset()
@@ -68,4 +59,5 @@ public class Vital
 public enum VitalType
 {
     Health,
+    Force,
 }

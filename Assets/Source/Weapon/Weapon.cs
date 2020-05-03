@@ -55,7 +55,7 @@ public class Weapon : ScriptableObject
 
     public WeaponIndex Index => WeaponIndex.Ranged;
 
-    public virtual void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    public virtual void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, LayerMask mask)
     {
         Physics.Raycast(exitPoint.position, heading.normalized, out RaycastHit hit, Mathf.Infinity, mask);
 
@@ -64,33 +64,29 @@ public class Weapon : ScriptableObject
 
         //Debug.DrawLine(exitPoint.position, hit.transform != null ? hit.point : exitPoint.position + heading.normalized * 300f, Color.red);
         if (hit.transform?.GetComponent<IDamageable>() != null)
+        {
             shooter.Raise(ActorEvent.ShotHit, hit.transform.GetComponent<IDamageable>());
+        }
         else
             shooter.Raise(ActorEvent.ShotMissed);
 
         CreateShotVFX(heading, hit, exitPoint);
-        CreateShotSFX(source);
+        CreateShotSFX(exitPoint);
     }
     protected virtual void CreateShotVFX(Vector3 heading, RaycastHit hit, Transform exitPoint)
     {
+        //instantiate projectile prefab
         Instantiate(shots.Random(), exitPoint.position, Quaternion.LookRotation(heading, Vector3.up), null).GetComponent<ProjectileEntity>().Initialize(hit);
 
         if(hit.transform != null)
         {
+            GlobalEvents.Raise(GlobalEvent.PlayImpactSFX, hit);
+
             IDamageable damageable = hit.transform.GetComponent<IDamageable>();
 
             //dont create hit markers on actors 
             if (damageable != null)
-            {
-                if (damageable.CreateDecalsOnHit)
-                {
-                    GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
-                    h.transform.SetParent(hit.transform);
-
-                    GameObject g = Instantiate(impacts.Random(), hit.point, Quaternion.LookRotation(hit.normal, Vector3.up), null);
-                    g.transform.SetParent(hit.transform);
-                }
-            }
+                GlobalEvents.Raise(GlobalEvent.OnIDamageableHit, hit.transform.GetComponent<IDamageable>(), hit.point, hit.normal);
             else
             {
                 GameObject h = Instantiate(hits.Random(), hit.point, Quaternion.LookRotation(hit.normal), null);
@@ -101,11 +97,7 @@ public class Weapon : ScriptableObject
             }
         }
     }
-    protected virtual void CreateShotSFX(AudioSource source)
-    {
-        source.pitch = Random.Range(minPitch, maxPitch);
-        source.PlayOneShot(shotSFX.Random());
-    }
+    protected virtual void CreateShotSFX(Transform exitPoint) => GlobalEvents.Raise(GlobalEvent.PlayShotSFX, exitPoint, minPitch, maxPitch, shotSFX.Random());
 }
 public enum WeaponIndex
 {

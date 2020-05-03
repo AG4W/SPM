@@ -25,5 +25,8 @@ MonoBehaviour:
     m_Bits: 268435457
   hotkey: 51
   animationIndex: 0
-  debug: 0
+  castingCost: 20
+  maxTrauma: 0.25
+  activateSounds:
+  - {fileID: 8300000, guid: 94064da778be66d4a8d5367d17ebf60b, type: 3}
   timeScaling: 0.2

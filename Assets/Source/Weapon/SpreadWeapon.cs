@@ -6,7 +6,7 @@ public class SpreadWeapon : Weapon
     [Header("Spread Weapon Specific")]
     [SerializeField]int bulletsPerShot = 4;
 
-    public override void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, AudioSource source, LayerMask mask)
+    public override void OnFire(Actor shooter, Vector3 target, Vector3 heading, Transform exitPoint, LayerMask mask)
     {
         for (int i = 0; i < bulletsPerShot; i++)
         {
@@ -25,6 +25,6 @@ public class SpreadWeapon : Weapon
             base.CreateShotVFX(h, hit, exitPoint);
         }
 
-        base.CreateShotSFX(source);
+        base.CreateShotSFX(exitPoint);
     }
 }

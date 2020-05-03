@@ -20,15 +20,19 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
+  minimumForceRequiredToEnterForceState: 0.2
   aimMask:
     serializedVersion: 2
     m_Bits: 268435457
   hotkey: 49
   animationIndex: 0
-  debug: 0
+  castingCost: 20
+  maxTrauma: 0.5
+  activateSounds:
+  - {fileID: 8300000, guid: dca47ca4c59079a4f98f9fccab7728e4, type: 3}
   radius: 4
-  distance: 15
-  power: 10
+  distance: 10
+  power: 25
   initialAcceleration:
     serializedVersion: 2
     m_Curve:

@@ -47,7 +47,6 @@ public class CameraController : MonoBehaviour
 
     [Header("Clip settings")]
     [SerializeField]float cullDistance = 50f;
-    [SerializeField]float lodCullDistance = 2000f;
 
     [Header("FOV Settings")]
     [SerializeField]float defaultFOV = 60;
@@ -65,8 +64,9 @@ public class CameraController : MonoBehaviour
 
     [Header("Trauma")]
     float trauma;
-    float shake { get { return trauma * trauma * trauma; } }
+    float Shake { get { return trauma * trauma * trauma; } }
     [SerializeField]float traumaInterpolationSpeed = 5f;
+
     Quaternion cameraRotation;
 
     Camera camera;
@@ -91,7 +91,7 @@ public class CameraController : MonoBehaviour
             cullingDistances[i] = i == 31 ? 0f : cullDistance;
 
         camera.layerCullDistances = cullingDistances;
-        camera.layerCullSpherical = true;
+        //camera.layerCullSpherical = true;
 
         target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
@@ -109,7 +109,7 @@ public class CameraController : MonoBehaviour
                 this.ModifyTrauma(Mathf.Abs(v.LatestChange) / v.Current);
         });
     }
-    void Update()
+    void LateUpdate()
     {
         UpdateCamera();
         UpdateJig();
@@ -130,7 +130,6 @@ public class CameraController : MonoBehaviour
     }
     void UpdateCamera()
     {
-
         InterpolateTrauma();
         ApplyCameraShake();
 
@@ -286,8 +285,8 @@ public class CameraController : MonoBehaviour
         float s0 = Random.Range(0f, int.MaxValue);
 
         Vector3 offset = new Vector3(
-                (4f * shake * Mathf.PerlinNoise(s0, Time.deltaTime)) * Random.Range(-1f, 1f),
-                (4f * shake * Mathf.PerlinNoise(s0 + 1, Time.deltaTime)) * Random.Range(-1f, 1f),
+                (4f * Shake * Mathf.PerlinNoise(s0, Time.deltaTime)) * Random.Range(-1f, 1f),
+                (4f * Shake * Mathf.PerlinNoise(s0 + 1, Time.deltaTime)) * Random.Range(-1f, 1f),
                 0f//traumaSqRd * Mathf.PerlinNoise(s0, Time.deltaTime) * Random.Range(-1, 1)
             );
 
