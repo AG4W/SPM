@@ -8,21 +8,32 @@ public class CameraController : MonoBehaviour
     [SerializeField]float jigTranslationSpeed = 15f;
     [SerializeField]float cameraTranslationSpeed = 2.5f;
 
-    float currentCameraTranslationSpeed; // used by the collisionhandler to switch between cameraTranslationSpeed/cameraCollisionTranslationSpeed
 
     [Header("Collision Settings")]
     [Tooltip("Layers the camera should collide with")]
     [SerializeField]LayerMask collisionMask;
 
     [Tooltip("The distance which the camera should keep away from colliders")]
-    [Range(0f, 1f)][SerializeField] float cameraSkinWidth = 0.2f;
+    [Range(0f, .5f)][SerializeField] float cameraSkinWidth = .2f;
 
     [Tooltip("The closest distance to which the camera will go behind the character. " +
-        "A small value can push the camera into the head/body, while a big value will keep the camera behind walls")]
-    [Range(0, .5f)][SerializeField]float minDistanceBehindCharacter = .4f;
+        "A small value may push the camera into the head/body, while a big value may keep the camera behind walls (Z-axis)")]
+    [Range(0, .4f)][SerializeField]float minDistBehindPlayer = .4f;
+
+    [Tooltip("The closest distance to which the camera will go to the side of the character." +
+        "A small value may push the camera into the head/body, while a big value may keep the camera behind walls (X-axis)")]
+    [Range(0, .4f)] [SerializeField] float minDistBesidePlayer = .2f;
+
+    [Tooltip("The distance out from the player, left and right, to check to see if the camera should switch shoulder to avoid walls (X-axis)")]
+    [Range(.1f, 1f)] [SerializeField] float switchShoulderDist = .5f;
 
     [Tooltip("The speed which the camera will move during collision. Should be higher than normal")]
-    [SerializeField]float cameraCollisionTranslationSpeed = 20f;
+    [SerializeField]float camCollisionTransSpeed = 5f; // (Krulls) Not used right now since the shit isn't fucking working
+
+    bool cameraIsColliding = false; // (Krulls) used by the collisionhandler to switch between cameraTranslationSpeed/camCollisionTransSpeed, Not used right now since the shit isn't fucking working
+
+    [Header("Debugging")]
+    [SerializeField]bool drawGizmos = false;
 
     [Header("Camera Positions")]
     [SerializeField]Vector3 defaultPosition = new Vector3(.6f, .4f, -1.1f);
@@ -131,60 +142,131 @@ public class CameraController : MonoBehaviour
 
     void UpdateCameraPosition()
     {
-        currentCameraTranslationSpeed = cameraTranslationSpeed;
+        cameraIsColliding = false;
 
-        Vector3 desiredPos = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
-        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraPosition(desiredPos), currentCameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
+        //Vector3 desiredPos = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
+        Vector3 desiredPos = GetDesiredPosition();
 
-        camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, currentCameraTranslationSpeed * Time.deltaTime);
+        camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraPosition(desiredPos), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
+        camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, cameraTranslationSpeed * Time.deltaTime);
     }
 
     //Collision
     Vector3 CorrectCameraPosition(Vector3 desiredPositionILS) // ILS = In Local Space, IWS = In World Space
     {
         RaycastHit hit;
-        //float zMove = 0f; // (NOTE krulls) Känns bättre utan denna tror jag
+        float zMove = 0f;
         float desiredZ = desiredPositionILS.z;
-        Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
-        Vector3 directionToDesiredPosIWS = this.transform.position.DirectionTo(desiredPositionIWS);
-        Vector3 lineCastEndPos = this.transform.position + directionToDesiredPosIWS.normalized * (directionToDesiredPosIWS.magnitude + cameraSkinWidth);
+        float desiredX = desiredPositionILS.x;
 
+        Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
+        Vector3 dirToDesiredPosFromJigIWS = this.transform.position.DirectionTo(desiredPositionIWS);
+
+        /**************************** Kamera följer vägg-kollision********************************/ 
+        //Vector3 lineCastEndPos = this.transform.position + dirToDesiredPosFromJigIWS.normalized * (dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth);
         //Debug.DrawRay(camera.transform.position, camera.transform.right * .5f, Color.cyan); // Use when debugging
         //Debug.DrawRay(camera.transform.position, -camera.transform.right * .5f, Color.cyan); // Use when debugging
         //Debug.DrawLine(this.transform.position, lineCastEndPos, Color.blue); // Use when debugging
 
-        if (Physics.Linecast(this.transform.position, lineCastEndPos, out hit, collisionMask))// && hit.distance <= directionToDesiredPos.magnitude
+        //if (Physics.Linecast(this.transform.position, lineCastEndPos, out hit, collisionMask))// && hit.distance <= directionToDesiredPos.magnitude
+        //{
+        //    currentCameraTranslationSpeed = camCollisionTransSpeed;
+        //    desiredPositionIWS = new Vector3(hit.point.x + hit.normal.x * cameraSkinWidth, desiredPositionIWS.y, hit.point.z + hit.normal.z * cameraSkinWidth);
+        //    //zMove = directionToDesiredPosIWS.magnitude - hit.distance; // (NOTE krulls) Känns som man clippar mycket genom väggar med zMove
+
+        //}
+
+        //if (Physics.Raycast(camera.transform.position, camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
+        //{
+        //    //Debug.Log("Camera collision to the right");
+        //    currentCameraTranslationSpeed = camCollisionTransSpeed;
+        //    desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
+
+        //}
+        //else if (Physics.Raycast(camera.transform.position, -camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
+        //{
+        //    //Debug.Log("Camera collision to the left");
+        //    currentCameraTranslationSpeed = camCollisionTransSpeed;
+        //    desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
+
+        //}
+        /**************************** Kamera följer vägg-kollision********************************/
+
+        if(drawGizmos)
+            Debug.DrawRay(this.transform.position, dirToDesiredPosFromJigIWS, Color.blue);
+
+        /**** Moves the camera in Z-axis at collision ****/
+        if (Physics.SphereCast(this.transform.position, cameraSkinWidth, dirToDesiredPosFromJigIWS, out hit, dirToDesiredPosFromJigIWS.magnitude, collisionMask))
         {
-            currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
-
-            desiredPositionIWS = new Vector3(hit.point.x + hit.normal.x * cameraSkinWidth, desiredPositionIWS.y, hit.point.z + hit.normal.z * cameraSkinWidth);
-            //zMove = directionToDesiredPosIWS.magnitude - hit.distance; // (NOTE krulls) Känns bättre utan denna tror jag
-
+            cameraIsColliding = true;
+            zMove = (dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth) - hit.distance;
         }
 
-        if (Physics.Raycast(camera.transform.position, camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
+        desiredPositionILS.z += zMove;
+        desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZ, -minDistBehindPlayer);
+        /**** Moves the camera in Z-axis at collision ****/
+
+        /**** Moves the camera in X-axis at collision ****/
+        Vector3 desiredPosZeroXIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
+
+        if (drawGizmos)
+            Debug.DrawRay(desiredPosZeroXIWS, camera.transform.right * desiredX, Color.yellow);
+
+        if (Physics.SphereCast(desiredPosZeroXIWS, cameraSkinWidth, camera.transform.right * desiredX, out hit, Mathf.Abs(desiredX), collisionMask) & desiredX != 0f)
         {
-            //Debug.Log("Camera collision to the right");
-            currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
-            desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
+            cameraIsColliding = true;
 
+            float xMove;
+            if (desiredX > 0f) // positive = right side
+            {
+                xMove = (desiredX + cameraSkinWidth) - hit.distance; // xMove becomes positive which we subtract from the desired X-pos
+                xMove = Mathf.Clamp(xMove, 0f, desiredX);
+
+                desiredPositionILS.x -= xMove;
+                desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, minDistBesidePlayer, desiredX);
+            }
+            if (desiredX < 0f) // negative = left side
+            {
+                xMove = (desiredX - cameraSkinWidth) + hit.distance; // xMove becomes negative which we subtract from the desired -X-pos
+                xMove = Mathf.Clamp(xMove, desiredX, 0f);
+
+                desiredPositionILS.x -= xMove;
+                desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, desiredX, -minDistBesidePlayer);
+            }
         }
-        else if (Physics.Raycast(camera.transform.position, -camera.transform.right, out hit, .5f, collisionMask) && hit.distance < 2 * cameraSkinWidth)
-        {
-            //Debug.Log("Camera collision to the left");
-            currentCameraTranslationSpeed = cameraCollisionTranslationSpeed;
-            desiredPositionIWS += new Vector3(hit.normal.x * (2 * cameraSkinWidth - hit.distance), 0f, hit.normal.z * (2 * cameraSkinWidth - hit.distance));
-
-        }
-
-        desiredPositionILS = transform.InverseTransformPoint(desiredPositionIWS);
-        //desiredPositionILS.z += zMove; // (NOTE krulls) Känns bättre utan denna tror jag
-        desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZ, -minDistanceBehindCharacter);
+        /**** Moves the camera in X-axis at collision ****/
 
         return desiredPositionILS;
     }
 
-    void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], currentCameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
+    Vector3 GetDesiredPosition()
+    {
+        /**** Get player input ****/
+        Vector3 desiredPositionILS = positions[(int)mode];
+        if (Input.GetKey(KeyCode.C))
+            desiredPositionILS += crouchOffset;
+
+        /**** Check which shoulder is best for the camera ****/
+        Vector3 desiredPosYaxisIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, 0f));
+
+        if (drawGizmos)
+        {
+            Debug.DrawRay(desiredPosYaxisIWS, camera.transform.right * switchShoulderDist, Color.cyan);
+            Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.cyan);
+        }
+
+        Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, camera.transform.right, out RaycastHit rightHit, switchShoulderDist, collisionMask);
+        Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, -camera.transform.right, out RaycastHit leftHit, switchShoulderDist, collisionMask);
+
+        if (rightHit.transform != null & leftHit.transform == null || rightHit.transform != null & leftHit.transform != null & leftHit.distance > rightHit.distance)
+        {
+            desiredPositionILS.x *= -1f; // Puts the camera on the left shoulder
+        }
+
+        return desiredPositionILS;
+    }
+
+    void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
     void UpdateDepthOfField()
     {
         Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, Mathf.Infinity, collisionMask);

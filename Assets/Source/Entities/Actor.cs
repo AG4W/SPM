@@ -151,22 +151,21 @@ public class Actor : Entity
         //Vector3 pointA = this.pointAsphere.position;
         //Vector3 pointB = this.pointBsphere.position;
 
-        Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity, collisionMask);
-
         float allowedMoveDistance;
         float hitSurfaceSteepness;
 
         int counter = 1;
-        while (hit.transform != null)
+        while (Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out RaycastHit hit, Mathf.Infinity, collisionMask))
         {
             hitSurfaceSteepness = Vector3.Dot(Vector3.down, hit.normal); // Plan mark blir -1. Vertikal vägg blir 0. Plant tak blir 1.
-            allowedMoveDistance = skinWidth / Vector3.Dot(this.Velocity.normalized, hit.normal); // får ett negativt tal (-skinWidh till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
+
+            allowedMoveDistance = skinWidth / Vector3.Dot(this.Velocity.normalized, hit.normal); // får ett negativt tal (-skinWidth till oändlighet mot 0, i teorin) som måste dras av från träffdistance för att hamna på SkinWidth avstånd från träffpunkten(faller vi rakt ner, 90 deg, får vi -SkinWidth.)
             allowedMoveDistance += hit.distance; // distans till träff för att hamna på skinWidth
 
             if (allowedMoveDistance > this.Velocity.magnitude * (Time.deltaTime / Time.timeScale))
-                break;  // fritt fram att röra sig om distansen till träffytan är större än vad vi kommer röra oss denna frame
+                break;  // fritt fram att röra sig denna frame
 
-            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, och över noll, så vill vi flytta karaktären fram dit
+            else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, och över noll, så vill vi flytta karaktären till skinWidth avstånd från ytan
                 this.transform.position += this.Velocity.normalized * allowedMoveDistance;
 
             if (hit.distance <= this.Velocity.magnitude * (Time.deltaTime / Time.timeScale) + skinWidth) // Applicera normalkraft och friktion om vi kommer träffa en yta
@@ -174,11 +173,13 @@ public class Actor : Entity
 
                 Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
                 this.Velocity += tempNormalForce;
-                
-                if (hitSurfaceSteepness > -.8f && stateMachine.Current.GetType() != typeof(JumpState) && stateMachine.Current.GetType() != typeof(FallState)) // Tar bort velocity.y om man träffat en brant backe och inte hoppar/faller
+
+                // Tar bort velocity.y om man träffat en brant backe och inte hoppar/faller för att motverka klättring
+                if (hitSurfaceSteepness > -.8f && stateMachine.Current.GetType() != typeof(JumpState) && stateMachine.Current.GetType() != typeof(FallState))
                     this.Velocity = new Vector3(this.Velocity.x, 0f, this.Velocity.z);
 
-                if(stateMachine.Current.GetType() == typeof(JumpState)) // Minskar velocity.y vid hopp för att slippa boost vid kollisioner
+                // Minskar velocity.y vid hopp för att slippa boost vid kollisioner
+                if (stateMachine.Current.GetType() == typeof(JumpState))
                     this.Velocity = new Vector3(this.Velocity.x, this.Velocity.y * .75f, this.Velocity.z);
 
                 this.Velocity = Friction(this.Velocity, tempNormalForce);
@@ -186,18 +187,17 @@ public class Actor : Entity
 
             CheckOverlap();
 
+            counter++;
+            if (counter == 11)
+                break;
+
             pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
             pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
             //pointA = this.pointAsphere.position;
             //pointB = this.pointBsphere.position;
-            Physics.CapsuleCast(pointA, pointB, collisionRadius, this.Velocity.normalized, out hit, this.Velocity.magnitude + skinWidth, collisionMask);
-
-            counter++;
-            if (counter == 11)
-                break;
         }
 
-        if(counter < 2)
+        if (counter < 2)
             CheckOverlap(); // ifall vi breakar ur while-loopen vill vi fortfarande kolla overlap
 
     }
