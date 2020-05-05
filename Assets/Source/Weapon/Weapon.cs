@@ -103,5 +103,5 @@ public enum WeaponIndex
 {
     Unarmed,
     Ranged,
-    Melee //shhhhh, it's a secret ;)
+    Melee //shhhhh, it's a secret ;) lolol^^
 }

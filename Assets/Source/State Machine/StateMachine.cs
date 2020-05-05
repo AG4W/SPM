@@ -40,24 +40,6 @@ public class StateMachine
 
         //stateDictionary.Add(state.GetType(), state); // ett state-typ kopplas till en faktisk state
 
-        // Detta borde alltid ske, eller?
-        // Vi kan väl inte manuellt assignea ett state i början,
-        // Så känns weird att guarda för det
-        // also, detta sker för varje state? Så de skriver över varandra??
-        // Oklart
-        //if (currentState == null)
-        //{
-        //    Debug.Log("Current state blir instance.");
-        //    currentState = state;
-        //}
-        //}
-
-
-        // Varför behövs denna nullguard?
-        // Känns som att det är bättre om vi kastar exceptions i loggen
-        // ifall något viktigt saknar states så att vi märker felet innan build
-        //currentState?.Enter(); // Om jag fick ett state, starta den
-
         this.Current = this.states[startState];
         this.Current.Enter();
     }

@@ -18,7 +18,10 @@ public class PlayerActor : HumanoidActor
     Transform jig;
 
     [Header("Player Actor Collision Settings")]
-    [Range(0f, 1f)][SerializeField]float overlapRadiusModifier = 0.9f;
+    [Range(.8f, 1f)][SerializeField]float overlapRadiusModifier = 0.9f;
+
+    [Header("Debug Collision")]
+    [SerializeField] bool drawCollisionSpheres = false;
 
     public Vital Force { get; private set; }
 
@@ -105,11 +108,11 @@ public class PlayerActor : HumanoidActor
     }
     private void OnDrawGizmos()
     {
-        //(Krulls)
-        //Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier)), base.CollisionRadius);
-        //Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier)), base.CollisionRadius);
-        //Gizmos.DrawSphere(base.pointAsphere.position, base.CollisionRadius);
-        //Gizmos.DrawSphere(base.pointBsphere.position, base.CollisionRadius);
+        if (drawCollisionSpheres)
+        {
+            Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier)), base.CollisionRadius);
+            Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier)), base.CollisionRadius);
+        }
     }
     void DispatchInput()
     {
@@ -125,9 +128,6 @@ public class PlayerActor : HumanoidActor
     {
         Vector3 pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
         Vector3 pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
-        //(Krulls)
-        //Vector3 pointA = base.pointAsphere.position;
-        //Vector3 pointB = base.pointBsphere.position;
 
         Vector3 closestPoint;
         Vector3 hitDirection;
@@ -155,9 +155,6 @@ public class PlayerActor : HumanoidActor
                     // Uppdatera pointA/B
                     pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
                     pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
-                    //(Krulls)
-                    //pointA = base.pointAsphere.position;
-                    //pointB = base.pointBsphere.position;
                 }
 
             Collider[] overlapCollidersB = Physics.OverlapSphere(pointB, base.CollisionRadius * overlapRadiusModifier, base.CollisionMask);
@@ -175,8 +172,6 @@ public class PlayerActor : HumanoidActor
 
                     pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
                     pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
-                    //pointA = base.pointAsphere.position;
-                    //pointB = base.pointBsphere.position;
                 }
 
             // Kolla overlap igen
@@ -188,6 +183,7 @@ public class PlayerActor : HumanoidActor
             counter++;
         }
     }
+
     protected override void OnHealthChanged(float change)
     {
         base.OnHealthChanged(change);
