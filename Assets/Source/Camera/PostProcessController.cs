@@ -57,11 +57,12 @@ public class PostProcessController : MonoBehaviour
     {
         targetDoFDistance = (float)args[0];
 
-        depthOfField.farFocusStart.value = actualDoFDistance + 2f;
-        depthOfField.farMaxBlur = mode == CameraMode.IronSight ? ironSightDoFStrength : defaultDoFStrength;
+        depthOfField.focusDistance.value = actualDoFDistance;
+        //depthOfField.farFocusStart.value = actualDoFDistance + 2f;
+        //depthOfField.farMaxBlur = mode == CameraMode.IronSight ? ironSightDoFStrength : defaultDoFStrength;
 
-        depthOfField.nearFocusStart.value = mode == CameraMode.IronSight ? 1f : 0f;
-        depthOfField.nearFocusEnd.value = mode == CameraMode.IronSight ? 1.5f : 0f;
+        //depthOfField.nearFocusStart.value = mode == CameraMode.IronSight ? 1f : 0f;
+        //depthOfField.nearFocusEnd.value = mode == CameraMode.IronSight ? 1.5f : 0f;
     }
 
     void OnHealthChanged(object[] args)
