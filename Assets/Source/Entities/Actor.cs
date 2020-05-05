@@ -9,20 +9,27 @@ public class Actor : Entity
     [Header("Input")]
     [SerializeField]Vector3 targetInput;
     [SerializeField]Vector3 actualInput;
-
     float inputModifier = 1f;
     [SerializeField]float inputInterpolationSpeed = 2.5f;
 
-    [Header("Movement/Collision Properties")]
-    [SerializeField]float collisionRadius = .25f;
 
-    [SerializeField]float skinWidth = .03f;
-    [SerializeField]float staticFriction = .5f;
-    [SerializeField]float dynamicFriction = .4f;
+    [Header("Movement/Collision Properties")]
+    [Tooltip("Layers the Actor should collide with")]
+    [SerializeField]LayerMask collisionMask;
+    [SerializeField]float collisionRadius = .25f;
+    [Range(.01f, .1f)][SerializeField]float skinWidth = .03f;
+
+    [Tooltip("Friction needed to overcome when standing still")]
+    [Range(0f, 1f)][SerializeField]float staticFriction = .5f;
+
+    [Tooltip("Friction needed to overcome when moving")]
+    [Range(0f, 1f)][SerializeField]float dynamicFriction = .4f;
+
+    [Tooltip("Speed modifier on Y-axis when jumping on a slope")]
+    [Range(.25f, .75f)][SerializeField]float jumpOnSlopeYaxisModifier = .75f;
 
     [SerializeField]float height = 1.8f;
-
-    [SerializeField]LayerMask collisionMask;
+    
 
     [Header("Equipment")]
     WeaponController weaponController;
@@ -55,9 +62,6 @@ public class Actor : Entity
     public Transform FocusPoint { get; private set; }
     public Transform EyePoint { get; private set; }
 
-    //(Krulls)
-    //protected Transform pointAsphere { get; set; }
-    //protected Transform pointBsphere { get; set; }
 
     protected override void Initalize()
     {
@@ -80,12 +84,6 @@ public class Actor : Entity
             this.EyePoint.SetParent(this.transform);
             this.EyePoint.position = this.transform.position;
         }
-
-        //(Krulls) Testar med punkter på karaktären som referens vid kollisionshantering
-        //this.pointAsphere = this.transform.FindRecursively("pointAsphere");
-        //this.pointBsphere = this.transform.FindRecursively("pointBsphere");
-        //if (this.pointAsphere == null || this.pointBsphere == null)
-        //    Debug.LogWarning(this.name + " is missing a pointAspehere or pointBsphere!");
 
         weaponController = this.GetComponent<WeaponController>();
         weaponController.Initialize(this);
@@ -115,16 +113,9 @@ public class Actor : Entity
 
         Interpolate();
     }
-    protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, this.TargetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
-    public void SetCollisionLowPoint(float value)
-    {
-        feetOffset = value;
-    }
-    public void SetCollisionHighPoint(float value)
-    {
-        heightOffset = value;
-    }
+    //Inputs
+    protected virtual void Interpolate() => actualInput = Vector3.Lerp(actualInput, this.TargetInput, inputInterpolationSpeed * (Time.deltaTime / Time.timeScale));
 
     void SetTargetInput(object[] args) => targetInput = (Vector3)args[0];
     void SetInputModifier(object[] args) => inputModifier = (float)args[0];
@@ -147,10 +138,6 @@ public class Actor : Entity
     {
         Vector3 pointA = this.transform.position + (Vector3.up * (this.CurrentHeight - this.collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
-
-        //Vector3 pointA = this.pointAsphere.position;
-        //Vector3 pointB = this.pointBsphere.position;
-
         float allowedMoveDistance;
         float hitSurfaceSteepness;
 
@@ -176,11 +163,11 @@ public class Actor : Entity
 
                 // Tar bort velocity.y om man träffat en brant backe och inte hoppar/faller för att motverka klättring
                 if (hitSurfaceSteepness > -.8f && stateMachine.Current.GetType() != typeof(JumpState) && stateMachine.Current.GetType() != typeof(FallState))
-                    this.Velocity = new Vector3(this.Velocity.x, 0f, this.Velocity.z);
+                    this.Velocity = new Vector3(this.Velocity.x, -1f, this.Velocity.z); //(Krulls:NOTE) -1f kan vi vilja ändra. -gravity?
 
                 // Minskar velocity.y vid hopp för att slippa boost vid kollisioner
                 if (stateMachine.Current.GetType() == typeof(JumpState))
-                    this.Velocity = new Vector3(this.Velocity.x, this.Velocity.y * .75f, this.Velocity.z);
+                    this.Velocity = new Vector3(this.Velocity.x, this.Velocity.y * jumpOnSlopeYaxisModifier, this.Velocity.z);
 
                 this.Velocity = Friction(this.Velocity, tempNormalForce);
             }
@@ -193,8 +180,6 @@ public class Actor : Entity
 
             pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
             pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
-            //pointA = this.pointAsphere.position;
-            //pointB = this.pointBsphere.position;
         }
 
         if (counter < 2)
@@ -225,5 +210,14 @@ public class Actor : Entity
             return velocity;
         }
     }
+
     void ModifyVelocity(object[] args) => this.Velocity += (Vector3)args[0];
+    public void SetCollisionLowPoint(float value)
+    {
+        feetOffset = value;
+    }
+    public void SetCollisionHighPoint(float value)
+    {
+        heightOffset = value;
+    }
 }
