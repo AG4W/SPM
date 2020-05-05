@@ -8,14 +8,15 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Foo Bar
-  m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _DISABLE_DECALS _DISABLE_SSR _EMISSIVE_COLOR_MAP
-    _NORMALMAP _NORMALMAP_TANGENT_SPACE
+  m_Shader: {fileID: -6465566751694194690, guid: b11f4859673bef249b16dc99764ea61a,
+    type: 3}
+  m_ShaderKeywords: _ALPHATEST_ON _DISABLE_SSR
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2450
   stringTagMap:
+    MotionVector: User
     RenderType: TransparentCutout
   disabledShaderPasses:
   - DistortionVectors
@@ -26,6 +27,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_34B6901A:
+        m_Texture: {fileID: 2800000, guid: 19f0dce4dd36e0d4fbf346907376ebd5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_81079FC4:
+        m_Texture: {fileID: 2800000, guid: 9785284424f66d245bc8fff18d163b6d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -111,6 +120,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_1FE87DD3: 0.1
+    - Vector1_81924208: 0.01
+    - Vector1_9F212EFA: 1
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -179,7 +191,7 @@ Material:
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _NormalMapSpace: 0
     - _NormalScale: 1
     - _PPDLodThreshold: 5
@@ -189,8 +201,10 @@ Material:
     - _PPDPrimitiveWidth: 1
     - _ReceivesSSR: 0
     - _RefractionModel: 0
+    - _RenderQueueType: 1
+    - _RequireSplitLighting: 0
     - _SSRefractionProjectionModel: 0
-    - _Smoothness: 0.5
+    - _Smoothness: 1
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SpecularAAScreenSpaceVariance: 0.1
@@ -231,6 +245,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - Color_C89049AF: {r: 3.7328477, g: 13.512909, b: 19.037523, a: 1}
+    - Vector2_B17AE139: {r: 0, g: 1, b: 0, a: 0}
+    - Vector2_CB353F6: {r: 1, g: 1, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
