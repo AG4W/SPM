@@ -50,7 +50,7 @@ public class Panel : MonoBehaviour, IInteractable
         this.gameObject.layer = LayerMask.NameToLayer("Interactable");
     }
 
-    void IInteractable.Interact()
+    public void Interact()
     {
         if(current.InteractSFX.Length > 0)
             source.PlayOneShot(current.InteractSFX.Random());
