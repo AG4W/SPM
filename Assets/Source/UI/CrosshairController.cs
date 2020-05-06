@@ -37,11 +37,8 @@ public class CrosshairController : MonoBehaviour
     }
     void OnHit(object[] args)
     {
-        if (hitMarker != null)
-        {
-            fadeTimer = 0f;
-            markerImage.color = new Color(1f, 1f, 1f, 1f);
-            hitMarker.SetActive(true);
-        }
+        fadeTimer = 0f;
+        markerImage.color = new Color(1f, 1f, 1f, 1f);
+        hitMarker.SetActive(true);
     }
 }

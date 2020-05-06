@@ -8,7 +8,7 @@ public class InteractionPromptController : MonoBehaviour
 
     void Awake()
     {
-        prompt = this.GetComponentInChildren<Text>(true);
+        prompt = this.GetComponentInChildren<Text>();
 
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
             if (args[0] is IInteractable interactable && interactable.Prompt.Length > 0)
@@ -32,20 +32,14 @@ public class InteractionPromptController : MonoBehaviour
     }
     void OpenInteractPrompt(IInteractable entity)
     {
-        if (prompt != null)
-        {
-            current = entity;
+        current = entity;
 
-            prompt.text = entity.Prompt;
-            prompt.gameObject.SetActive(true);
-        }
+        prompt.text = entity.Prompt;
+        prompt.gameObject.SetActive(true);
     }
     void CloseInteractPrompt()
     {
-        if (prompt != null)
-        {
-            prompt.gameObject.SetActive(false);
-            current = null;
-        }
+        prompt.gameObject.SetActive(false);
+        current = null;
     }
 }
