@@ -17,6 +17,7 @@ public class ZoneTrigger : MonoBehaviour
 
         zone = this.GetComponent<Collider>();
         zone.isTrigger = true;
+        zone.gameObject.layer = LayerMask.NameToLayer("TriggerZone");
     }
     void Update()
     {
