@@ -30,7 +30,7 @@ public class PostProcessController : MonoBehaviour
 
     ChromaticAberration abberation;
 
-    void Awake()
+    void Start()
     {
         profile = this.GetComponent<Volume>().profile;
         profile.TryGet(out depthOfField);

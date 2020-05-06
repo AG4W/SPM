@@ -7,7 +7,7 @@ public static class GlobalEvents
     static Dictionary<Actor, List<Action<object[]>>[]> actorEvents;
 
     //orkade inte sätta upp en initializer, så lazy initar arrayen
-    static void Initialize()
+    public static void Initialize()
     {
         events = new List<Action<object[]>>[Enum.GetNames(typeof(GlobalEvent)).Length];
         actorEvents = new Dictionary<Actor, List<Action<object[]>>[]>();
@@ -18,8 +18,6 @@ public static class GlobalEvents
 
     public static void Subscribe(GlobalEvent e, Action<object[]> a)
     {
-        if (events == null)
-            Initialize();
 
         events[(int)e].Add(a);
     }
@@ -32,8 +30,6 @@ public static class GlobalEvents
     //look upon me and despair
     public static void Subscribe(this Actor actor, ActorEvent e, Action<object[]> action)
     {
-        if (actorEvents == null)
-            Initialize();
 
         //skapa ny slot ifall actor inte finns
         if (!actorEvents.ContainsKey(actor))
@@ -59,8 +55,6 @@ public static class GlobalEvents
 
     public static void Raise(GlobalEvent e, params object[] args)
     {
-        if (events == null)
-            Initialize();
 
         for (int i = 0; i < events[(int)e].Count; i++)
         {
@@ -75,8 +69,6 @@ public static class GlobalEvents
     //vem behöver koll på vad som skickas vart oavsett
     public static void Raise(this Actor actor, ActorEvent e, params object[] args)
     {
-        if (actorEvents == null)
-            Initialize();
 
         for (int i = 0; i < actorEvents[actor][(int)e].Count; i++)
         {
@@ -128,6 +120,9 @@ public enum GlobalEvent
     //ai
     NoiseCreated,
     AlertOthers,
+
+    //SceneLoad
+    OnSceneLoad,
 }
 public enum ActorEvent
 {

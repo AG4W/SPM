@@ -13,7 +13,7 @@ public class CrosshairController : MonoBehaviour
 
     float fadeTimer = 0f;
 
-    void Awake()
+    void Start()
     {
         hitMarker = this.transform.FindRecursively("hit marker").gameObject;
         markerImage = hitMarker.transform.GetComponent<Image>();
@@ -37,8 +37,8 @@ public class CrosshairController : MonoBehaviour
     }
     void OnHit(object[] args)
     {
-        fadeTimer = 0f;
-        markerImage.color = new Color(1f, 1f, 1f, 1f);
-        hitMarker.SetActive(true);
+            fadeTimer = 0f;
+            markerImage.color = new Color(1f, 1f, 1f, 1f);
+            hitMarker.SetActive(true);
     }
 }

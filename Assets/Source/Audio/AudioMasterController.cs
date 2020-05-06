@@ -8,7 +8,7 @@ public class AudioMasterController : MonoBehaviour
     [SerializeField]float minLowPassFrequency;
     [SerializeField]float maxLowPassFrequency;
 
-    void Awake()
+    void Start()
     {
         GlobalEvents.Subscribe(GlobalEvent.PlayerHealthChanged, UpdateMasterLowPassFilter);
     }

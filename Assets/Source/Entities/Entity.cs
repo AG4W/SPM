@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
 
     //basklass
     //kommer lite skit här sen
-    void Awake()
+    void Start()
     {
         Initalize();
     }
