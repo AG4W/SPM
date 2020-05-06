@@ -6,7 +6,7 @@ public class InteractionPromptController : MonoBehaviour
     Text prompt;
     IInteractable current;
 
-    void Awake()
+    void Start()
     {
         prompt = this.GetComponentInChildren<Text>();
 
@@ -28,7 +28,10 @@ public class InteractionPromptController : MonoBehaviour
         prompt.transform.position = Camera.main.WorldToScreenPoint(current.Position);
 
         if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("Försöker plocka upp vapen");
             current.Interact();
+        }
     }
     void OpenInteractPrompt(IInteractable entity)
     {

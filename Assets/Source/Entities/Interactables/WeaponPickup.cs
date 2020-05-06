@@ -33,7 +33,7 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     }
     public void Interact()
     {
-        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, weapon);
-        Destroy(this.gameObject);
+            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, weapon);
+            Destroy(this.gameObject);
     }
 }

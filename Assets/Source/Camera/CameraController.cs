@@ -74,7 +74,7 @@ public class CameraController : MonoBehaviour
 
     CameraMode mode = CameraMode.Default;
 
-    void Awake()
+    void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
 

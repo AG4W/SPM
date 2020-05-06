@@ -6,7 +6,7 @@ public class InteractionController : MonoBehaviour
 
     [SerializeField]LayerMask mask;
 
-    void Awake()
+    void Start()
     {
         GlobalEvents.Subscribe(GlobalEvent.OnInteractableStart, (object[] args) => current = null);
         GlobalEvents.Subscribe(GlobalEvent.OnInteractableComplete, (object[] args) => current = null);

@@ -4,7 +4,7 @@ public class PlayerAudioController : MonoBehaviour
 {
     AudioSource source;
 
-    void Awake()
+    void Start()
     {
         source = this.GetComponent<AudioSource>();
 
