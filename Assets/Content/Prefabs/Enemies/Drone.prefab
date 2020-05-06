@@ -383,8 +383,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2251941711988688793}
+  - component: {fileID: 947615095}
   m_Layer: 0
-  m_Name: "Tr\xF6ttBot"
+  m_Name: Drone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -405,6 +406,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &947615095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2251941711988688792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f5149a576cb754dac017d498ccfb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  healthRegenerationAmount: 0
+  isDestructible: 1
+  path: States/
+  targetInput: {x: 0, y: 0, z: 0}
+  actualInput: {x: 0, y: 0, z: 0}
+  inputInterpolationSpeed: 2.5
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionRadius: 0.25
+  skinWidth: 0.03
+  staticFriction: 0.5
+  dynamicFriction: 0.4
+  jumpOnSlopeYaxisModifier: 0.75
+  height: 1.8
+  stateMachine:
+    debugStateMachine: 0
+  maxSpeed: 2
+  acceleration: 0.05
+  patrolPath:
+  - {x: 0, y: 2, z: -5}
+  - {x: 0, y: 2, z: 4}
+  - {x: 3, y: 2, z: 1}
+  turnRatio: 0.033
+  target: {fileID: 0}
+  viewDistance: 10
+  targetOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &2251941712459937350
 GameObject:
   m_ObjectHideFlags: 0
