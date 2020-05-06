@@ -22,7 +22,7 @@ public class WeaponPickup : MonoBehaviour, IInteractable
         bc.size = new Vector3(1f, 1f, .25f);
 
         this.gameObject.AddComponent<Rigidbody>();
-        this.gameObject.GetComponent<Rigidbody>().mass = 50f;
+        this.gameObject.GetComponent<Rigidbody>().mass = 25f;
         this.gameObject.AddComponent<RigidBodyForceWrapper>();
 
         //stäng av alla ljus
