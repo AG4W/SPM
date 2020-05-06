@@ -11,6 +11,7 @@ public class InteractionController : MonoBehaviour
         GlobalEvents.Subscribe(GlobalEvent.OnInteractableStart, (object[] args) => current = null);
         GlobalEvents.Subscribe(GlobalEvent.OnInteractableComplete, (object[] args) => current = null);
     }
+
     void Update()
     {
         UpdateCurrentEntity();

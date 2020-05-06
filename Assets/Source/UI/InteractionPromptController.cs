@@ -8,7 +8,8 @@ public class InteractionPromptController : MonoBehaviour
 
     void Awake()
     {
-        prompt = this.GetComponentInChildren<Text>();
+        prompt = this.GetComponentInChildren<Text>(true);
+        prompt.gameObject.SetActive(true);
 
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
             if (args[0] is IInteractable interactable && interactable.Prompt.Length > 0)
@@ -19,6 +20,10 @@ public class InteractionPromptController : MonoBehaviour
 
         //start disabled
         CloseInteractPrompt();
+    }
+    private void Start()
+    {
+        
     }
     void Update()
     {

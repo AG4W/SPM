@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class CrosshairController : MonoBehaviour
 {
-    [SerializeField]GameObject hitMarker;
+    GameObject hitMarker;
     Image markerImage;
 
     [SerializeField]float hitFadeTime = .25f;
@@ -15,11 +15,13 @@ public class CrosshairController : MonoBehaviour
 
     void Awake()
     {
+        hitMarker = this.transform.FindRecursively("hit marker").gameObject;
         markerImage = hitMarker.transform.GetComponent<Image>();
         hitMarker.SetActive(false);
 
         GlobalEvents.Subscribe(GlobalEvent.PlayerShotHit, OnHit);
     }
+
     void Update()
     {
         if (hitMarker.activeSelf)
@@ -36,8 +38,11 @@ public class CrosshairController : MonoBehaviour
     }
     void OnHit(object[] args)
     {
-        fadeTimer = 0f;
-        markerImage.color = new Color(1f, 1f, 1f, 1f);
-        hitMarker.SetActive(true);
+        if (hitMarker != null)
+        {
+            fadeTimer = 0f;
+            markerImage.color = new Color(1f, 1f, 1f, 1f);
+            hitMarker.SetActive(true);
+        }
     }
 }
