@@ -80,8 +80,6 @@ public class PlayerActor : HumanoidActor
 
         base.Initalize();
 
-        Debug.Log(Player.GetWeapon(WeaponSlot.Primary));
-
         GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, Player.GetWeapon(WeaponSlot.Primary));
         //cache current weapon in savedata
         //Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
