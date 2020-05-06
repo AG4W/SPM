@@ -14,7 +14,7 @@ public class PullState : AbilityState
         base.Tick();
 
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-        Vector3 fp = ray.origin + (ray.direction.normalized * 4f);
+        Vector3 fp = ray.origin + (ray.direction.normalized * 2.5f);
         fp += Vector3.up;
 
         RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance);
