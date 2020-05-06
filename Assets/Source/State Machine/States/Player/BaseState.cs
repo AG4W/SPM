@@ -38,6 +38,8 @@ public abstract class BaseState : State
 
     protected override void OnInitialize()
     {
+        lookAt = GameObject.Find("lookAt");
+
         base.OnInitialize();
         UpdateIKTarget();
     }

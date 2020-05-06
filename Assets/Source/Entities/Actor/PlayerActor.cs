@@ -21,7 +21,7 @@ public class PlayerActor : HumanoidActor
     [Range(.8f, 1f)][SerializeField]float overlapRadiusModifier = 0.9f;
 
     [Header("Debug Collision")]
-    [SerializeField] bool drawCollisionSpheres = false;
+    [SerializeField]bool drawCollisionSpheres = false;
 
     public Vital Force { get; private set; }
 
