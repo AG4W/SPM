@@ -86,6 +86,11 @@ public static class GlobalEvents
             actorEvents[actor][(int)e][i].Invoke(args);
         }
     }
+
+    internal static void Raise(string v)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 //obs, notera att serializerade (de ni exposeat i inspectorn)/hårdkodade variabler av den här typen inte uppdateras
