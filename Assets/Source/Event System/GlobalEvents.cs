@@ -120,6 +120,9 @@ public enum GlobalEvent
     //ai
     NoiseCreated,
     AlertOthers,
+
+    //SceneLoad
+    OnSceneLoad,
 }
 public enum ActorEvent
 {
