@@ -98,9 +98,12 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 2147483649
-  cameraSkinWidth: 0.8
-  minDistanceBehindCharacter: 0.4
-  cameraCollisionTranslationSpeed: 20
+  cameraSkinWidth: 0.2
+  minDistBehindPlayer: 0.2
+  minDistBesidePlayer: 0.2
+  switchShoulderDist: 0.5
+  camCollisionTransSpeed: 5
+  drawGizmos: 0
   defaultPosition: {x: 0.6, y: 0.4, z: -1.1}
   ironSightPosition: {x: 0.4, y: 0.4, z: -0.75}
   jumpPosition: {x: 0, y: 0.5, z: -1.5}
@@ -173,7 +176,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 50
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -269,7 +272,7 @@ MonoBehaviour:
   antialiasing: 2
   SMAAQuality: 0
   dithering: 1
-  stopNaNs: 0
+  stopNaNs: 1
   taaSharpenStrength: 0.6
   physicalParameters:
     m_Iso: 200

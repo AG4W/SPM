@@ -6,6 +6,9 @@ public class ZoneTrigger : MonoBehaviour
 {
     [Header("Leave this empty to use player")]
     [SerializeField]GameObject triggeringObject;
+    
+    [SerializeField]bool repeatable = false;
+
     [Header("On trigger")]
     [SerializeField]UnityEvent events;
 
@@ -24,7 +27,9 @@ public class ZoneTrigger : MonoBehaviour
         if(zone.bounds.Contains(triggeringObject.transform.position))
         {
             events?.Invoke();
-            Destroy(this.gameObject);
+
+            if(!repeatable)
+                Destroy(this.gameObject);
         }
     }
 }
