@@ -21,7 +21,7 @@ public abstract class ActState : BaseLocomotionState
         //weapon
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (base.Get<WeaponController>().NeedsReload)
+            if (base.Get<WeaponController>().NeedsReload & base.Get<WeaponController>().Weapon != null)
                 base.TransitionTo<ReloadState>();
 
             if (!base.Get<WeaponController>().CanFire)
@@ -39,7 +39,7 @@ public abstract class ActState : BaseLocomotionState
 
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTraumaCapped, base.Get<WeaponController>().Weapon.TraumaValue);
         }
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) & base.Get<WeaponController>().Weapon != null)
             base.TransitionTo<ReloadState>();
 
         //abilities

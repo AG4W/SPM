@@ -53,14 +53,15 @@ public class JumpState : GroundLostState
         base.Actor.Raise(ActorEvent.ModifyVelocity, velocity);
     }
 
-    void UpdateFeetOffset() // Needed for collisionbox-adjustments in jumpmotion
+    ////// Offsets needed for collisionbox-adjustments during jumpmotion for correct collision checks
+    void UpdateFeetOffset()
     {
         if (jumpTimer < jumpDuration / 2f)
             base.Actor.SetCollisionLowPoint(Mathf.Lerp(0f, feetOffset, jumpTimer * 1.2f));
         if (jumpTimer >= jumpDuration / 2f)
             base.Actor.SetCollisionLowPoint(Mathf.Lerp(feetOffset, 0f, jumpTimer * 0.8f));
     }
-    void UpdateHeightOffset() // Needed for collisionbox-adjustments in jumpmotion
+    void UpdateHeightOffset() 
     {
         if (jumpTimer < jumpDuration / 2f)
             base.Actor.SetCollisionHighPoint(Mathf.Lerp(0f, heightOffset, jumpTimer * 1.2f));

@@ -157,15 +157,14 @@ public class Actor : Entity
 
             if (hit.distance <= this.Velocity.magnitude * (Time.deltaTime / Time.timeScale) + skinWidth) // Applicera normalkraft och friktion om vi kommer träffa en yta
             {
-
-                Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
-                this.Velocity += tempNormalForce;
-
                 // Tar bort velocity.y om man träffat en brant backe och inte hoppar/faller för att motverka klättring
                 if (hitSurfaceSteepness > -.8f && stateMachine.Current.GetType() != typeof(JumpState) && stateMachine.Current.GetType() != typeof(FallState))
                     this.Velocity = new Vector3(this.Velocity.x, -1f, this.Velocity.z); //(Krulls:NOTE) -1f kan vi vilja ändra. -gravity?
 
-                // Minskar velocity.y vid hopp för att slippa boost vid kollisioner
+                Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
+                this.Velocity += tempNormalForce;
+
+                // Minskar velocity.y vid hopp för att slippa boost av normalforce vid kollisioner
                 if (stateMachine.Current.GetType() == typeof(JumpState))
                     this.Velocity = new Vector3(this.Velocity.x, this.Velocity.y * jumpOnSlopeYaxisModifier, this.Velocity.z);
 
@@ -196,19 +195,19 @@ public class Actor : Entity
          * sätter vi vår hastighet till noll, annars adderar vi den motsatta riktningen av hastigheten multiplicerat med den dynamiska friktionen 
          * (normalkraften multiplicerat med den dynamiska friktionskoefficienten).
          */
-        if (velocity.magnitude < (normalForce.magnitude * staticFriction))
+
+        if (Vector3.Dot(velocity, Vector3.down) > 0.9f) // Om vi faller applicera inte friktion
+            return velocity;
+
+        if (velocity.magnitude < (normalForce.magnitude * staticFriction)) // Om vi inte kan övervinna den statiska friktionen
         {
             velocity.x = 0f;
             velocity.z = 0f;
             return velocity;
         }
-        else if (Vector3.Dot(velocity, Vector3.down) > 0.9f) // Om vi faller applicera inte friktion
-            return velocity;
-        else 
-        {
-            velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
-            return velocity;
-        }
+        
+        velocity += -velocity.normalized * (normalForce.magnitude * dynamicFriction);
+        return velocity;
     }
 
     void ModifyVelocity(object[] args) => this.Velocity += (Vector3)args[0];

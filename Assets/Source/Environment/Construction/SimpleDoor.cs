@@ -41,13 +41,6 @@ public class SimpleDoor : MonoBehaviour
             brokenState
         };
 
-        //designers är retarded
-        Debug.Assert(door != null, this.name + " does not have a door object assigned, did you forget to assign it?", this.gameObject);
-        Debug.Assert(closedPosition != null, this.name + " does not have a closedPosition assigned, did you forget to assign it?", this.gameObject);
-        Debug.Assert(openPosition != null, this.name + " does not have a openPosition object assigned, did you forget to assign it?", this.gameObject);
-        Debug.Assert(panels.Length > 0, this.name + " has no panels assigned and will not be interactable, remove this component if this is desired behaviour.", this.gameObject);
-        Debug.Assert(state != SimpleDoorState.Animating, this.name + " should not start in animating mode, please select a different mode.", this.gameObject);
-
         for (int i = 0; i < panels.Length; i++)
         {
             panels[i].SetState(states[(int)state]);
@@ -56,13 +49,20 @@ public class SimpleDoor : MonoBehaviour
                 panels[i].OnInteract += OnInteract;
         }
 
-        door.transform.localPosition = state == SimpleDoorState.Opened ? openPosition.localPosition : closedPosition.localPosition;
-
         if (this.state == SimpleDoorState.Broken || this.state == SimpleDoorState.Locked)
         {
-            door.isStatic = true;
             Destroy(this);
+            return;
         }
+
+        //designers är retarded
+        Debug.Assert(door != null, this.name + " does not have a door object assigned, did you forget to assign it?", this.gameObject);
+        Debug.Assert(closedPosition != null, this.name + " does not have a closedPosition assigned, did you forget to assign it?", this.gameObject);
+        Debug.Assert(openPosition != null, this.name + " does not have a openPosition object assigned, did you forget to assign it?", this.gameObject);
+        Debug.Assert(panels.Length > 0, this.name + " has no panels assigned and will not be interactable, remove this component if this is desired behaviour.", this.gameObject);
+        Debug.Assert(state != SimpleDoorState.Animating, this.name + " should not start in animating mode, please select a different mode.", this.gameObject);
+
+        door.transform.localPosition = state == SimpleDoorState.Opened ? openPosition.localPosition : closedPosition.localPosition;
     }
 
     void OnInteract()
