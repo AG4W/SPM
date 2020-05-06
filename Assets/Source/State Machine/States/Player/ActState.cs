@@ -21,7 +21,7 @@ public abstract class ActState : BaseLocomotionState
         //weapon
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (base.Get<WeaponController>().NeedsReload)
+            if (base.Get<WeaponController>().NeedsReload & base.Get<WeaponController>().Weapon != null)
                 base.TransitionTo<ReloadState>();
 
             if (!base.Get<WeaponController>().CanFire)
