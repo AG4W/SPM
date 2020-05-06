@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
 
     bool cameraIsColliding = false; // (Krulls) used by the collisionhandler to switch between cameraTranslationSpeed/camCollisionTransSpeed, Not used right now since the shit isn't fucking working
 
-    [Header("Debugging")]
+    [Header("Debug Collision")]
     [SerializeField]bool drawGizmos = false;
 
     [Header("Camera Positions")]
@@ -142,10 +142,9 @@ public class CameraController : MonoBehaviour
     void UpdateCameraPosition()
     {
         cameraIsColliding = false;
-
         //Vector3 desiredPos = positions[(int)mode] + (Input.GetKey(KeyCode.C) ? crouchOffset : Vector3.zero);
+        
         Vector3 desiredPos = GetDesiredPosition();
-
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraPosition(desiredPos), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
         camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, cameraTranslationSpeed * Time.deltaTime);
     }
@@ -155,8 +154,8 @@ public class CameraController : MonoBehaviour
     {
         RaycastHit hit;
         float zMove = 0f;
-        float desiredZ = desiredPositionILS.z;
-        float desiredX = desiredPositionILS.x;
+        float desiredZpos = desiredPositionILS.z;
+        float desiredXpos = desiredPositionILS.x;
 
         Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
         Vector3 dirToDesiredPosFromJigIWS = this.transform.position.DirectionTo(desiredPositionIWS);
@@ -204,35 +203,35 @@ public class CameraController : MonoBehaviour
         }
 
         desiredPositionILS.z += zMove;
-        desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZ, -minDistBehindPlayer);
+        desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZpos, -minDistBehindPlayer);
         ////// Moves the camera in Z-axis at collision 
 
         ////// Moves in X-axis at collision 
         Vector3 desiredPosZeroXIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
 
         if (drawGizmos)
-            Debug.DrawRay(desiredPosZeroXIWS, camera.transform.right * desiredX, Color.yellow);
+            Debug.DrawRay(desiredPosZeroXIWS, camera.transform.right * desiredXpos, Color.red);
 
-        if (Physics.SphereCast(desiredPosZeroXIWS, cameraSkinWidth, camera.transform.right * desiredX, out hit, Mathf.Abs(desiredX), collisionMask) & desiredX != 0f)
+        if (Physics.SphereCast(desiredPosZeroXIWS, cameraSkinWidth, camera.transform.right * desiredXpos, out hit, Mathf.Abs(desiredXpos), collisionMask) & desiredXpos != 0f)
         {
             cameraIsColliding = true;
 
             float xMove;
-            if (desiredX > 0f) // positive = right side
+            if (desiredXpos > 0f) // positive = right side
             {
-                xMove = (desiredX + cameraSkinWidth) - hit.distance; // xMove becomes positive which we subtract from the desired X-pos
-                xMove = Mathf.Clamp(xMove, 0f, desiredX);
+                xMove = (desiredXpos + cameraSkinWidth) - hit.distance; // xMove becomes positive which we subtract from the desired X-pos
+                xMove = Mathf.Clamp(xMove, 0f, desiredXpos);
 
                 desiredPositionILS.x -= xMove;
-                desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, minDistBesidePlayer, desiredX);
+                desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, minDistBesidePlayer, desiredXpos);
             }
-            if (desiredX < 0f) // negative = left side
+            if (desiredXpos < 0f) // negative = left side
             {
-                xMove = (desiredX - cameraSkinWidth) + hit.distance; // xMove becomes negative which we subtract from the desired -X-pos
-                xMove = Mathf.Clamp(xMove, desiredX, 0f);
+                xMove = (desiredXpos - cameraSkinWidth) + hit.distance; // xMove becomes negative which we subtract from the desired -X-pos
+                xMove = Mathf.Clamp(xMove, desiredXpos, 0f);
 
                 desiredPositionILS.x -= xMove;
-                desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, desiredX, -minDistBesidePlayer);
+                desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, desiredXpos, -minDistBesidePlayer);
             }
         }
         ////// Moves in X-axis at collision 
@@ -254,8 +253,8 @@ public class CameraController : MonoBehaviour
 
         if (drawGizmos)
         {
-            Debug.DrawRay(desiredPosYaxisIWS, camera.transform.right * switchShoulderDist, Color.cyan);
-            Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.cyan);
+            Debug.DrawRay(desiredPosYaxisIWS, camera.transform.right * switchShoulderDist, Color.red);
+            Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.red);
         }
 
         Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, camera.transform.right, out RaycastHit rightHit, switchShoulderDist, collisionMask);
