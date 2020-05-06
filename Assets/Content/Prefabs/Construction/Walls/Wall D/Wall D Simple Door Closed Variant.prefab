@@ -258,7 +258,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 14cd441883a0cf341a8d857568dd32d2, type: 2}
+  - {fileID: 2100000, guid: 757492bbb8086ed498f93843080edc87, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -293,6 +293,83 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1752850553933484860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151777602190751578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62f96f9be20a25f418b98bf7980ffc2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prompt: 
+  interactionDistance: 4
+  door: {fileID: 0}
+  closedPosition: {fileID: 0}
+  openPosition: {fileID: 0}
+  state: 3
+  panels:
+  - {fileID: 7812848720885002633}
+  closedState:
+    text: REPLACE ME
+    sprite: {fileID: 0}
+    tint: {r: 1, g: 0, b: 1, a: 1}
+    tintIntensity: 8
+    blinkText: 0
+    blinkImages: 0
+    blinkLength: 0.25
+    timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
+  openedState:
+    text: REPLACE ME
+    sprite: {fileID: 0}
+    tint: {r: 1, g: 0, b: 1, a: 1}
+    tintIntensity: 8
+    blinkText: 0
+    blinkImages: 0
+    blinkLength: 0.25
+    timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
+  animatingState:
+    text: REPLACE ME
+    sprite: {fileID: 0}
+    tint: {r: 1, g: 0, b: 1, a: 1}
+    tintIntensity: 8
+    blinkText: 0
+    blinkImages: 0
+    blinkLength: 0.25
+    timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
+  lockedState:
+    text: LOCKED
+    sprite: {fileID: 0}
+    tint: {r: 1, g: 0, b: 0, a: 1}
+    tintIntensity: 8
+    blinkText: 0
+    blinkImages: 0
+    blinkLength: 0.25
+    timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
+  brokenState:
+    text: REPLACE ME
+    sprite: {fileID: 0}
+    tint: {r: 1, g: 0, b: 1, a: 1}
+    tintIntensity: 8
+    blinkText: 0
+    blinkImages: 0
+    blinkLength: 0.25
+    timeBetweenBlinks: 0.25
+    interactSFX: []
+    blinkSFX: []
+  animationTime: 2
+  animationMode: 3
 --- !u!1001 &5638211833782921851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -382,9 +459,96 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 14cd441883a0cf341a8d857568dd32d2, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13b6d2d1437de8d4097b28672b05c6a0, type: 3}
+--- !u!1 &3151777602190751578 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7314882417764097313, guid: 13b6d2d1437de8d4097b28672b05c6a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 5638211833782921851}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2154414828272895305 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6041850571747667762, guid: 13b6d2d1437de8d4097b28672b05c6a0,
     type: 3}
   m_PrefabInstance: {fileID: 5638211833782921851}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7751540291629570530
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2154414828272895305}
+    m_Modifications:
+    - target: {fileID: 576408349885753449, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_Name
+      value: Generic Panel Small
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.1269
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 35aa029085992a048b5a430f33095de0, type: 3}
+--- !u!114 &7812848720885002633 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
+    type: 3}
+  m_PrefabInstance: {fileID: 7751540291629570530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d30ba5577246a4bbd63283fc737330, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
