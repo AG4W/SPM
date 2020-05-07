@@ -116,6 +116,7 @@ public enum GlobalEvent
     OnInteractableStart,
     OnInteractableComplete,
     CurrentInteractableChanged,
+    SetCrosshairIcon,
 
     //ai
     NoiseCreated,

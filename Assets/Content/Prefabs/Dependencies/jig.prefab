@@ -109,7 +109,7 @@ MonoBehaviour:
   jumpPosition: {x: 0, y: 0.5, z: -1.5}
   sprintPosition: {x: 0, y: 0.5, z: -1}
   fallPosition: {x: 0, y: 0.6, z: -4}
-  crouchOffset: {x: 0, y: -0.5, z: 0.1}
+  crouchOffset: {x: 0, y: -0.25, z: 0.1}
   cullDistance: 50
   defaultFOV: 60
   ironSightFOV: 40

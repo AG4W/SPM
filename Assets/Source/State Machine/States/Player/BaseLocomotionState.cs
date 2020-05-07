@@ -15,10 +15,9 @@ public abstract class BaseLocomotionState : BaseState
         if (Input.GetKeyDown(KeyCode.Mouse1))
             base.TransitionTo<AimState>();
         if (Input.GetKeyDown(KeyCode.Space))
-            base.TransitionTo<JumpState>();
-        if (Input.GetKeyDown(KeyCode.V))
             base.TransitionTo<RollState>();
 
+        //base.TransitionTo<JumpState>();
         base.Actor.Raise(ActorEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
     }
 }

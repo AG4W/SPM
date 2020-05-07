@@ -11,7 +11,7 @@ public class InteractionPromptController : MonoBehaviour
         prompt = this.GetComponentInChildren<Text>();
 
         GlobalEvents.Subscribe(GlobalEvent.CurrentInteractableChanged, (object[] args) => {
-            if (args[0] is IInteractable interactable && interactable.Prompt.Length > 0)
+            if (args[0] is IInteractable interactable)
                 OpenInteractPrompt(interactable);
             else
                 CloseInteractPrompt();
@@ -32,6 +32,8 @@ public class InteractionPromptController : MonoBehaviour
     }
     void OpenInteractPrompt(IInteractable entity)
     {
+        GlobalEvents.Raise(GlobalEvent.SetCrosshairIcon, CrosshairIcon.Interact);
+
         current = entity;
 
         prompt.text = entity.Prompt;
@@ -39,6 +41,8 @@ public class InteractionPromptController : MonoBehaviour
     }
     void CloseInteractPrompt()
     {
+        GlobalEvents.Raise(GlobalEvent.SetCrosshairIcon, CrosshairIcon.Default);
+
         prompt.gameObject.SetActive(false);
         current = null;
     }
