@@ -245,9 +245,9 @@ MonoBehaviour:
   - {fileID: 8303971878527414002}
   - {fileID: 8484432592734943552}
   closedState:
-    text: CLOSED
+    text: OPEN
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
-    tint: {r: 1, g: 0, b: 0, a: 1}
+    tint: {r: 0, g: 1, b: 1, a: 1}
     tintIntensity: 8
     blinkText: 0
     blinkImages: 0
@@ -259,7 +259,7 @@ MonoBehaviour:
   openedState:
     text: OPEN
     sprite: {fileID: 21300000, guid: 5f4b88ea10613834083951dde1fdeec8, type: 3}
-    tint: {r: 0, g: 1, b: 0, a: 1}
+    tint: {r: 0, g: 1, b: 1, a: 1}
     tintIntensity: 8
     blinkText: 0
     blinkImages: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
     tint: {r: 1, g: 0.5, b: 0, a: 1}
     tintIntensity: 8
     blinkText: 1
-    blinkImages: 1
+    blinkImages: 0
     blinkLength: 0.25
     timeBetweenBlinks: 0.25
     interactSFX: []
@@ -725,7 +725,7 @@ PrefabInstance:
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.9
+      value: 3.4
       objectReference: {fileID: 0}
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
@@ -827,7 +827,7 @@ PrefabInstance:
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1155855790338808227}
   - component: {fileID: 1155855790338808225}
   - component: {fileID: 1155855790338808224}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1155855790573417989}
   - component: {fileID: 1155855790573417995}
   - component: {fileID: 1155855790573417994}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 1155855790689344417}
   - component: {fileID: 1155855790689344423}
   - component: {fileID: 1155855790689344422}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 1155855791343542192}
   - component: {fileID: 1155855791343542198}
   - component: {fileID: 1155855791343542193}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1155855791397684059}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Skyscraper Medium
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,7 @@ Transform:
   m_GameObject: {fileID: 1155855791397684058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 1.5, z: 2}
   m_Children:
   - {fileID: 1155855790689344417}
   - {fileID: 1155855791343542192}
