@@ -193,26 +193,29 @@ MonoBehaviour:
 
     V: Roll
 
+    F: Toggle Flashlight
+
+    Z: Draw/Holster
+    Weapon
+
+
     LEFT SHIFT (hold): Sprint
 
-    CAPS
-    LOCK (toggle): Walk
+    CAPS LOCK (toggle): Walk
 
-    LEFT CLICK: Shoot
+    LEFT
+    CLICK: Shoot
 
     RIGHT CLICK: Aim
 
 
-    1: Force
-    Push
+    1: Force Push
 
     2: Force Pull
 
-    3: Slow Time (ej klar)
 
-
-    ESCAPE: Open/Close
-    this menu.'
+    ESCAPE:
+    Open/Close this menu.'
 --- !u!114 &907381375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,7 +657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d941e5c81600af84683a063d2c9ca580, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitMarker: {fileID: 1872910886}
   hitFadeTime: 0.15
   mode: 3
   maxCrosshairSize: 1.25
