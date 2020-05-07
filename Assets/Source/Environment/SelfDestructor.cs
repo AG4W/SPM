@@ -6,6 +6,12 @@ public class SelfDestructor : MonoBehaviour
 
     void Start()
     {
-        Destroy(this.gameObject, lifetime);
+        if(lifetime > 0f)
+            Destroy(this.gameObject, lifetime);
+    }
+
+    public void Invoke()
+    {
+        Destroy(this.gameObject);
     }
 }

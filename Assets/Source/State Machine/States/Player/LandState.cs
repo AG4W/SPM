@@ -27,6 +27,6 @@ public class LandState : BaseState
         base.Get<Animator>().SetBool("isLanding", false);
 
         GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Default);
-        GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .35f);
+        //GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .35f);
     }
 }
