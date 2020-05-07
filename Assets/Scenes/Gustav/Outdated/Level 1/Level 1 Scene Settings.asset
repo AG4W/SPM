@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1464182294733780825
+--- !u!114 &-6096333293274085389
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23,7 +23,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   exposure:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   multiplier:
     m_OverrideState: 0
@@ -51,24 +51,24 @@ MonoBehaviour:
     m_Value: 0
   top:
     m_OverrideState: 1
-    m_Value: {r: 0.7607843, g: 0.9843137, b: 1, a: 1}
+    m_Value: {r: 0, g: 0.022208534, b: 0.05660379, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
   middle:
     m_OverrideState: 1
-    m_Value: {r: 0.9622642, g: 0.42506582, b: 0.22241013, a: 1}
+    m_Value: {r: 0, g: 0.02150309, b: 0.03773582, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
   bottom:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.1462264, b: 0.40719554, a: 1}
+    m_Value: {r: 0.00049828255, g: 0, b: 0.009433985, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
   gradientDiffusion:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
 --- !u!114 &-856743637663108204
 MonoBehaviour:
@@ -158,7 +158,7 @@ MonoBehaviour:
   - {fileID: -856743637663108204}
   - {fileID: 3951733642850325124}
   - {fileID: -61388070807129042}
-  - {fileID: -1464182294733780825}
+  - {fileID: -6096333293274085389}
 --- !u!114 &3951733642850325124
 MonoBehaviour:
   m_ObjectHideFlags: 3
