@@ -106,6 +106,9 @@ public class WeaponController : MonoBehaviour
     {
         shotsLeftInCurrentClip = weapon.ClipSize;
         uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
+    }
+    public void PlayReloadSFX()
+    {
         source.PlayOneShot(this.weapon.ReloadSFX.Random());
     }
     void SetWeapon(params object[] args)

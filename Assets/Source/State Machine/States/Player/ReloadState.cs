@@ -11,6 +11,8 @@ public class ReloadState : BaseState
     {
         base.Enter();
 
+        base.Get<WeaponController>().PlayReloadSFX();
+
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 1f);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 0f);
 
