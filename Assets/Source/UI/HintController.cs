@@ -8,6 +8,7 @@ public class HintController : MonoBehaviour
     Text text;
     Image sprite;
 
+    PlayerActor player;
     GameObject target;
 
     Camera camera;
@@ -20,11 +21,17 @@ public class HintController : MonoBehaviour
         camera = Camera.main;
 
         hint.SetActive(false);
+        player = FindObjectOfType<PlayerActor>();
     }
     void Update()
     {
         if (hint.activeSelf)
-            hint.transform.position = camera.WorldToScreenPoint(target.transform.position);
+        {
+            if (Vector3.Dot(player.transform.forward, player.transform.position.DirectionTo(target.transform.position).normalized) >= .5f)
+                hint.transform.position = camera.WorldToScreenPoint(target.transform.position);
+            else
+                hint.transform.position = camera.ViewportToScreenPoint(new Vector3(Vector3.Dot(Vector3.Cross(player.transform.forward, player.transform.position.DirectionTo(target.transform.position)), Vector3.up) > 0f ? 1f : 0f, .5f));
+        }
     }
 
     public void DisplayHint(string t)

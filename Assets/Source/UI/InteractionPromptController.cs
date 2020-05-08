@@ -25,8 +25,6 @@ public class InteractionPromptController : MonoBehaviour
         if (current == null)
             return;
 
-        prompt.transform.position = Camera.main.WorldToScreenPoint(current.Position);
-
         if (Input.GetKeyDown(KeyCode.E))
             current.Interact();
     }

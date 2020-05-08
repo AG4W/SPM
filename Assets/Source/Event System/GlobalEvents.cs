@@ -106,6 +106,9 @@ public enum GlobalEvent
     PlayShotSFX,
     PlayImpactSFX,
 
+    //dialogue
+    PlayDialogue,
+
     //camera && post
     SetCameraMode,
     UpdateDOFFocusDistance,

@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1105578084378377489}
   m_LocalRotation: {x: 0.5394676, y: -0, z: -0, w: 0.8420064}
   m_LocalPosition: {x: 0, y: 2.366, z: 0.06500006}
-  m_LocalScale: {x: 1.600001, y: 0.10000019, z: 0.009999997}
+  m_LocalScale: {x: 1.6000011, y: 0.1000002, z: 0.009999997}
   m_Children: []
   m_Father: {fileID: 2154414828272895305}
   m_RootOrder: 0
@@ -46,7 +46,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.42771924, b: 0.41037738, a: 1}
-  m_Intensity: 24.867899
+  m_Intensity: 49.73577
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -87,7 +87,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 2
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1.6000013, y: 0.10000019}
+  m_AreaSize: {x: 1.6000015, y: 0.1000002}
   m_BounceIntensity: 1
   m_ColorTemperature: 8478
   m_UseColorTemperature: 1
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_PointlightHDType: 1
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 12.5
+  m_Intensity: 25
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 1.6000013
-  m_ShapeHeight: 0.10000019
+  m_ShapeWidth: 1.6000015
+  m_ShapeHeight: 0.1000002
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
