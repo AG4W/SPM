@@ -11,14 +11,14 @@ GameObject:
   - component: {fileID: 4746135821926478536}
   - component: {fileID: 5748104818004024879}
   - component: {fileID: 4354246290945884121}
-  - component: {fileID: 7616504973034999764}
-  - component: {fileID: 1448512416281090547}
-  m_Layer: 0
+  - component: {fileID: 3604379618323353849}
+  - component: {fileID: 3106072200825657961}
+  m_Layer: 19
   m_Name: Area Light (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967294
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4746135821926478536
 Transform:
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 549484870929108067}
   m_LocalRotation: {x: 0.0000008642671, y: 0.8420066, z: -0.5394672, w: 0.0000015199181}
   m_LocalPosition: {x: -0, y: 2.378, z: -0.25}
-  m_LocalScale: {x: 1.6000019, y: 0.100000195, z: 0.009999997}
+  m_LocalScale: {x: 1.6000026, y: 0.10000027, z: 0.009999997}
   m_Children: []
   m_Father: {fileID: 8677318779228961017}
   m_RootOrder: 8
@@ -46,7 +46,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.42771924, b: 0.41037738, a: 1}
-  m_Intensity: 24.867874
+  m_Intensity: 24.867846
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -87,7 +87,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1.6000023, y: 0.100000195}
+  m_AreaSize: {x: 1.600003, y: 0.10000027}
   m_BounceIntensity: 0
   m_ColorTemperature: 8478
   m_UseColorTemperature: 1
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 1.6000023
-  m_ShapeHeight: 0.100000195
+  m_ShapeWidth: 1.600003
+  m_ShapeHeight: 0.10000027
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
   useVolumetric: 1
   featuresFoldout: 1
   showAdditionalSettings: 4
---- !u!23 &7616504973034999764
+--- !u!23 &3604379618323353849
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -240,7 +240,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &1448512416281090547
+--- !u!33 &3106072200825657961
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &8056917443028403814
 Transform:
@@ -525,7 +525,7 @@ MonoBehaviour:
         useOcclusionCulling: 1
         cullingMask:
           serializedVersion: 2
-          m_Bits: 4294967295
+          m_Bits: 3137339447
         sceneCullingMaskOverride: 0
       invertFaceCulling: 0
       flipYMode: 0
@@ -721,7 +721,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1858627535924218653
 Transform:
@@ -731,7 +731,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2319399670631304851}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.00000011920929, y: 1.5, z: 0.7500001}
+  m_LocalPosition: {x: 0.00000011920929, y: 1.5, z: 0.7500013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8677318779228961017}
@@ -982,7 +982,7 @@ MonoBehaviour:
         useOcclusionCulling: 1
         cullingMask:
           serializedVersion: 2
-          m_Bits: 4294967295
+          m_Bits: 3137339447
         sceneCullingMaskOverride: 0
       invertFaceCulling: 0
       flipYMode: 0
@@ -1178,7 +1178,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 64
   m_IsActive: 1
 --- !u!4 &3920202225609462816
 Transform:
@@ -1265,14 +1265,14 @@ GameObject:
   - component: {fileID: 3492691063150668443}
   - component: {fileID: 5416877614017186819}
   - component: {fileID: 256162328817050271}
-  - component: {fileID: 5337482614654837757}
-  - component: {fileID: 6538101559751229352}
-  m_Layer: 0
+  - component: {fileID: 8359106544709914357}
+  - component: {fileID: 3932660797664411392}
+  m_Layer: 19
   m_Name: Area Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967294
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &3492691063150668443
 Transform:
@@ -1283,7 +1283,7 @@ Transform:
   m_GameObject: {fileID: 7700616341090255441}
   m_LocalRotation: {x: 0.53946745, y: 0.0000011026858, z: -0.00000077486027, w: 0.84200644}
   m_LocalPosition: {x: 0, y: 2.378, z: 0}
-  m_LocalScale: {x: 1.6000017, y: 0.1000001, z: 0.009999997}
+  m_LocalScale: {x: 1.6000024, y: 0.10000014, z: 0.009999997}
   m_Children: []
   m_Father: {fileID: 8677318779228961017}
   m_RootOrder: 7
@@ -1300,7 +1300,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.42771924, b: 0.41037738, a: 1}
-  m_Intensity: 24.867903
+  m_Intensity: 24.86788
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1341,7 +1341,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1.600002, y: 0.1000001}
+  m_AreaSize: {x: 1.6000028, y: 0.10000014}
   m_BounceIntensity: 0
   m_ColorTemperature: 8478
   m_UseColorTemperature: 1
@@ -1380,8 +1380,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 1.600002
-  m_ShapeHeight: 0.1000001
+  m_ShapeWidth: 1.6000028
+  m_ShapeHeight: 0.10000014
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
@@ -1455,7 +1455,7 @@ MonoBehaviour:
   useVolumetric: 1
   featuresFoldout: 1
   showAdditionalSettings: 4
---- !u!23 &5337482614654837757
+--- !u!23 &8359106544709914357
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1494,7 +1494,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &6538101559751229352
+--- !u!33 &3932660797664411392
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

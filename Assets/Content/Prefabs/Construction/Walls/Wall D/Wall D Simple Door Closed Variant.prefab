@@ -13,12 +13,12 @@ GameObject:
   - component: {fileID: 4449621944055846609}
   - component: {fileID: 6141013073826972753}
   - component: {fileID: 4131625283186852657}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Area Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967294
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1698165525393599504
 Transform:
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1105578084378377489}
   m_LocalRotation: {x: 0.5394676, y: -0, z: -0, w: 0.8420064}
   m_LocalPosition: {x: 0, y: 2.366, z: 0.06500006}
-  m_LocalScale: {x: 1.6000007, y: 0.10000015, z: 0.009999997}
+  m_LocalScale: {x: 1.6000009, y: 0.100000165, z: 0.009999997}
   m_Children: []
   m_Father: {fileID: 2154414828272895305}
   m_RootOrder: 1
@@ -87,7 +87,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 2
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1.6000011, y: 0.10000015}
+  m_AreaSize: {x: 1.6000012, y: 0.100000165}
   m_BounceIntensity: 1
   m_ColorTemperature: 8478
   m_UseColorTemperature: 1
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 1.6000011
-  m_ShapeHeight: 0.10000015
+  m_ShapeWidth: 1.6000012
+  m_ShapeHeight: 0.100000165
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
@@ -264,7 +264,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2954106745334331461
 Transform:

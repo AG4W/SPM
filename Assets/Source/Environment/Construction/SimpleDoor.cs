@@ -30,7 +30,7 @@ public class SimpleDoor : MonoBehaviour
     [SerializeField]float animationTime = 2f;
     [SerializeField]InterpolationMode animationMode = InterpolationMode.EaseIn;
 
-    void Awake()
+    void Start()
     {
         states = new PanelState[]
         {

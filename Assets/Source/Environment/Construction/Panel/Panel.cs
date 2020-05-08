@@ -17,6 +17,9 @@ public class Panel : MonoBehaviour, IInteractable
     PanelState current;
     AudioSource source;
 
+    [Header("Panel Configuration (ignored if connected to door)")]
+    [SerializeField]PanelState state;
+
     [Header("Event Triggers")]
     [SerializeField]UnityEvent events;
 
@@ -48,6 +51,8 @@ public class Panel : MonoBehaviour, IInteractable
 
         source = this.GetComponentInChildren<AudioSource>();
         this.gameObject.layer = LayerMask.NameToLayer("Interactable");
+
+        this.SetState(state);
     }
 
     public void Interact()
