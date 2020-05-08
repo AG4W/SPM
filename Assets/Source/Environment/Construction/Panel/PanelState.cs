@@ -8,7 +8,7 @@ using System;
 public class PanelState
 {
     [Header("Common Settings")]
-    [SerializeField]string text = "REPLACE ME";
+    [TextArea(3, 10)][SerializeField]string text = "REPLACE ME";
 
     [SerializeField]Sprite sprite;
     [SerializeField]Color tint = Color.magenta;

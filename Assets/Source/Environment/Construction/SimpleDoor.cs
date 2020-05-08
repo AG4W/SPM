@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using System.Collections;
+using System;
 
 public class SimpleDoor : MonoBehaviour
 {
@@ -45,15 +46,15 @@ public class SimpleDoor : MonoBehaviour
         {
             panels[i].SetState(states[(int)state]);
 
-            if(this.state != SimpleDoorState.Broken && this.state != SimpleDoorState.Locked)
-                panels[i].OnInteract += OnInteract;
+            //if(this.state != SimpleDoorState.Broken && this.state != SimpleDoorState.Locked)
+            panels[i].OnInteract += OnInteract;
         }
 
-        if (this.state == SimpleDoorState.Broken || this.state == SimpleDoorState.Locked)
-        {
-            Destroy(this);
-            return;
-        }
+        //if (this.state == SimpleDoorState.Broken || this.state == SimpleDoorState.Locked)
+        //{
+        //    Destroy(this);
+        //    return;
+        //}
 
         //designers är retarded
         Debug.Assert(door != null, this.name + " does not have a door object assigned, did you forget to assign it?", this.gameObject);
@@ -63,6 +64,13 @@ public class SimpleDoor : MonoBehaviour
         Debug.Assert(state != SimpleDoorState.Animating, this.name + " should not start in animating mode, please select a different mode.", this.gameObject);
 
         door.transform.localPosition = state == SimpleDoorState.Opened ? openPosition.localPosition : closedPosition.localPosition;
+    }
+    public void SetState(string state)
+    {
+        Enum.TryParse(state, true, out this.state);
+
+        for (int i = 0; i < panels.Length; i++)
+            panels[i].SetState(states[(int)this.state]);
     }
 
     void OnInteract()
@@ -81,6 +89,8 @@ public class SimpleDoor : MonoBehaviour
                 state = last == SimpleDoorState.Closed ? SimpleDoorState.Opened : SimpleDoorState.Closed;
                 break;
             case SimpleDoorState.Locked:
+                return;
+            case SimpleDoorState.Broken:
                 return;
             default:
                 state = SimpleDoorState.Opened;

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class WeaponPickup : MonoBehaviour, IInteractable
 {
     [SerializeField]Weapon weapon;
+
+    [SerializeField]UnityEvent events;
 
     public string Prompt =>
         weapon.name + "\n" +
@@ -33,7 +36,9 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     }
     public void Interact()
     {
-            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, weapon);
-            Destroy(this.gameObject);
+        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, weapon);
+        events?.Invoke();
+
+        Destroy(this.gameObject);
     }
 }
