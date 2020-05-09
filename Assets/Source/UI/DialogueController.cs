@@ -22,7 +22,7 @@ public class DialogueController : MonoBehaviour
     }
     void Update()
     {
-        if (root.activeSelf)
+        if (current != null && root.activeSelf)
         {
             timer += Time.deltaTime;
 
