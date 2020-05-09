@@ -8,7 +8,6 @@ public class CameraController : MonoBehaviour
     [SerializeField]float jigTranslationSpeed = 15f;
     [SerializeField]float cameraTranslationSpeed = 2.5f;
 
-
     [Header("Collision Settings")]
     [Tooltip("Layers the camera should collide with")]
     [SerializeField]LayerMask collisionMask;
@@ -91,7 +90,7 @@ public class CameraController : MonoBehaviour
             cullingDistances[i] = i == 31 ? 0f : cullDistance;
 
         camera.layerCullDistances = cullingDistances;
-        //camera.layerCullSpherical = true;
+        camera.layerCullSpherical = true;
 
         target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
