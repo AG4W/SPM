@@ -23,14 +23,14 @@ Material:
   m_Name: Sign Ica
   m_Shader: {fileID: -6465566751694194690, guid: b11f4859673bef249b16dc99764ea61a,
     type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _BLENDMODE_ALPHA _DISABLE_SSR _SURFACE_TYPE_TRANSPARENT
+  m_ShaderKeywords: _ALPHATEST_ON _DISABLE_SSR
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2450
   stringTagMap:
     MotionVector: User
-    RenderType: Transparent
+    RenderType: TransparentCutout
   disabledShaderPasses:
   - DistortionVectors
   - TransparentBackface
@@ -41,7 +41,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_34B6901A:
-        m_Texture: {fileID: 2800000, guid: 6aca484c29a23e7498b41f3047492213, type: 3}
+        m_Texture: {fileID: 2800000, guid: 19f0dce4dd36e0d4fbf346907376ebd5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_656881EB:
@@ -154,10 +154,10 @@ Material:
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
-    - _AlphaDstBlend: 10
+    - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
     - _Anisotropy: 0
-    - _BlendMode: 0
+    - _BlendMode: 1
     - _CoatMask: 0
     - _CullMode: 2
     - _CullModeForward: 2
@@ -187,7 +187,7 @@ Material:
     - _DistortionVectorScale: 2
     - _DoubleSidedEnable: 0
     - _DoubleSidedNormalMode: 1
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -222,7 +222,7 @@ Material:
     - _PPDPrimitiveWidth: 1
     - _ReceivesSSR: 0
     - _RefractionModel: 0
-    - _RenderQueueType: 5
+    - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _SSRefractionProjectionModel: 0
     - _Smoothness: 0.5
@@ -244,7 +244,7 @@ Material:
     - _StencilWriteMaskMV: 176
     - _SubsurfaceMask: 1
     - _SupportDecals: 1
-    - _SurfaceType: 1
+    - _SurfaceType: 0
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1
@@ -260,13 +260,13 @@ Material:
     - _UVEmissive: 0
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
-    - _ZTestDepthEqualForOpaque: 4
+    - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 3
     - _ZTestModeDistortion: 4
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_C89049AF: {r: 101.666306, g: 1.5968529, b: 15.96853, a: 1}
+    - Color_C89049AF: {r: 210.11319, g: 13.200829, b: 13.200829, a: 1}
     - Vector2_1394A000: {r: 2, g: -1, b: 0, a: 0}
     - Vector2_B17AE139: {r: 0, g: 1, b: 0, a: 0}
     - Vector2_CB353F6: {r: 1, g: 1, b: 0, a: 0}
