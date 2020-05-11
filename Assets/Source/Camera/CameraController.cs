@@ -74,7 +74,7 @@ public class CameraController : MonoBehaviour
     Quaternion cameraRotation;
 
     Camera camera;
-    GameObject target;
+    GameObject cameraFocusPoint;
 
     CameraMode mode = CameraMode.Default;
 
@@ -96,8 +96,8 @@ public class CameraController : MonoBehaviour
         camera.layerCullDistances = cullingDistances;
         camera.layerCullSpherical = true;
 
-        target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
-        if (target == null)
+        cameraFocusPoint = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
+        if (cameraFocusPoint == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
 
         GlobalEvents.Subscribe(GlobalEvent.SetCameraMode, SetMode);
@@ -127,8 +127,8 @@ public class CameraController : MonoBehaviour
 
         this.transform.rotation = Quaternion.Euler(jigRotationY, jigRotationX, 0f);
 
-        if (target != null)
-            this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, jigTranslationSpeed * Time.deltaTime);
+        if (cameraFocusPoint != null)
+            this.transform.position = Vector3.Lerp(this.transform.position, cameraFocusPoint.transform.position, jigTranslationSpeed * Time.deltaTime);
     }
     void UpdateCamera()
     {
@@ -179,14 +179,19 @@ public class CameraController : MonoBehaviour
         return desiredPositionILS;
     }
 
-    // Collision
-    Vector3 CorrectCameraPosition(Vector3 desiredPositionILS) // ILS = In Local Space, IWS = In World Space
+    /// <summary>
+    /// Takes the desired position, In Local Space, checks for collisions and returns a position, In Local Space, that avoids collision.
+    /// </summary>
+    /// <param name="desiredPositionILS">The desired position In Local Space.</param>
+    /// <returns></returns>
+    Vector3 CorrectCameraPosition(Vector3 desiredPositionILS)
     {
         RaycastHit hit;
         float zMove = 0f;
         float desiredZpos = desiredPositionILS.z;
         float desiredXpos = desiredPositionILS.x;
 
+        // ILS = In Local Space, IWS = In World Space
         Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
         Vector3 dirToDesiredPosFromJigIWS = this.transform.position.DirectionTo(desiredPositionIWS);
 
