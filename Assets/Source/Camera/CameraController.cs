@@ -62,7 +62,7 @@ public class CameraController : MonoBehaviour
     float jigRotationY;
 
     new Camera camera;
-    GameObject target;
+    GameObject cameraFocusPoint;
 
     [SerializeField]CameraSettings settings;
 
@@ -73,7 +73,7 @@ public class CameraController : MonoBehaviour
         camera = this.GetComponentInChildren<Camera>();
         target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
-        if (target == null)
+        if (cameraFocusPoint == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
 
         GlobalEvents.Subscribe(GlobalEvent.SetCameraSettings, SetSettings);
@@ -113,8 +113,8 @@ public class CameraController : MonoBehaviour
 
         this.transform.rotation = Quaternion.Euler(jigRotationY, jigRotationX, 0f);
 
-        if (target != null)
-            this.transform.position = Vector3.Lerp(this.transform.position, target.transform.position, jigTranslationSpeed * Time.deltaTime);
+        if (cameraFocusPoint != null)
+            this.transform.position = Vector3.Lerp(this.transform.position, cameraFocusPoint.transform.position, jigTranslationSpeed * Time.deltaTime);
     }
     void UpdateCamera()
     {
