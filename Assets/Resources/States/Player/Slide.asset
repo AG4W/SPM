@@ -20,7 +20,11 @@ MonoBehaviour:
   rotationSpeed: 0.5
   gravitationalConstant: 9.82
   airResistance: 0.5
-  dynamicFriction: 0
+  settings:
+    fov: 50
+    farClipDistance: 25
+    position: {x: 0.6, y: -0.4, z: -1.4}
+    rotation: {x: 0, y: 0, z: 0}
   curve:
     serializedVersion: 2
     m_Curve:

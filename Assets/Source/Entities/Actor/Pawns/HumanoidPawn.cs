@@ -61,10 +61,8 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
         this.Subscribe(ActorEvent.OnAIForceAffectEnd, OnForceAffectEnd);
 
         this.Target = FindObjectOfType<PlayerActor>();
-    }
-    protected override StateMachine InitializeStateMachine()
-    {
-        return new StateMachine(this,
+
+        base.StateMachine.Initialize(this,
             Resources.LoadAll<State>(base.Path),
             new Dictionary<Type, object>
             {

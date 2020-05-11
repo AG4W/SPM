@@ -87,7 +87,7 @@ public enum GlobalEvent
     PlayDialogue,
 
     //camera && post
-    SetCameraMode,
+    SetCameraSettings,
     UpdateDOFFocusDistance,
     ModifyCameraTrauma,
     ModifyCameraTraumaCapped,

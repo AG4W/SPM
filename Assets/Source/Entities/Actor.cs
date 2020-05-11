@@ -97,10 +97,7 @@ public class Actor : Entity
 
         //velocity
         this.Subscribe(ActorEvent.ModifyVelocity, ModifyVelocity);
-
-        this.StateMachine = InitializeStateMachine();
     }
-    protected virtual StateMachine InitializeStateMachine() => null;
 
     protected override void Update()
     {

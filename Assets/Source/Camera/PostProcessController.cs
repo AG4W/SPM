@@ -6,12 +6,9 @@ using UnityEngine.Rendering.HighDefinition;
 public class PostProcessController : MonoBehaviour
 {
     VolumeProfile profile;
-    CameraMode mode = CameraMode.Default;
 
     [Header("Depth of Field")]
     [SerializeField]float focusSpeed = 5f;
-    [SerializeField]float defaultDoFStrength = .25f;
-    [SerializeField]float ironSightDoFStrength = 7f;
 
     DepthOfField depthOfField;
     float targetDoFDistance;
@@ -37,7 +34,6 @@ public class PostProcessController : MonoBehaviour
         profile.TryGet(out vignette);
         profile.TryGet(out abberation);
 
-        GlobalEvents.Subscribe(GlobalEvent.SetCameraMode, SetMode);
         GlobalEvents.Subscribe(GlobalEvent.UpdateDOFFocusDistance, UpdateDepthOfField);
 
         GlobalEvents.Subscribe(GlobalEvent.PlayerHealthChanged, OnHealthChanged);
@@ -52,7 +48,6 @@ public class PostProcessController : MonoBehaviour
         actualDoFDistance = Mathf.Lerp(actualDoFDistance, targetDoFDistance, focusSpeed * (Time.deltaTime / Time.timeScale));
     }
 
-    void SetMode(object[] args) => mode = (CameraMode)args[0];
     void UpdateDepthOfField(object[] args)
     {
         targetDoFDistance = (float)args[0];

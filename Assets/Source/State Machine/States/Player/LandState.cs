@@ -25,8 +25,5 @@ public class LandState : BaseState
     public override void Exit()
     {
         base.Get<Animator>().SetBool("isLanding", false);
-
-        GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Default);
-        //GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, .35f);
     }
 }

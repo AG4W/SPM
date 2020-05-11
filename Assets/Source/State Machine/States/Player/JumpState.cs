@@ -19,8 +19,6 @@ public class JumpState : GroundLostState
         base.Enter();
         base.Actor.Raise(ActorEvent.SetAnimatorBool, "isJumping", true);
 
-        GlobalEvents.Raise(GlobalEvent.SetCameraMode, CameraMode.Jump);
-
         jumpTimer = 0f;
     }
     public override void Tick()

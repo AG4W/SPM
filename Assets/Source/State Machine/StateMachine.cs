@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class StateMachine
 {
     [SerializeField]bool debugStateMachine = false;
+    [SerializeField]bool enableRealtimeEditing = false;
+
     Actor owner;
 
     readonly Stack<State> queue = new Stack<State>();
@@ -16,29 +18,18 @@ public class StateMachine
 
     public State Current { get; private set; }
 
-    public StateMachine(object controller, State[] states, Dictionary<Type, object> context, Type startState)
+    public void Initialize(Actor controller, State[] states, Dictionary<Type, object> context, Type startState)
     {
-        owner = (Actor)controller;
+        owner = controller;
 
         //glorious fori superier
         //fuck foreach
         //syntaktiskt socker för scriptkiddies
         for (int i = 0; i < states.Length; i++)
         {
-            this.states.Add(states[i].GetType(), UnityEngine.Object.Instantiate(states[i]));
+            this.states.Add(states[i].GetType(), enableRealtimeEditing ? states[i] : UnityEngine.Object.Instantiate(states[i]));
             this.states[states[i].GetType()].Initialize(this, context);
         }
-        //foreach (State state in states)
-        //{
-        //State instance = UnityEngine.Object.Instantiate(state); // Vi skapar en kopia av staten i runtime
-        //Undviker att kopiera, nu kan vi ändra världen i realtid istället.
-        //state.SetStateMachine(this);
-        //state.SetContext(context);
-        //OBS, MÅSTE ÄNDRA TILLBAKA DETTA NÄR VI LÄGGER IN AI, DÅ AIN använder flera states
-
-        //state.Initialize();
-
-        //stateDictionary.Add(state.GetType(), state); // ett state-typ kopplas till en faktisk state
 
         this.Current = this.states[startState];
         this.Current.Enter();
@@ -55,11 +46,15 @@ public class StateMachine
     {
         if (queue.Count > 0)
             next = queue.Pop();
+
+        if (this.debugStateMachine)
+            Debug.Log(owner.name + ": " + Current.GetType() + " <-> " + next.GetType());
     }
 
     public void Tick()
     {
         this.Current.Tick();
+
         UpdateState();
     }
 

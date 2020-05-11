@@ -79,14 +79,7 @@ public class PlayerActor : HumanoidActor
         });
 
         base.Initalize();
-
-        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, Player.GetWeapon(WeaponSlot.Primary));
-        //cache current weapon in savedata
-        //Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
-    }
-    protected override StateMachine InitializeStateMachine()
-    {
-        return new StateMachine(this,
+        base.StateMachine.Initialize(this,
             Resources.LoadAll<State>(base.Path),
             new Dictionary<Type, object>
             {
@@ -96,6 +89,10 @@ public class PlayerActor : HumanoidActor
                 [typeof(WeaponController)] = base.WeaponController,
             },
             typeof(IdleState));
+
+        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, Player.GetWeapon(WeaponSlot.Primary));
+        //cache current weapon in savedata
+        //Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
     }
 
     protected override void Update()

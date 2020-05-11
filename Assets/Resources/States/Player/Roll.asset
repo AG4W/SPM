@@ -20,3 +20,8 @@ MonoBehaviour:
   rotationSpeed: 5
   gravitationalConstant: 9.82
   airResistance: 0.5
+  settings:
+    fov: 60
+    farClipDistance: 25
+    position: {x: 0.6, y: -0.3, z: -1.1}
+    rotation: {x: 0, y: 0, z: 0}
