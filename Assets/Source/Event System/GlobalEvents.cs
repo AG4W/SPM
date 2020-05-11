@@ -116,7 +116,6 @@ public enum ActorEvent
     SetTargetWeaponIndex,
     SetTargetPosition,
     SetTargetRotation,
-    UpdateAlertStatus,
 
     PlayAudio,
 

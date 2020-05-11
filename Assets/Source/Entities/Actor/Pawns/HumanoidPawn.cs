@@ -56,7 +56,6 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
         this.Subscribe(ActorEvent.SetLastKnownPositionOfTarget, SetLastKnownPositionOfTarget);
 
         this.Subscribe(ActorEvent.UpdateAITargetStatus, UpdateCanSeeTargetStatus);
-        this.Subscribe(ActorEvent.UpdateAlertStatus, UpdateAlertedStatus);
 
         this.Subscribe(ActorEvent.OnAIForceAffectStart, OnForceAffectStart);
         this.Subscribe(ActorEvent.OnAIForceAffectEnd, OnForceAffectEnd);
@@ -139,9 +138,6 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
         }
 
         this.CanSeeTarget = true;
-    }
-    void UpdateAlertedStatus(object[] args)
-    {
     }
 
     void OnForceAffectStart(object[] args)
