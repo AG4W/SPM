@@ -23,10 +23,9 @@ public class HintController : MonoBehaviour
         hint.SetActive(false);
         player = FindObjectOfType<PlayerActor>();
     }
-
     void Update()
     {
-        if (hint.activeSelf == true)
+        if (hint.activeSelf)
         {
             if (Vector3.Dot(player.transform.forward, player.transform.position.DirectionTo(target.transform.position).normalized) >= .5f)
                 hint.transform.position = camera.WorldToScreenPoint(target.transform.position);
@@ -40,12 +39,10 @@ public class HintController : MonoBehaviour
         text.text = t;
         hint.SetActive(true);
     }
-
     public void SetHintPosition(GameObject go)
     {
         target = go;
     }
-
     public void CloseHint()
     {
         hint.SetActive(false);

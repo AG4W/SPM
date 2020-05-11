@@ -2,7 +2,6 @@
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
-
 public class ZoneTrigger : MonoBehaviour
 {
     [Header("Leave this empty to use player")]
@@ -11,7 +10,6 @@ public class ZoneTrigger : MonoBehaviour
     [SerializeField]bool repeatable = false;
 
     [Header("On trigger")]
-    [Tooltip("Drag prefab")]
     [SerializeField]UnityEvent events;
 
     Collider zone;

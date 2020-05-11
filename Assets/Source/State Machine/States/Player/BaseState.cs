@@ -13,6 +13,9 @@ public abstract class BaseState : State
     [SerializeField]float gravitationalConstant = 9.82f;
     [SerializeField]float airResistance = .5f;
 
+    [Header("Camera Settings")]
+    [SerializeField]Vector3 offset;
+
     LayerMask ikMask;
 
     protected PlayerActor Player => (PlayerActor)base.Actor;
@@ -31,10 +34,10 @@ public abstract class BaseState : State
             }
         }
     }
-    public float GravitationalConstant { get { return gravitationalConstant; } }
-    public float AirResistance { get { return airResistance; } }
+    public float GravitationalConstant => gravitationalConstant;
+    public float AirResistance => airResistance;
 
-    new public HumanoidActor Actor { get { return base.Actor as HumanoidActor; } }
+    new public HumanoidActor Actor => (HumanoidActor)base.Actor;
 
     protected override void OnInitialize()
     {
@@ -68,7 +71,7 @@ public abstract class BaseState : State
         else
             base.Actor.Raise(ActorEvent.SetLookAtPosition, ray.GetPoint(10f));
 
-        Debug.DrawLine(base.Actor.FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
+        //Debug.DrawLine(base.Actor.FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
         base.Actor.Raise(ActorEvent.SetLookAtWeights, new float[] { total, body, head, eyes, clamp });
     }
     void UpdateIKTarget()
