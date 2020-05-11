@@ -12,7 +12,6 @@ public class Actor : Entity
     float inputModifier = 1f;
     [SerializeField]float inputInterpolationSpeed = 2.5f;
 
-
     [Header("Movement/Collision Properties")]
     [Tooltip("Layers the Actor should collide with")]
     [SerializeField]LayerMask collisionMask;
@@ -21,7 +20,6 @@ public class Actor : Entity
 
     [Tooltip("Friction needed to overcome when standing still")]
     [Range(0f, 1f)][SerializeField]float staticFriction = .5f;
-
     [Tooltip("Friction needed to overcome when moving")]
     [Range(0f, 1f)][SerializeField]float dynamicFriction = .4f;
 
@@ -29,7 +27,6 @@ public class Actor : Entity
     [Range(.25f, .75f)][SerializeField]float jumpOnSlopeYaxisModifier = .75f;
 
     [SerializeField]float height = 1.8f;
-    
 
     [Header("Equipment")]
     WeaponController weaponController;
@@ -41,10 +38,10 @@ public class Actor : Entity
 
     protected virtual float CurrentHeight => height;
     protected float Height { get { return height + heightOffset; } }
-    private float heightOffset = 0f;
+    float heightOffset = 0f;
 
     protected virtual float CurrentFeetOffset => feetOffset;
-    private float feetOffset = 0f;
+    float feetOffset = 0f;
     protected float CollisionRadius { get { return collisionRadius; } }
     protected float SkinWidth { get { return skinWidth; } }
 
@@ -61,7 +58,6 @@ public class Actor : Entity
 
     public Transform FocusPoint { get; private set; }
     public Transform EyePoint { get; private set; }
-
 
     protected override void Initalize()
     {
@@ -104,7 +100,6 @@ public class Actor : Entity
 
         this.StateMachine = InitializeStateMachine();
     }
-
     protected virtual StateMachine InitializeStateMachine() => null;
 
     protected override void Update()
@@ -151,7 +146,6 @@ public class Actor : Entity
 
             if (allowedMoveDistance > this.Velocity.magnitude * (Time.deltaTime / Time.timeScale))
                 break;  // fritt fram att röra sig denna frame
-
             else if (allowedMoveDistance >= 0) // om distansen är kortare än vad vi vill röra oss, och över noll, så vill vi flytta karaktären till skinWidth avstånd från ytan
                 this.transform.position += this.Velocity.normalized * allowedMoveDistance;
 
@@ -183,7 +177,6 @@ public class Actor : Entity
 
         if (counter < 2)
             CheckOverlap(); // ifall vi breakar ur while-loopen vill vi fortfarande kolla overlap
-
     }
     protected virtual void CheckOverlap()
     {

@@ -37,7 +37,7 @@ public class HumanoidActor : Actor
     float targetLeftHandWeight;
     float actualLeftHandWeight;
 
-    [SerializeField] float lookAtInterpolationSpeed = 1.5f;
+    [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
     protected override float CurrentHeight => Mathf.Lerp(crouchHeight, base.Height, actualStance);
     protected override float CurrentFeetOffset => base.CurrentFeetOffset;
@@ -90,8 +90,7 @@ public class HumanoidActor : Actor
         base.Update();
 
         UpdateAnimator();
-
-        Debug.DrawLine(this.FocusPoint.position, actualLookAtPosition, Color.magenta);
+        //Debug.DrawLine(this.FocusPoint.position, actualLookAtPosition, Color.magenta);
     }
     protected virtual void OnAnimatorMove()
     {

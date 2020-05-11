@@ -16,7 +16,7 @@ public class WeaponController : MonoBehaviour
 
     Actor owner;
 
-    // Cached stuff
+    //cached stuff
     GameObject model;
     GameObject muzzleFlash;
     AudioSource source;
@@ -113,7 +113,7 @@ public class WeaponController : MonoBehaviour
     }
     void SetWeapon(params object[] args)
     {
-        // Delete old model.
+        //delete old model
         if (model != null)
             Destroy(model);
 
@@ -121,13 +121,13 @@ public class WeaponController : MonoBehaviour
             this.weapon = null;
         else
         {
-            // Create copy to avoid collision with multiple controllers pointing to the same weapon.
+            //create copy to avoid collision with multiple controllers pointing to the same weapon
             this.weapon = Instantiate((Weapon)args[0]);
 
-            // Create new.
+            //create new
             model = Instantiate(weapon.Prefab, anchorPoint.position, anchorPoint.rotation, anchorPoint);
 
-            // Update relevant transforms and cache them.
+            //update relevant transforms and cache them
             this.ExitPoint = model.transform.FindRecursively("exitPoint");
             this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
             uiController = model.GetComponentInChildren<WeaponWorldUIController>();
@@ -136,7 +136,7 @@ public class WeaponController : MonoBehaviour
 
             muzzleFlash.SetActive(false);
 
-            // Update counter and UI.
+            //update counter and UI
             shotsLeftInCurrentClip = this.weapon.ClipSize;
             uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
         }

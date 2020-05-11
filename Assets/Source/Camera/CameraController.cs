@@ -1,9 +1,4 @@
-﻿/* 
- * This class handles the Camera.
- * Must be assigned to the Camera Jig
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
@@ -66,14 +61,14 @@ public class CameraController : MonoBehaviour
     float jigRotationX;
     float jigRotationY;
 
-    [Header("Trauma / Camera shake")]
+    [Header("Trauma")]
     float trauma;
     float Shake { get { return trauma * trauma * trauma; } }
     [SerializeField]float traumaInterpolationSpeed = 5f;
 
     Quaternion cameraRotation;
 
-    Camera camera;
+    new Camera camera;
     GameObject cameraFocusPoint;
 
     CameraMode mode = CameraMode.Default;
@@ -88,8 +83,9 @@ public class CameraController : MonoBehaviour
         camera = this.GetComponentInChildren<Camera>();
         cameraRotation = camera.transform.localRotation;
 
-        // Setup camera stuff
+        //setup camera stuff
         float[] cullingDistances = new float[32];
+
         for (int i = 0; i < cullingDistances.Length; i++)
             cullingDistances[i] = i == 31 ? 0f : cullDistance;
 
@@ -97,6 +93,7 @@ public class CameraController : MonoBehaviour
         camera.layerCullSpherical = true;
 
         cameraFocusPoint = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
+
         if (cameraFocusPoint == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
 
@@ -150,34 +147,6 @@ public class CameraController : MonoBehaviour
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, CorrectCameraPosition(desiredPos), cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
         camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, cameraRotation, cameraTranslationSpeed * Time.deltaTime);
     }
-    Vector3 GetDesiredPosition()
-    {
-        // IWS = InWorldSpace / ILS = InLocalSpace
-
-        // Get player input 
-        Vector3 desiredPositionILS = positions[(int)mode];
-        if (Input.GetKey(KeyCode.C))
-            desiredPositionILS += crouchOffset;
-
-        #region Check which shoulder is best for the camera
-        Vector3 desiredPosYaxisIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, 0f));
-
-        if (drawGizmos)
-        {
-            Debug.DrawRay(desiredPosYaxisIWS, camera.transform.right * switchShoulderDist, Color.red);
-            Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.red);
-        }
-
-        Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, camera.transform.right, out RaycastHit rightHit, switchShoulderDist, collisionMask);
-        Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, -camera.transform.right, out RaycastHit leftHit, switchShoulderDist, collisionMask);
-        if (rightHit.transform != null & leftHit.transform == null || rightHit.transform != null & leftHit.transform != null & leftHit.distance > rightHit.distance)
-        {
-            desiredPositionILS.x *= -1f; // Puts the camera on the left shoulder
-        }
-        #endregion
-
-        return desiredPositionILS;
-    }
 
     /// <summary>
     /// Takes the desired position, In Local Space, checks for collisions and returns a position, In Local Space, that avoids collision.
@@ -197,8 +166,8 @@ public class CameraController : MonoBehaviour
 
         if (drawGizmos)
             Debug.DrawRay(this.transform.position, dirToDesiredPosFromJigIWS, Color.blue);
-
-        #region Moves the camera in Z-axis at collision
+        
+        ////// Moves the camera in Z-axis at collision
         if (Physics.SphereCast(this.transform.position, cameraSkinWidth, dirToDesiredPosFromJigIWS, out hit, dirToDesiredPosFromJigIWS.magnitude, collisionMask))
         {
             cameraIsColliding = true;
@@ -207,9 +176,9 @@ public class CameraController : MonoBehaviour
 
         desiredPositionILS.z += zMove;
         desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZpos, -minDistBehindPlayer);
-        #endregion
+        ////// Moves the camera in Z-axis at collision 
 
-        #region Moves in X-axis at collision
+        ////// Moves in X-axis at collision 
         Vector3 desiredPosZeroXIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
 
         if (drawGizmos)
@@ -236,13 +205,40 @@ public class CameraController : MonoBehaviour
                 desiredPositionILS.x -= xMove;
                 desiredPositionILS.x = Mathf.Clamp(desiredPositionILS.x, desiredXpos, -minDistBesidePlayer);
             }
-        } 
-        #endregion
+        }
+        ////// Moves in X-axis at collision 
+
+        ////// desiredPositionILS = transform.InverseTransformPoint(desiredPositionIWS); // Kamera följer vägg-kollision
+        return desiredPositionILS;
+    }
+    Vector3 GetDesiredPosition()
+    {
+        ////// Get player input 
+        Vector3 desiredPositionILS = positions[(int)mode];
+        if (Input.GetKey(KeyCode.C))
+            desiredPositionILS += crouchOffset;
+
+        ////// Check which shoulder is best for the camera 
+        ////// IWS = InWorldSpace / ILS = InLocalSpace 
+        Vector3 desiredPosYaxisIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, 0f));
+
+        if (drawGizmos)
+        {
+            Debug.DrawRay(desiredPosYaxisIWS, camera.transform.right * switchShoulderDist, Color.red);
+            Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.red);
+        }
+
+        Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, camera.transform.right, out RaycastHit rightHit, switchShoulderDist, collisionMask);
+        Physics.SphereCast(desiredPosYaxisIWS, cameraSkinWidth, -camera.transform.right, out RaycastHit leftHit, switchShoulderDist, collisionMask);
+        if (rightHit.transform != null & leftHit.transform == null || rightHit.transform != null & leftHit.transform != null & leftHit.distance > rightHit.distance)
+        {
+            desiredPositionILS.x *= -1f; // Puts the camera on the left shoulder
+        }
+        ////// Check which shoulder is best for the camera 
 
         return desiredPositionILS;
     }
 
-    // FOV
     void UpdateFieldOfView() => camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, fovs[(int)mode], cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
     void UpdateDepthOfField()
     {
@@ -252,7 +248,7 @@ public class CameraController : MonoBehaviour
             GlobalEvents.Raise(GlobalEvent.UpdateDOFFocusDistance, hit.distance);
     }
 
-    // JOOICE
+    //JOOICE
     void InterpolateTrauma()
     {
         trauma -= traumaInterpolationSpeed * Time.timeScale;
