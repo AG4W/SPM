@@ -30,11 +30,11 @@ public class SkinnedMeshRendererController : MonoBehaviour
     {
         for (int i = 0; i < renderers.Length; i++)
         {
-            for (int j = 0; j < renderers[i].materials.Length; j++)
+            for (int j = 0; j < renderers[i].sharedMaterials.Length; j++)
             {
-                Color tempColor = renderers[i].materials[j].color;
+                Color tempColor = renderers[i].sharedMaterials[j].GetColor("_BaseColor");
                 tempColor.a = alpha;
-                renderers[i].materials[j].color = tempColor;
+                renderers[i].sharedMaterials[j].SetColor("_BaseColor", tempColor);
             }
             
         }
