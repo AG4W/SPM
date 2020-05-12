@@ -73,8 +73,12 @@ public class SimpleDoor : MonoBehaviour
             panels[i].SetState(states[(int)this.state]);
     }
 
-    void OnInteract()
+    void OnInteract(bool isRecursiveCall = false)
     {
+        //stoppa icke-rekursiva anrop ifrån att trigga dörren.
+        if (this.state == SimpleDoorState.Animating && !isRecursiveCall)
+            return;
+
         SimpleDoorState state;
 
         switch (this.state)
@@ -122,7 +126,7 @@ public class SimpleDoor : MonoBehaviour
                 yield return null;
             }
 
-            OnInteract();
+            OnInteract(true);
         }
     }
 }

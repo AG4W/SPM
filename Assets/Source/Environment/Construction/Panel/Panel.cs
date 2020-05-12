@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 using System.Collections;
+using UnityEngine.Rendering.HighDefinition;
 
 [RequireComponent(typeof(Collider))]
 public class Panel : MonoBehaviour, IInteractable
@@ -84,7 +85,10 @@ public class Panel : MonoBehaviour, IInteractable
             images[i].material.SetColor("_Emission", current.Tint * current.TintIntensity);
         }
         for (int i = 0; i < lights.Length; i++)
+        {
             lights[i].color = current.Tint;
+            lights[i].GetComponent<HDAdditionalLightData>().RequestShadowMapRendering();
+        }
 
         if (current.HasBlinkEffect)
             StartCoroutine(BlinkAsync());
@@ -125,6 +129,6 @@ public class Panel : MonoBehaviour, IInteractable
             lights[i].gameObject.SetActive(status);
     }
 
-    public delegate void OnInteractEvent();
+    public delegate void OnInteractEvent(bool isRecursiveCall = false);
     public OnInteractEvent OnInteract;
 }
