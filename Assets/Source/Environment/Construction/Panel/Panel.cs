@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.Rendering.HighDefinition;
 
 using System.Collections;
-using UnityEngine.Rendering.HighDefinition;
 
 [RequireComponent(typeof(Collider))]
 public class Panel : MonoBehaviour, IInteractable
@@ -51,8 +51,8 @@ public class Panel : MonoBehaviour, IInteractable
         }
 
         source = this.GetComponentInChildren<AudioSource>();
-        this.gameObject.layer = LayerMask.NameToLayer("Interactable");
 
+        this.gameObject.layer = LayerMask.NameToLayer("Interactable");
         this.SetState(state);
     }
 
