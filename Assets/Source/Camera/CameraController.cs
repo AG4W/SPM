@@ -71,7 +71,7 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         camera = this.GetComponentInChildren<Camera>();
-        target = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
+        cameraFocusPoint = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
         if (cameraFocusPoint == null)
             Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");

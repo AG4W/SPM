@@ -8,6 +8,8 @@ public class SlideState : BaseState
     [SerializeField]float minSlideTime = 1f;
     [SerializeField]float minimumSpeedThreshold = 5f;
 
+    [SerializeField]LayerMask aimMask;
+
     float timer;
     Vector3 velocityOnEnter;
 
