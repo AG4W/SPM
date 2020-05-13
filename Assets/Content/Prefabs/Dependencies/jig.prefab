@@ -95,30 +95,24 @@ MonoBehaviour:
   sensitivityY: 80
   jigTranslationSpeed: 15
   cameraTranslationSpeed: 2.5
+  maxCameraUpAngle: 70
+  maxCameraDownAngle: 80
+  traumaInterpolationSpeed: 0.01
   collisionMask:
     serializedVersion: 2
     m_Bits: 2147483649
   cameraSkinWidth: 0.2
-  minDistBehindPlayer: 0.2
-  minDistBesidePlayer: 0.2
-  switchShoulderDist: 0.5
-  camCollisionTransSpeed: 5
+  minDistBehindPlayer: 0
+  minDistBesidePlayer: 0
+  switchShoulderDist: 0.7
+  startTransparancyDist: 0.7
+  fullTransparancyDist: 0.4
   drawGizmos: 0
-  defaultPosition: {x: 0.6, y: 0.4, z: -1.1}
-  ironSightPosition: {x: 0.4, y: 0.4, z: -0.75}
-  jumpPosition: {x: 0, y: 0.5, z: -1.5}
-  sprintPosition: {x: 0, y: 0.5, z: -1}
-  fallPosition: {x: 0, y: 0.6, z: -4}
-  crouchOffset: {x: 0, y: -0.25, z: 0.1}
-  cullDistance: 50
-  defaultFOV: 60
-  ironSightFOV: 40
-  jumpFOV: 90
-  sprintFOV: 60
-  fallFOV: 90
-  maxCameraUpAngle: 70
-  maxCameraDownAngle: 80
-  traumaInterpolationSpeed: 0.01
+  settings:
+    fov: 0
+    farClipDistance: 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
 --- !u!1 &4975658104452451928
 GameObject:
   m_ObjectHideFlags: 0
