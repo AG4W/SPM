@@ -130,6 +130,7 @@ public class Actor : Entity
     {
         Vector3 pointA = this.transform.position + (Vector3.up * (this.CurrentHeight - this.collisionRadius));
         Vector3 pointB = this.transform.position + (Vector3.up * (CurrentFeetOffset + collisionRadius));
+
         float allowedMoveDistance;
         float hitSurfaceSteepness;
 
@@ -149,16 +150,13 @@ public class Actor : Entity
             if (hit.distance <= this.Velocity.magnitude * (Time.deltaTime / Time.timeScale) + skinWidth) // Applicera normalkraft och friktion om vi kommer träffa en yta
             {
                 // Tar bort velocity.y om man träffat en brant backe och inte hoppar/faller för att motverka klättring
-                if (hitSurfaceSteepness > -.8f && stateMachine.Current.GetType() != typeof(JumpState) && stateMachine.Current.GetType() != typeof(FallState))
+                if (hitSurfaceSteepness > -.8f)
                     this.Velocity = new Vector3(this.Velocity.x, -1f, this.Velocity.z); //(Krulls:NOTE) -1f kan vi vilja ändra. -gravity?
 
                 Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
                 this.Velocity += tempNormalForce;
 
                 // Minskar velocity.y vid hopp för att slippa boost av normalforce vid kollisioner
-                if (stateMachine.Current.GetType() == typeof(JumpState))
-                    this.Velocity = new Vector3(this.Velocity.x, this.Velocity.y * jumpOnSlopeYaxisModifier, this.Velocity.z);
-
                 this.Velocity = Friction(this.Velocity, tempNormalForce);
             }
 

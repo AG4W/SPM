@@ -14,8 +14,8 @@ public abstract class BaseLocomotionState : BaseState
     {
         base.Tick();
 
-        if (!base.Actor.IsGrounded)
-            base.TransitionTo<FallState>();
+        //if (!base.Actor.IsGrounded)
+          //base.TransitionTo<FallState>();
         if (Input.GetKeyDown(KeyCode.Mouse1))
             base.TransitionTo<AimState>();
         if (Input.GetKeyDown(KeyCode.Space))

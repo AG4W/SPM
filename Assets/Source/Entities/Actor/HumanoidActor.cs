@@ -100,28 +100,6 @@ public class HumanoidActor : Actor
         // Vi kollar detta sist så att vi inte råkar förflytta karaktären efter att vi har kollat för kollision
         base.CheckCollision();
 
-        //if (IsGrounded && this.TargetInput.magnitude > .1f)
-        //{
-        //    Vector3 velocityXZ = this.Velocity;
-        //    velocityXZ.y = 0f;
-
-        //    //kolla ifall vi träffar något grundplan, ifall sant, raycasta med vår stepIgnore eller liknande för att se ifall vi kan stiga över det.
-        //    if (Physics.Raycast(this.transform.position + (Vector3.up * .1f), velocityXZ.normalized, out RaycastHit botHit, stepOverDistance, base.CollisionMask))
-        //    {
-        //        if (!Physics.Raycast(this.transform.position + (Vector3.up * actualStepOverHeight), velocityXZ.normalized, out RaycastHit topHit, stepOverDistance, base.CollisionMask))
-        //        {
-        //            //base.Velocity += Vector3.up * actualStepOverHeight * (mode == MovementMode.Sprint ? 2f : 1f);
-        //            this.transform.position += Vector3.up * actualStepOverHeight;
-
-        //            Debug.Log("Ignoring step");
-        //        }
-
-        //        Debug.DrawRay(this.transform.position + (Vector3.up * .25f), velocityXZ.normalized * stepOverDistance, topHit.transform == null ? Color.red : Color.green);
-        //    }
-
-        //    Debug.DrawRay(this.transform.position + (Vector3.up * .1f), velocityXZ.normalized * stepOverDistance, botHit.transform == null ? Color.red : Color.green);
-        //}
-
         this.transform.position += base.Velocity * (Time.deltaTime / Time.timeScale);
     }
     protected virtual void OnAnimatorIK(int layerIndex)
@@ -179,10 +157,7 @@ public class HumanoidActor : Actor
     }
     protected virtual void UpdateGroundedStatus()
     {
-        if (this.Animator.GetBool("isJumping"))
-            this.IsGrounded = false;
-        else
-            this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
+        this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
     }
 
     void SetTargetStance(object[] args) => stance = (Stance)args[0];
