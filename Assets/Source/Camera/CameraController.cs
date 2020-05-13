@@ -146,7 +146,7 @@ public class CameraController : MonoBehaviour
     {
         //// ILS = In Local Space & IWS = In World Space
 
-        //desiredPositionILS = CheckShoulderPosition(desiredPositionILS);
+        desiredPositionILS = CheckShoulderPosition(desiredPositionILS);
 
         RaycastHit hit;
         float zMove = 0f;
@@ -168,7 +168,7 @@ public class CameraController : MonoBehaviour
         #endregion
 
         #region Moves in X-axis on collision 
-        Vector3 desiredPosZeroXIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
+        Vector3 desiredPosZeroXIWS = this.transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
 
         if (drawGizmos)
             Debug.DrawRay(desiredPosZeroXIWS, camera.transform.right * desiredXpos, Color.red);
