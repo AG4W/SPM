@@ -7,25 +7,16 @@ public class SkinnedMeshRendererController : MonoBehaviour
 
     SkinnedMeshRenderer[] renderers;
 
-    int counter = 0;
-
     void Start()
     {
-        // Hämta alla renderer
-        // Hämta alla material från alla renderers
-
         renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerAlpha, (object[] args) => SetAlpha((float)args[0]));
     }
 
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.N))
-            SetAlpha(0f);
-        if (Input.GetKey(KeyCode.M))
-            SetAlpha(1f);
-    }
-
+    /// <summary>
+    /// Sets the alpha level on all the Material of all the Skinned Mesh Renderers on the applied game object.
+    /// </summary>
+    /// <param name="alpha">The alpha level to be set on the materials [0-1].</param>
     void SetAlpha(float alpha)
     {
         for (int i = 0; i < renderers.Length; i++)

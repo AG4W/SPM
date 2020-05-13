@@ -104,6 +104,9 @@ public enum GlobalEvent
 
     //scene management
     OnSceneLoad,
+
+    //Skinned mesh renderer
+    SetPlayerAlpha,
 }
 public enum ActorEvent
 {
