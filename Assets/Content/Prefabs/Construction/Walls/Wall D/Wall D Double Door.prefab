@@ -182,7 +182,7 @@ Transform:
   m_GameObject: {fileID: 3461224789217668378}
   m_LocalRotation: {x: 0.86602426, y: -0, z: -0, w: 0.5000021}
   m_LocalPosition: {x: -0, y: 2.354, z: -0.262}
-  m_LocalScale: {x: 3.500002, y: 0.12500036, z: 0.009999997}
+  m_LocalScale: {x: 3.5000024, y: 0.12500045, z: 0.009999997}
   m_Children: []
   m_Father: {fileID: 3254456801940364116}
   m_RootOrder: 10
@@ -240,7 +240,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 1
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 3.5000029, y: 0.12500036}
+  m_AreaSize: {x: 3.5000033, y: 0.12500045}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
@@ -279,8 +279,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 3.5000029
-  m_ShapeHeight: 0.12500036
+  m_ShapeWidth: 3.5000033
+  m_ShapeHeight: 0.12500045
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
@@ -1945,18 +1945,23 @@ PrefabInstance:
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.data[1]
       value: 
-      objectReference: {fileID: 3461224790712709592}
+      objectReference: {fileID: 3461224789217668375}
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.data[2]
       value: 
       objectReference: {fileID: 3461224789217668375}
+    - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: lights.Array.data[0]
+      value: 
+      objectReference: {fileID: 3461224790712709592}
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2047,18 +2052,23 @@ PrefabInstance:
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.data[1]
       value: 
-      objectReference: {fileID: 3461224790712709592}
+      objectReference: {fileID: 3461224789217668375}
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.data[2]
       value: 
       objectReference: {fileID: 3461224789217668375}
+    - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: lights.Array.data[0]
+      value: 
+      objectReference: {fileID: 3461224790712709592}
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: m_LocalPosition.x
