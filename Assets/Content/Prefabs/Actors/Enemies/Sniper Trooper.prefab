@@ -48,23 +48,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 20
-  healthRegenerationRate: 0
   healthRegenerationAmount: 0
   isDestructible: 1
   path: States/Trooper
   targetInput: {x: 0, y: 0, z: 0}
   actualInput: {x: 0, y: 0, z: 0}
   inputInterpolationSpeed: 5
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 2147483905
   collisionRadius: 0.25
   skinWidth: 0.03
   staticFriction: 0.5
   dynamicFriction: 0.4
+  jumpOnSlopeYaxisModifier: 0.75
   height: 1.8
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 2147483649
   stateMachine:
     debugStateMachine: 0
+    enableRealtimeEditing: 0
   crouchHeight: 1.4
   groundCheckDistance: 1
   aimMode: 0
@@ -82,7 +83,7 @@ MonoBehaviour:
   accuracy: 0.5
   sightMask:
     serializedVersion: 2
-    m_Bits: 2147483649
+    m_Bits: 2147483905
   model: {fileID: 584724987660752295}
   ragdoll: {fileID: 678963261578950607, guid: b444b478061f50d43bc8c9a3608f43fa, type: 3}
 --- !u!114 &4397077379897178178
@@ -101,7 +102,7 @@ MonoBehaviour:
   anchorPoint: {fileID: 584724987299875068}
   mask:
     serializedVersion: 2
-    m_Bits: 268435457
+    m_Bits: 268435713
 --- !u!95 &701672296559076905
 Animator:
   serializedVersion: 3
