@@ -14,7 +14,7 @@ public abstract class BaseState : State
     [SerializeField]float airResistance = .5f;
 
     [Header("Camera Settings")]
-    [SerializeField]CameraSettings settings = new CameraSettings(50f, 25f, new Vector3(.6f, .4f, -1.1f), Vector3.zero);
+    [SerializeField]CameraSettings settings = new CameraSettings(50f, new Vector3(.6f, .4f, -1.1f), Vector3.zero);
 
     LayerMask ikMask;
 
