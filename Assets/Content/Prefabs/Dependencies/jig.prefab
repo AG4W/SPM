@@ -105,12 +105,12 @@ MonoBehaviour:
   minDistBehindPlayer: 0
   minDistBesidePlayer: 0
   switchShoulderDist: 0.7
+  cameraTranslationSpeedOnCollision: 5
   startTransparancyDist: 0.7
   fullTransparancyDist: 0.4
   drawGizmos: 0
   settings:
     fov: 0
-    farClipDistance: 0
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
 --- !u!1 &4975658104452451928
@@ -170,7 +170,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 50
+  far clip plane: 25
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -266,7 +266,7 @@ MonoBehaviour:
   antialiasing: 2
   SMAAQuality: 0
   dithering: 1
-  stopNaNs: 1
+  stopNaNs: 0
   taaSharpenStrength: 0.6
   physicalParameters:
     m_Iso: 200
