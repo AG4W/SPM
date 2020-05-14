@@ -3,65 +3,45 @@
 public class CameraController : MonoBehaviour
 {
     [Header("General Settings")]
-    [SerializeField] float sensitivityX = 80f;
-    [SerializeField] float sensitivityY = 80f;
-    [SerializeField] float jigTranslationSpeed = 15f;
-    [SerializeField] float cameraTranslationSpeed = 2.5f;
+    [SerializeField]float sensitivityX = 80f;
+    [SerializeField]float sensitivityY = 80f;
+    [SerializeField]float jigTranslationSpeed = 15f;
+    [SerializeField]float cameraTranslationSpeed = 2.5f;
 
-    [SerializeField] float maxCameraUpAngle = 70;
-    [SerializeField] float maxCameraDownAngle = 80;
+    [SerializeField]float maxCameraUpAngle = 70;
+    [SerializeField]float maxCameraDownAngle = 80;
 
     [Header("Trauma")]
-    [SerializeField] float traumaInterpolationSpeed = 5f;
+    [SerializeField]float traumaInterpolationSpeed = 5f;
     float trauma;
     float Shake { get { return trauma * trauma * trauma; } }
 
     [Header("Collision Settings")]
     [Tooltip("Layers the camera should collide with")]
-    [SerializeField] LayerMask collisionMask;
+    [SerializeField]LayerMask collisionMask;
 
     [Tooltip("The distance which the camera should keep away from colliders")]
-    [Range(0f, .5f)] [SerializeField] float cameraSkinWidth = .2f;
+    [Range(0f, .5f)][SerializeField]float cameraSkinWidth = .2f;
     [Tooltip("The closest distance to which the camera will go behind the character. " +
         "A small value may push the camera into the head/body, while a big value may keep the camera behind walls (Z-axis)")]
-    [Range(0, .4f)] [SerializeField] float minDistBehindPlayer = .4f;
+    [Range(0, .4f)][SerializeField]float minDistBehindPlayer = .4f;
     [Tooltip("The closest distance to which the camera will go to the side of the character. " +
         "A small value may push the camera into the head/body, while a big value may keep the camera behind walls (X-axis)")]
-    [Range(0, .4f)] [SerializeField] float minDistBesidePlayer = .2f;
+    [Range(0, .4f)][SerializeField]float minDistBesidePlayer = .2f;
     [Tooltip("The distance out from the player, left and right, to check to see if the camera should switch shoulder to avoid walls (X-axis)")]
-    [Range(.1f, 1f)] [SerializeField] float switchShoulderDist = .5f;
+    [Range(.1f, 1f)][SerializeField]float switchShoulderDist = .5f;
     [Tooltip("The translation speed of the camera while it's colliding. (Higher than normal to avoid being pushed behind walls)")]
-    [SerializeField] float cameraTranslationSpeedOnCollision = 5f;
+    [SerializeField]float cameraTranslationSpeedOnCollision = 5f;
     bool cameraIsColliding = false;
 
     [Header("Player transparency settings")]
     [Tooltip("The distance of the Camera behind the Player, at which transparancy change kicks in.")]
-    [Range(0f, 1f)] [SerializeField] float startTransparancyDist = .7f;
+    [Range(0f, 1f)][SerializeField]float startTransparancyDist = .7f;
     [Tooltip("The distance of the Camera behind the Player, at which full transparancy is applied.")]
-    [Range(0f, 1f)] [SerializeField] float fullTransparancyDist = .4f;
-
+    [Range(0f, 1f)][SerializeField]float fullTransparancyDist = .4f;
 
     [Header("Debug Collision")]
-    [SerializeField] bool drawGizmos = false;
-
-    //keeping these for reference
-    //[Header("Camera Positions")]
-    //[SerializeField]Vector3 defaultPosition = new Vector3(.6f, .4f, -1.1f);
-    //[SerializeField]Vector3 ironSightPosition = new Vector3(.5f, .45f, -.75f);
-    //[SerializeField]Vector3 jumpPosition = new Vector3(.3f, .5f, -1.4f);
-    //[SerializeField]Vector3 sprintPosition = new Vector3(.3f, .5f, -1.4f);
-    //[SerializeField]Vector3 fallPosition = new Vector3(0f, .6f, -4f);
-    //Vector3[] positions;
-
-    //[SerializeField]Vector3 crouchOffset = new Vector3(0f, -.4f, 0f);
-
-    //[Header("FOV Settings")]
-    //[SerializeField]float defaultFOV = 60;
-    //[SerializeField]float ironSightFOV = 40;
-    //[SerializeField]float jumpFOV = 70;
-    //[SerializeField]float sprintFOV = 65;
-    //[SerializeField]float fallFOV = 90;
-    //float[] fovs;
+    [SerializeField]bool drawGizmos = false;
 
     float jigRotationX;
     float jigRotationY;
@@ -69,7 +49,7 @@ public class CameraController : MonoBehaviour
     new Camera camera;
     GameObject cameraFocusPoint;
 
-    [SerializeField] CameraSettings settings;
+    [SerializeField]CameraSettings settings;
 
     void Start()
     {
@@ -107,12 +87,10 @@ public class CameraController : MonoBehaviour
     public void SetSettings(CameraSettings settings)
     {
         this.settings = settings;
-
-        //dont blend farclipdistance
-        for (int i = 0; i < camera.layerCullDistances.Length; i++)
-            camera.layerCullDistances[i] = i == 31 ? 0f : this.settings.FarClipDistance;
-
-        camera.farClipPlane = this.settings.FarClipDistance;
+    }
+    public void SetFarClipDistance(float distance)
+    {
+        camera.farClipPlane = distance;
     }
     void SetSettings(object[] args) => SetSettings((CameraSettings)args[0]);
 
