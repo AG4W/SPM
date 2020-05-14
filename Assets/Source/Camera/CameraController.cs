@@ -74,8 +74,8 @@ public class CameraController : MonoBehaviour
     }
     void LateUpdate()
     {
-        UpdateCamera();
         UpdateJig();
+        UpdateCamera();
 
         /// Make the player's character transparant when the camera gets too close
         if (camera.transform.localPosition.z >= -fullTransparancyDist)
@@ -120,7 +120,6 @@ public class CameraController : MonoBehaviour
     {
         cameraIsColliding = false;
         Vector3 correctedCamPos = CorrectCameraPosition(settings.Position); // cameraIsColliding blir true här vid kollision
-
         float camTransSpeed = cameraIsColliding == true ? cameraTranslationSpeedOnCollision : cameraTranslationSpeed;
 
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, correctedCamPos, camTransSpeed * (Time.deltaTime / Time.timeScale));
@@ -138,6 +137,7 @@ public class CameraController : MonoBehaviour
         float zMove = 0f;
         float desiredZpos = desiredPositionILS.z;
         float desiredXpos = desiredPositionILS.x;
+        float desiredYpos = desiredPositionILS.y;
 
         Vector3 desiredPositionIWS = transform.TransformPoint(desiredPositionILS);
         Vector3 dirToDesiredPosFromJigIWS = this.transform.position.DirectionTo(desiredPositionIWS);
@@ -159,22 +159,20 @@ public class CameraController : MonoBehaviour
         #region Moves in X-axis on collision 
         if (desiredXpos != 0f)
         {
-            Vector3 desiredPosZeroXIWS = this.transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
+            //Vector3 desiredPosZeroXIWS = this.transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, desiredPositionILS.z));
+            Vector3 desiredPosTest = this.transform.TransformPoint(new Vector3(-desiredPositionILS.x, desiredPositionILS.y, desiredPositionILS.z));
 
             if (drawGizmos)
-                Debug.DrawRay(desiredPosZeroXIWS, camera.transform.right * desiredXpos, Color.red);
+                Debug.DrawRay(desiredPosTest, camera.transform.right * desiredXpos * 2f, Color.red);
 
-            if (desiredXpos < 0f) // This extra check is needed to stop the next cast from starting behind walls when the camera was on the left shoulder
-                if (Physics.SphereCast(desiredPositionIWS, cameraSkinWidth, camera.transform.right * desiredXpos * -1f, out hit, Mathf.Abs(desiredXpos) + cameraSkinWidth, collisionMask))
-                    return desiredPositionILS;
-
-            if (Physics.SphereCast(desiredPosZeroXIWS, cameraSkinWidth, camera.transform.right * desiredXpos, out hit, Mathf.Abs(desiredXpos) + cameraSkinWidth, collisionMask))
+            if (Physics.SphereCast(desiredPosTest, cameraSkinWidth, camera.transform.right * desiredXpos, out hit, Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth, collisionMask)
+                && Vector3.Dot(hit.normal, hit.transform.forward) > 0f)
             {
                 cameraIsColliding = true;
                 float xMove;
                 if (desiredXpos > 0f) // positive = right shoulder
                 {
-                    xMove = (desiredXpos + cameraSkinWidth) - hit.distance; // xMove becomes positive which we subtract from the desired X-pos
+                    xMove = (desiredXpos * 2f + cameraSkinWidth) - hit.distance; // xMove becomes positive which we subtract from the desired X-pos
                     xMove = Mathf.Clamp(xMove, 0f, desiredXpos);
 
                     desiredPositionILS.x -= xMove;
@@ -182,7 +180,7 @@ public class CameraController : MonoBehaviour
                 }
                 if (desiredXpos < 0f) // negative = left shoulder
                 {
-                    xMove = (desiredXpos - cameraSkinWidth) + hit.distance; // xMove becomes negative which we subtract from the desired -X-pos
+                    xMove = (desiredXpos * 2f - cameraSkinWidth) + hit.distance; // xMove becomes negative which we subtract from the desired -X-pos
                     xMove = Mathf.Clamp(xMove, desiredXpos, 0f);
 
                     desiredPositionILS.x -= xMove;
@@ -191,6 +189,17 @@ public class CameraController : MonoBehaviour
             }
         }
         #endregion
+
+        // Handle collision above
+        Vector3 desiredPosZeroYIWS = this.transform.TransformPoint(new Vector3(desiredPositionILS.x, 0f, desiredPositionILS.z));
+        if (drawGizmos)
+            Debug.DrawRay(desiredPosZeroYIWS, camera.transform.up * (desiredYpos + cameraSkinWidth), Color.green);
+
+        if (Physics.Raycast(desiredPosZeroYIWS, camera.transform.up, out hit, desiredYpos + cameraSkinWidth, collisionMask)
+            && Vector3.Dot(hit.normal, hit.transform.forward) > 0f)
+        {
+            desiredPositionILS.y -= (desiredYpos + cameraSkinWidth) - hit.distance;
+        }
 
         return desiredPositionILS;
     }
@@ -213,6 +222,8 @@ public class CameraController : MonoBehaviour
         {
             desiredPositionILS.x *= -1f; // Puts the camera on the left shoulder
         }
+        //if (Input.GetKey(KeyCode.Q))
+        //    desiredPositionILS.x *= -1f;
 
         return desiredPositionILS;
     }
