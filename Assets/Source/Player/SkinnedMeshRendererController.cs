@@ -5,11 +5,18 @@ using UnityEngine;
 public class SkinnedMeshRendererController : MonoBehaviour
 {
 
-    SkinnedMeshRenderer[] renderers;
+    Material[][] materials;
 
     void Start()
     {
-        renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        materials = new Material[renderers.Length][];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+                materials[i] = renderers[i].sharedMaterials;
+        }
+
         GlobalEvents.Subscribe(GlobalEvent.SetPlayerAlpha, (object[] args) => SetAlpha((float)args[0]));
     }
 
@@ -19,15 +26,14 @@ public class SkinnedMeshRendererController : MonoBehaviour
     /// <param name="alpha">The alpha level to be set on the materials [0-1].</param>
     void SetAlpha(float alpha)
     {
-        for (int i = 0; i < renderers.Length; i++)
+        for (int i = 0; i < materials.Length; i++)
         {
-            for (int j = 0; j < renderers[i].sharedMaterials.Length; j++)
+            for (int j = 0; j < materials[i].Length; j++)
             {
-                Color tempColor = renderers[i].sharedMaterials[j].GetColor("_BaseColor");
+                Color tempColor = materials[i][j].GetColor("_BaseColor");
                 tempColor.a = alpha;
-                renderers[i].sharedMaterials[j].SetColor("_BaseColor", tempColor);
+                materials[i][j].SetColor("_BaseColor", tempColor);
             }
-            
         }
     }
 }
