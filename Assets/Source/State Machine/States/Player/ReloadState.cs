@@ -16,8 +16,8 @@ public class ReloadState : BaseState
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 1f);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 0f);
 
-        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "playspeedMultiplier", base.Get<Animator>().GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
         base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", true);
+        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "playspeedMultiplier", base.Get<Animator>().GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
 
         timer = 0f;
         reloadWasComplete = false;
@@ -34,8 +34,6 @@ public class ReloadState : BaseState
             base.Return();
         }
 
-        if (!base.Actor.IsGrounded)
-            base.TransitionTo<FallState>();
         if (Input.GetKeyDown(KeyCode.Space))
             base.TransitionTo<JumpState>();
         if (Input.GetKeyDown(KeyCode.V))

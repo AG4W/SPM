@@ -26,7 +26,7 @@ public class AISearchState : AIBaseLocomotionState
         base.Tick();
 
         if (base.Pawn.CanSeeTarget)
-            base.TransitionTo<AIAttackState>();
+            base.TransitionTo<AIMoveToCoverState>();
 
         lookAtTimer += Time.deltaTime;
 

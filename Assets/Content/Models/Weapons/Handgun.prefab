@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3027418996487015482}
   - component: {fileID: 3027418996487015483}
+  - component: {fileID: 1261499075411928998}
   m_Layer: 0
   m_Name: Handgun
   m_TagString: Untagged
@@ -175,6 +176,25 @@ MonoBehaviour:
   images: []
   lights:
   - {fileID: 3027418997658916012}
+--- !u!95 &1261499075411928998
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3027418996487015481}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ba49cbfce37421d4fb0c914f7849a16f, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3027418997587993215
 GameObject:
   m_ObjectHideFlags: 0

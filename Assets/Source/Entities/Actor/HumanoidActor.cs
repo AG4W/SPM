@@ -39,6 +39,8 @@ public class HumanoidActor : Actor
 
     [SerializeField]float lookAtInterpolationSpeed = 1.5f;
 
+    RaycastHit[] groundCheckBuffer;
+
     protected override float CurrentHeight => Mathf.Lerp(crouchHeight, base.Height, actualStance);
     protected override float CurrentFeetOffset => base.CurrentFeetOffset;
     protected Animator Animator { get; private set; }
@@ -74,7 +76,6 @@ public class HumanoidActor : Actor
 
         this.Subscribe(ActorEvent.SetWeapon, (object[] args) => {
             this.Raise(ActorEvent.SetTargetWeaponIndex, args[0] == null ? WeaponIndex.Unarmed : ((Weapon)args[0]).Index);
-            
         });
 
         //GroundCheck
@@ -157,7 +158,10 @@ public class HumanoidActor : Actor
     }
     protected virtual void UpdateGroundedStatus()
     {
-        this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
+        //todo: Detta generar ett absolut fuckton av garbage
+        //byt mot Physics.SphereCastNonAlloc
+        //this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
+        this.IsGrounded = Physics.SphereCastNonAlloc(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, groundCheckBuffer, groundCheckDistance) > 0;
     }
 
     void SetTargetStance(object[] args) => stance = (Stance)args[0];

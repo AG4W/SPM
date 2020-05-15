@@ -25,9 +25,8 @@ public class AIAttackState : AIBaseLocomotionState
 
         SetInputModifier();
 
-        if (base.Pawn.Mode == AICombatMode.Defensive)
-            base.Actor.Raise(ActorEvent.SetTargetStance, Stance.Crouched);
-
+        //kolla ifall vi kan se sittandes
+        base.Actor.Raise(ActorEvent.SetTargetStance, Physics.Linecast(base.Actor.transform.position + Vector3.up, base.Pawn.Target.FocusPoint.position) ? Stance.Standing : Stance.Crouched);
         base.Actor.Raise(ActorEvent.SetTargetAimMode, AimMode.IronSight);
         base.Actor.Raise(ActorEvent.SetLookAtWeights, base.Weights);
     }

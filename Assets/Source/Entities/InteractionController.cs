@@ -6,8 +6,12 @@ public class InteractionController : MonoBehaviour
 
     [SerializeField]LayerMask mask;
 
+    Camera camera;
+
     void Start()
     {
+        camera = Camera.main;
+
         GlobalEvents.Subscribe(GlobalEvent.OnInteractableStart, (object[] args) => current = null);
         GlobalEvents.Subscribe(GlobalEvent.OnInteractableComplete, (object[] args) => current = null);
     }
@@ -20,7 +24,7 @@ public class InteractionController : MonoBehaviour
     {
         IInteractable lastEntity = current;
 
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        Ray ray = camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
         Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, mask);
 
         if (hit.transform != null)

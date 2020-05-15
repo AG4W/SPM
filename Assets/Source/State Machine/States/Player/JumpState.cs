@@ -33,10 +33,10 @@ public class JumpState : GroundLostState
 
         if (jumpTimer >= jumpDuration)
         {
-            if (base.DistanceToGround <= landThreshold)
+            //if (base.DistanceToGround <= landThreshold)
                 base.TransitionTo<LandState>();
-            else
-                base.TransitionTo<FallState>();
+            //else
+             //   base.TransitionTo<FallState>();
         }
 
         Vector3 velocity = Vector3.zero;

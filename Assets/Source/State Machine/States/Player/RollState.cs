@@ -12,8 +12,8 @@ public class RollState : BaseState
     {
         base.Tick();
 
-        if (!base.Actor.IsGrounded)
-            base.TransitionTo<FallState>();
+        //if (!base.Actor.IsGrounded)
+        //    base.TransitionTo<FallState>();
 
         if (!base.Get<Animator>().GetBool("isRolling"))
         {

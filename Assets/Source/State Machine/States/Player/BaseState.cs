@@ -7,6 +7,7 @@ public abstract class BaseState : State
     [Range(0f, 1f)][SerializeField]float head = 1f;
     [Range(0f, 1f)][SerializeField]float eyes = 1f;
     [Range(0f, 1f)][SerializeField]float clamp = .5f;
+    float[] weights;
 
     [SerializeField]float rotationSpeed = 5f;
 
@@ -17,6 +18,8 @@ public abstract class BaseState : State
     [SerializeField]CameraSettings settings = new CameraSettings(50f, new Vector3(.6f, .4f, -1.1f), Vector3.zero);
 
     LayerMask ikMask;
+    Camera camera;
+    RaycastHit[] ikRaycastBuffer;
 
     protected PlayerActor Player => (PlayerActor)base.Actor;
 
@@ -42,6 +45,12 @@ public abstract class BaseState : State
     protected override void OnInitialize()
     {
         base.OnInitialize();
+
+        weights = new float[] { total, body, head, eyes, clamp };
+        ikMask = LayerMask.NameToLayer("Default");
+        camera = Camera.main;
+        ikRaycastBuffer = new RaycastHit[1];
+
         UpdateIKTarget();
     }
     public override void Enter()
@@ -54,10 +63,10 @@ public abstract class BaseState : State
     {
         base.Actor.Raise(ActorEvent.SetTargetInput, new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")));
         // Ground Check
-        base.Actor.Raise(ActorEvent.UpdateGroundedStatus);
+        //tror ej detta behövs längre?
+        //base.Actor.Raise(ActorEvent.UpdateGroundedStatus);
         //Gravity
         base.Actor.Raise(ActorEvent.ModifyVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));
-
         //rotation
         base.Actor.transform.rotation = Quaternion.Slerp(base.Actor.transform.rotation, Quaternion.Euler(0f, base.Get<CameraController>().transform.eulerAngles.y, 0f), rotationSpeed * (Time.deltaTime / Time.timeScale));
 
@@ -65,16 +74,19 @@ public abstract class BaseState : State
     }
     void UpdateAnimatorIK()
     {
-        //Look at
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        //todo: Något här genererar också ett literal fuckton av garbage
+        //blir glhf kul att tracea detta.
 
-        if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.NameToLayer("Default")))
-            base.Actor.Raise(ActorEvent.SetLookAtPosition, hit.point);
+        //Look at
+        Ray ray = camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+
+        if(Physics.RaycastNonAlloc(ray, ikRaycastBuffer, Mathf.Infinity, ikMask) > 0)
+            base.Actor.Raise(ActorEvent.SetLookAtPosition, ikRaycastBuffer[0].point);
         else
             base.Actor.Raise(ActorEvent.SetLookAtPosition, ray.GetPoint(10f));
 
         //Debug.DrawLine(base.Actor.FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
-        base.Actor.Raise(ActorEvent.SetLookAtWeights, new float[] { total, body, head, eyes, clamp });
+        base.Actor.Raise(ActorEvent.SetLookAtWeights, weights);
     }
     void UpdateIKTarget()
     {

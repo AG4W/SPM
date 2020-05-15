@@ -63,9 +63,11 @@ public class AIIdleState : AIBaseLocomotionState
 
         if (base.Pawn.CanSeeTarget)
         {
+            base.TransitionTo<AIMoveToCoverState>();
+
             //alert other nearby pawns
-            GlobalEvents.Raise(GlobalEvent.AlertOthers, base.Actor, alertOthersDistance);
-            base.TransitionTo<AIAttackState>();
+            //GlobalEvents.Raise(GlobalEvent.AlertOthers, base.Actor, alertOthersDistance);
+            //base.TransitionTo<AIAttackState>();
         }
     }
     public override void Exit()

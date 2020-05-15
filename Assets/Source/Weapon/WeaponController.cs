@@ -2,6 +2,7 @@
 
 using System.Collections;
 using UnityEngine.Rendering;
+using UnityEditor.Experimental;
 
 public class WeaponController : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class WeaponController : MonoBehaviour
     //cached stuff
     GameObject model;
     GameObject muzzleFlash;
+    Animator animator;
     AudioSource source;
     WeaponWorldUIController uiController;
 
@@ -55,6 +57,7 @@ public class WeaponController : MonoBehaviour
             if (fireTimer >= weapon.FireRate)
             {
                 fireTimer = 0f;
+                animator?.SetLayerWeight(1, 0f);
                 this.CanFire = true;
             }
         }
@@ -69,6 +72,7 @@ public class WeaponController : MonoBehaviour
             return;
 
         this.CanFire = false;
+
         muzzleFlash.transform.localEulerAngles = new Vector3(0f, 0f, Random.Range(0f, 360f));
         muzzleFlash.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f);
         muzzleFlash.SetActive(true);
@@ -84,6 +88,10 @@ public class WeaponController : MonoBehaviour
             uiController.UpdateUI(shotsLeftInCurrentClip, this.weapon.ClipSize);
             this.weapon.OnFire(owner, target, heading, this.ExitPoint, mask);
         }
+
+        animator?.Rebind();
+        animator?.SetFloat("playspeedMultiplier", animator.GetCurrentAnimatorClipInfo(1)[0].clip.length / this.weapon.FireRate);
+        animator?.SetLayerWeight(1, 1f);
 
         GlobalEvents.Raise(GlobalEvent.NoiseCreated, this.transform.position, weapon.NoiseValue);
     }
@@ -130,6 +138,7 @@ public class WeaponController : MonoBehaviour
             //update relevant transforms and cache them
             this.ExitPoint = model.transform.FindRecursively("exitPoint");
             this.LeftHandIKTarget = model.transform.FindRecursively("leftIK");
+            animator = model.GetComponent<Animator>();
             uiController = model.GetComponentInChildren<WeaponWorldUIController>();
             muzzleFlash = model.transform.FindRecursively("muzzleFlash").gameObject;
             source = model.GetComponentInChildren<AudioSource>();

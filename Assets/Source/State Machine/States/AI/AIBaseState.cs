@@ -13,7 +13,7 @@ public abstract class AIBaseState : State
     public override void Tick()
     {
         // Ground Check
-        base.Actor.Raise(ActorEvent.UpdateGroundedStatus);
+        //base.Actor.Raise(ActorEvent.UpdateGroundedStatus);
         //Gravity
         base.Actor.Raise(ActorEvent.ModifyVelocity, Vector3.down * gravitationalConstant * (Time.deltaTime / Time.timeScale));
         base.Actor.Raise(ActorEvent.SetAnimatorFloat, "targetMagnitude", base.Actor.TargetInput.magnitude);

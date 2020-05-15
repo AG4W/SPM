@@ -21,8 +21,9 @@ public abstract class AIBaseLocomotionState : AIBaseState
         base.Tick();
 
         base.Actor.Raise(ActorEvent.UpdateAITargetStatus);
-
         base.Actor.Raise(ActorEvent.SetTargetInput, base.Get<NavMeshAgent>().steeringTarget.ToInput(base.Actor.transform).normalized);
+
+        Debug.DrawLine(base.Actor.FocusPoint.position, base.Pawn.Target.FocusPoint.position, base.Pawn.CanSeeTarget ? Color.green : Color.red);
 
         if (base.Actor.ActualInput.magnitude > 1f)
             return;
