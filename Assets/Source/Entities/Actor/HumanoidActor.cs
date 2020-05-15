@@ -158,9 +158,6 @@ public class HumanoidActor : Actor
     }
     protected virtual void UpdateGroundedStatus()
     {
-        //todo: Detta generar ett absolut fuckton av garbage
-        //byt mot Physics.SphereCastNonAlloc
-        //this.IsGrounded = Physics.SphereCast(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, out RaycastHit hit, groundCheckDistance);
         this.IsGrounded = Physics.SphereCastNonAlloc(this.transform.position + (Vector3.up * base.CollisionRadius), base.CollisionRadius, Vector3.down, groundCheckBuffer, groundCheckDistance) > 0;
     }
 

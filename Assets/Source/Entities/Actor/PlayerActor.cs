@@ -23,6 +23,8 @@ public class PlayerActor : HumanoidActor
     [Header("Debug Collision")]
     [SerializeField]bool drawCollisionSpheres = false;
 
+    Collider[] overlaps;
+
     public Vital Force { get; private set; }
 
     protected override void Initalize()
@@ -133,50 +135,14 @@ public class PlayerActor : HumanoidActor
         Vector3 pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
         Vector3 pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
 
-        Vector3 closestPoint;
-        Vector3 hitDirection;
-        float hitDist;
-
         bool overlapCheckA = Physics.CheckSphere(pointA, base.CollisionRadius * overlapRadiusModifier, base.CollisionMask);
         bool overlapCheckB = Physics.CheckSphere(pointB, base.CollisionRadius * overlapRadiusModifier, base.CollisionMask);
 
         int counter = 0;
         while (overlapCheckA == true || overlapCheckB == true)
         {
-            Collider[] overlapCollidersA = Physics.OverlapSphere(pointA, base.CollisionRadius * overlapRadiusModifier, base.CollisionMask);
-            if (overlapCollidersA.Length > 0)
-                for (int i = 0; i < overlapCollidersA.Length; i++)
-                {
-                    closestPoint = overlapCollidersA[i].ClosestPoint(pointA); // punkt i den överlappande collidern som är närmast centrum på sfären
-
-                    hitDist = Vector3.Distance(pointA, closestPoint);
-                    hitDirection = closestPoint - pointA;
-
-                    this.transform.position += -hitDirection.normalized * (base.CollisionRadius * overlapRadiusModifier - hitDist + base.SkinWidth); // Vi vill flytta oss bakåt: radien på sfären minus distans
-
-                    this.Velocity += this.Velocity.GetNormalForce(-hitDirection.normalized); // Applicera normalkraft 
-
-                    // Uppdatera pointA/B
-                    pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
-                    pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
-                }
-
-            Collider[] overlapCollidersB = Physics.OverlapSphere(pointB, base.CollisionRadius * overlapRadiusModifier, base.CollisionMask);
-            if (overlapCollidersB.Length > 0)
-                for (int i = 0; i < overlapCollidersB.Length; i++)
-                {
-                    closestPoint = overlapCollidersB[i].ClosestPoint(pointB);
-
-                    hitDist = Vector3.Distance(pointB, closestPoint);
-                    hitDirection = closestPoint - pointB;
-
-                    this.transform.position += -hitDirection.normalized * (base.CollisionRadius * overlapRadiusModifier - hitDist + base.SkinWidth);
-
-                    this.Velocity += this.Velocity.GetNormalForce(-hitDirection.normalized);
-
-                    pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
-                    pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
-                }
+            CheckOverlapPosition(ref pointA, ref pointA, ref pointB);
+            CheckOverlapPosition(ref pointB, ref pointA, ref pointB);
 
             // Kolla overlap igen
             overlapCheckA = Physics.CheckSphere(pointA, base.CollisionRadius * overlapRadiusModifier, base.CollisionMask);
@@ -185,6 +151,30 @@ public class PlayerActor : HumanoidActor
             if (counter >= 100)
                 break;
             counter++;
+        }
+    }
+
+    private void CheckOverlapPosition(ref Vector3 point, ref Vector3 pointA, ref Vector3 pointB)
+    {
+        if (Physics.OverlapSphereNonAlloc(point, base.CollisionRadius * overlapRadiusModifier, overlaps, base.CollisionMask) > 0)
+        {
+            Vector3 closestPoint;
+            Vector3 hitDirection;
+            float hitDist;
+            
+            for (int i = 0; i < overlaps.Length; i++)
+            {
+                closestPoint = overlaps[i].ClosestPoint(point); // punkt i den överlappande collidern som är närmast centrum på sfären
+
+                hitDist = Vector3.Distance(point, closestPoint);
+                hitDirection = closestPoint - point;
+
+                this.transform.position += -hitDirection.normalized * (base.CollisionRadius * overlapRadiusModifier - hitDist + base.SkinWidth); // Vi vill flytta oss bakåt: radien på sfären minus distans
+                pointA = this.transform.position + (Vector3.up * (base.CurrentHeight - base.CollisionRadius * overlapRadiusModifier));
+                pointB = this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier));
+
+                this.Velocity += this.Velocity.GetNormalForce(-hitDirection.normalized); // Applicera normalkraft 
+            }
         }
     }
 

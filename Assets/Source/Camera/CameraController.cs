@@ -43,15 +43,15 @@ public class CameraController : MonoBehaviour
     [Header("Debug Collision")]
     [SerializeField]bool drawGizmos = false;
 
+    [SerializeField] CameraSettings settings;
+
     float jigRotationX;
     float jigRotationY;
 
     new Camera camera;
     GameObject cameraFocusPoint;
-    RaycastHit[] hitInfo = new RaycastHit[20];
-    RaycastHit[] rightHitInfo = new RaycastHit[20];
-
-    [SerializeField]CameraSettings settings;
+    RaycastHit[] hitInfo = new RaycastHit[24];
+    RaycastHit[] rightHitInfo = new RaycastHit[24];
 
     void Start()
     {

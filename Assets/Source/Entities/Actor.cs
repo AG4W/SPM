@@ -156,14 +156,13 @@ public class Actor : Entity
                 Vector3 tempNormalForce = this.Velocity.GetNormalForce(hit.normal);
                 this.Velocity += tempNormalForce;
 
-                // Minskar velocity.y vid hopp för att slippa boost av normalforce vid kollisioner
                 this.Velocity = Friction(this.Velocity, tempNormalForce);
             }
 
             CheckOverlap();
 
             counter++;
-            if (counter == 11)
+            if (counter > 10)
                 break;
 
             pointA = this.transform.position + (Vector3.up * (CurrentHeight - collisionRadius));
