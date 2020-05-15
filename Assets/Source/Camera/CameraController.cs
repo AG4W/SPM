@@ -86,14 +86,8 @@ public class CameraController : MonoBehaviour
             GlobalEvents.Raise(GlobalEvent.SetPlayerAlpha, Mathf.InverseLerp(-fullTransparancyDist, -startTransparancyDist, camera.transform.localPosition.z));
     }
 
-    public void SetSettings(CameraSettings settings)
-    {
-        this.settings = settings;
-    }
-    public void SetFarClipDistance(float distance)
-    {
-        camera.farClipPlane = distance;
-    }
+    public void SetSettings(CameraSettings settings) => this.settings = settings;
+    public void SetFarClipDistance(float distance) => camera.farClipPlane = distance;
     void SetSettings(object[] args) => SetSettings((CameraSettings)args[0]);
 
     void UpdateJig()
