@@ -2,6 +2,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
+
 public static class Extensions
 {
     //floats
@@ -137,6 +140,14 @@ public static class Extensions
         }
 
         return null;
+    }
+
+    // Raycast
+    public static RaycastHit[] SortByHitDistance(this RaycastHit[] hits)
+    {
+        if (hits.Length > 1)
+            Array.Sort(hits, delegate (RaycastHit x, RaycastHit y) { return x.distance.CompareTo(y.distance); });
+        return hits;
     }
 }
 public enum InterpolationMode

@@ -48,6 +48,8 @@ public class CameraController : MonoBehaviour
 
     new Camera camera;
     GameObject cameraFocusPoint;
+    RaycastHit[] hitInfo = new RaycastHit[20];
+    RaycastHit[] rightHitInfo = new RaycastHit[20];
 
     [SerializeField]CameraSettings settings;
 
@@ -127,7 +129,7 @@ public class CameraController : MonoBehaviour
 
         desiredPositionILS = CheckShoulderPosition(desiredPositionILS);
 
-        RaycastHit hit;
+        
         float zMove = 0f;
         float desiredZpos = desiredPositionILS.z;
         float desiredXpos = desiredPositionILS.x;
@@ -140,10 +142,11 @@ public class CameraController : MonoBehaviour
         if (drawGizmos)
             Debug.DrawRay(this.transform.position, dirToDesiredPosFromJigIWS, Color.blue);
 
-        if (Physics.SphereCast(this.transform.position, cameraSkinWidth, dirToDesiredPosFromJigIWS, out hit, dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth, collisionMask))
+        if (Physics.SphereCastNonAlloc(this.transform.position, cameraSkinWidth, dirToDesiredPosFromJigIWS.normalized, hitInfo, dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth, collisionMask) > 0)
         {
+            hitInfo.SortByHitDistance();
             cameraIsColliding = true;
-            zMove = (dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth) - hit.distance;
+            zMove = (dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth) - hitInfo[0].distance;
         }
 
         desiredPositionILS.z += zMove;
@@ -159,14 +162,15 @@ public class CameraController : MonoBehaviour
             if (drawGizmos)
                 Debug.DrawRay(desiredPosTest, camera.transform.right * desiredXpos * 2f, Color.red);
 
-            if (Physics.SphereCast(desiredPosTest, cameraSkinWidth, camera.transform.right * desiredXpos, out hit, Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth, collisionMask)
-                && Vector3.Dot(hit.normal, hit.transform.forward) > 0f)
+            if (Physics.SphereCastNonAlloc(desiredPosTest, cameraSkinWidth, (camera.transform.right * desiredXpos).normalized, hitInfo, Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth, collisionMask) > 0
+                && Vector3.Dot(hitInfo[0].normal, hitInfo[0].transform.forward) > 0f)
             {
+                hitInfo.SortByHitDistance();
                 cameraIsColliding = true;
                 float xMove;
                 if (desiredXpos > 0f) // positive = right shoulder
                 {
-                    xMove = (desiredXpos * 2f + cameraSkinWidth) - hit.distance; // xMove becomes positive which we subtract from the desired X-pos
+                    xMove = (desiredXpos * 2f + cameraSkinWidth) - hitInfo[0].distance; // xMove becomes positive which we subtract from the desired X-pos
                     xMove = Mathf.Clamp(xMove, 0f, desiredXpos);
 
                     desiredPositionILS.x -= xMove;
@@ -174,7 +178,7 @@ public class CameraController : MonoBehaviour
                 }
                 if (desiredXpos < 0f) // negative = left shoulder
                 {
-                    xMove = (desiredXpos * 2f - cameraSkinWidth) + hit.distance; // xMove becomes negative which we subtract from the desired -X-pos
+                    xMove = (desiredXpos * 2f - cameraSkinWidth) + hitInfo[0].distance; // xMove becomes negative which we subtract from the desired -X-pos
                     xMove = Mathf.Clamp(xMove, desiredXpos, 0f);
 
                     desiredPositionILS.x -= xMove;
@@ -189,7 +193,7 @@ public class CameraController : MonoBehaviour
         if (drawGizmos)
             Debug.DrawRay(desiredPosZeroYIWS, camera.transform.up * (desiredYpos + cameraSkinWidth), Color.green);
 
-        if (Physics.Raycast(desiredPosZeroYIWS, camera.transform.up, out hit, desiredYpos + cameraSkinWidth, collisionMask)
+        if (Physics.Raycast(desiredPosZeroYIWS, camera.transform.up, out RaycastHit hit, desiredYpos + cameraSkinWidth, collisionMask)
             && Vector3.Dot(hit.normal, hit.transform.forward) > 0f)
         {
             desiredPositionILS.y -= (desiredYpos + cameraSkinWidth) - hit.distance;
@@ -208,11 +212,16 @@ public class CameraController : MonoBehaviour
             Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.magenta);
         }
 
-        bool rightIsHit = Physics.SphereCast(desiredPosYaxisIWS, .1f, camera.transform.right, out RaycastHit rightHitInfo, switchShoulderDist, collisionMask);
-        bool leftIsHit = Physics.SphereCast(desiredPosYaxisIWS, .1f, -camera.transform.right, out RaycastHit leftHitInfo, switchShoulderDist, collisionMask);
+        int rightHit = Physics.SphereCastNonAlloc(desiredPosYaxisIWS, .1f, camera.transform.right, rightHitInfo, switchShoulderDist, collisionMask);
+        if (rightHit > 0)
+            rightHitInfo.SortByHitDistance();
 
-        if (!leftIsHit & rightIsHit & rightHitInfo.distance <= switchShoulderDist / 3f || // Om vänster är fri och vi träffar höger med viss distans
-            leftIsHit & rightIsHit & leftHitInfo.distance > rightHitInfo.distance) // Träffar båda sidor och vänster har mer plats
+        int leftHit = Physics.SphereCastNonAlloc(desiredPosYaxisIWS, .1f, -camera.transform.right, hitInfo, switchShoulderDist, collisionMask);
+        if (leftHit > 0)
+            hitInfo.SortByHitDistance();
+
+        if (leftHit == 0 & rightHit != 0 & rightHitInfo[0].distance <= switchShoulderDist / 3f || // Om vänster är fri och vi träffar höger med viss distans
+            leftHit != 0 & rightHit != 0 & hitInfo[0].distance > rightHitInfo[0].distance) // Träffar båda sidor och vänster har mer plats
         {
             desiredPositionILS.x *= -1f; // Puts the camera on the left shoulder
         }
