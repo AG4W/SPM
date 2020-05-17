@@ -504,6 +504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3254456801940364116}
   - component: {fileID: 2852482842892230721}
+  - component: {fileID: 5922556912332722200}
   m_Layer: 0
   m_Name: Wall D Double Door Closed
   m_TagString: Untagged
@@ -547,8 +548,6 @@ MonoBehaviour:
   prompt: 
   interactionDistance: 4
   door: {fileID: 7747267723782974409}
-  closedPosition: {fileID: 7305609387790335754}
-  openPosition: {fileID: 6007106891435146261}
   state: 0
   panels:
   - {fileID: 8303971878527414002}
@@ -613,6 +612,26 @@ MonoBehaviour:
     blinkSFX: []
   animationTime: 2
   animationMode: 3
+  isPersistent: 0
+--- !u!95 &5922556912332722200
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5482531091180912880}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c7fc5c2bd32016e49a11fbb559d6c684, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5487870371399813757
 GameObject:
   m_ObjectHideFlags: 0

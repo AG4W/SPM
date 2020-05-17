@@ -29,20 +29,20 @@ public class Panel : MonoBehaviour, IInteractable
 
     Vector3 IInteractable.Position => this.transform.position;
 
-    void Awake()
+    public void Initialize()
     {
         texts = texts ?? new Text[0];
         images = images ?? new Image[0];
         lights = lights ?? new Light[0];
 
-        if(texts.Length > 0)
+        if (texts.Length > 0)
         {
             Material tm = texts[0].material;
 
             for (int i = 0; i < texts.Length; i++)
                 texts[i].material = Instantiate(tm);
         }
-        if(images.Length > 0)
+        if (images.Length > 0)
         {
             Material im = images[0].material;
 
@@ -55,7 +55,6 @@ public class Panel : MonoBehaviour, IInteractable
         this.gameObject.layer = LayerMask.NameToLayer("Interactable");
         this.SetState(state);
     }
-
     public void Interact()
     {
         if(current.InteractSFX.Length > 0)
@@ -64,7 +63,6 @@ public class Panel : MonoBehaviour, IInteractable
         events?.Invoke();
         OnInteract?.Invoke();
     }
-
     public void SetState(PanelState state)
     {
         current = state;
