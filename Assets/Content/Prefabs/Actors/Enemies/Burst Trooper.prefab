@@ -56,7 +56,7 @@ MonoBehaviour:
   inputInterpolationSpeed: 5
   collisionMask:
     serializedVersion: 2
-    m_Bits: 2147483905
+    m_Bits: 2147488001
   collisionRadius: 0.25
   skinWidth: 0.03
   staticFriction: 0.5
@@ -83,7 +83,7 @@ MonoBehaviour:
   accuracy: 0.5
   sightMask:
     serializedVersion: 2
-    m_Bits: 2147483905
+    m_Bits: 2147488001
   model: {fileID: 483819717377289966}
   ragdoll: {fileID: 678963261578950607, guid: b444b478061f50d43bc8c9a3608f43fa, type: 3}
 --- !u!114 &5628095978818688688
@@ -102,7 +102,7 @@ MonoBehaviour:
   anchorPoint: {fileID: 483819717250249653}
   mask:
     serializedVersion: 2
-    m_Bits: 268436225
+    m_Bits: 268440321
 --- !u!95 &2668357539062087087
 Animator:
   serializedVersion: 3

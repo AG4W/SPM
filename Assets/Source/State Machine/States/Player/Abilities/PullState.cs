@@ -9,6 +9,8 @@ public class PullState : AbilityState
 
     [SerializeField]AnimationCurve initialAcceleration;
 
+    RaycastHit[] hits = new RaycastHit[48];
+
     public override void Tick()
     {
         base.Tick();
@@ -17,17 +19,19 @@ public class PullState : AbilityState
         Vector3 fp = ray.origin + (ray.direction.normalized * 2.5f);
         fp += Vector3.up;
 
-        RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance);
+        //RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance, affectableMask);
+        Physics.SphereCastNonAlloc(ray, radius, hits, distance, affectableMask);
 
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].transform.GetComponent<IForceAffectable>() != null && Vector3.Dot(base.Actor.transform.forward, base.Actor.transform.position.DirectionTo(hits[i].transform.position)) >= -.25f)
-            {
-                hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(hits[i].transform.position.DirectionTo(fp).normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power) + base.Actor.Velocity);
+            if(hits[i].transform != null)
+                if (hits[i].transform.GetComponent<IForceAffectable>() != null && Vector3.Dot(base.Actor.transform.forward, base.Actor.transform.position.DirectionTo(hits[i].transform.position)) >= -.25f)
+                {
+                    hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(hits[i].transform.position.DirectionTo(fp).normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power) + base.Actor.Velocity);
 
-                if (hits[i].transform.position.DistanceTo(fp) <= 2f)
-                    hits[i].transform.GetComponent<IForceAffectable>().SetVelocity(base.Actor.Velocity);
-            }
+                    if (hits[i].transform.position.DistanceTo(fp) <= 2f)
+                        hits[i].transform.GetComponent<IForceAffectable>().SetVelocity(base.Actor.Velocity);
+                }
         }
     }
 }

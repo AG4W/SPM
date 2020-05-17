@@ -20,6 +20,7 @@ public abstract class BaseState : State
     LayerMask ikMask;
 
     RaycastHit[] ikRaycastBuffer;
+    Ray ray;
 
     protected PlayerActor Player => (PlayerActor)base.Actor;
     protected Animator Animator { get; private set; }
@@ -80,7 +81,7 @@ public abstract class BaseState : State
         //blir glhf kul att tracea detta.
 
         //Look at
-        Ray ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
 
         if(Physics.RaycastNonAlloc(ray, ikRaycastBuffer, Mathf.Infinity, ikMask) > 0)
             base.Actor.Raise(ActorEvent.SetLookAtPosition, ikRaycastBuffer[0].point);
