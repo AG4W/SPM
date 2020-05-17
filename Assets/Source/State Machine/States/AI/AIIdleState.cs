@@ -44,7 +44,7 @@ public class AIIdleState : AIBaseLocomotionState
         base.Actor.Raise(ActorEvent.SetTargetPosition, base.Actor.transform.position);
         base.Actor.Raise(ActorEvent.SetTargetInput, Vector3.zero);
 
-        base.Get<Animator>().SetBool("isIdling", true);
+        base.Animator.SetBool("isIdling", true);
     }
     public override void Tick()
     {
@@ -59,7 +59,7 @@ public class AIIdleState : AIBaseLocomotionState
             timer = 0f;
         }
 
-        base.Get<Animator>().SetFloat("randomIndex", idleIndex, .25f, Time.deltaTime);
+        base.Animator.SetFloat("randomIndex", idleIndex, .25f, Time.deltaTime);
 
         if (base.Pawn.CanSeeTarget)
         {
@@ -72,6 +72,6 @@ public class AIIdleState : AIBaseLocomotionState
     }
     public override void Exit()
     {
-        base.Get<Animator>().SetBool("isIdling", false);
+        base.Animator.SetBool("isIdling", false);
     }
 }

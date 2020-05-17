@@ -122,10 +122,7 @@ public enum ActorEvent
 
     PlayAudio,
 
-    //animator actor
-    SetAnimatorFloat,
-    SetAnimatorTrigger,
-    SetAnimatorBool,
+    //animator
     SetAnimatorLayer,
 
     UpdateGroundedStatus,

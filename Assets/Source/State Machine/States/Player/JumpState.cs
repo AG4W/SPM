@@ -17,7 +17,7 @@ public class JumpState : GroundLostState
     public override void Enter()
     {
         base.Enter();
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isJumping", true);
+        base.Animator.SetBool("isJumping", true);
 
         jumpTimer = 0f;
     }
@@ -72,6 +72,6 @@ public class JumpState : GroundLostState
         base.Actor.SetCollisionLowPoint(0f);
         base.Actor.SetCollisionHighPoint(0f);
 
-        base.Get<Animator>().SetBool("isJumping", false);
+        base.Animator.SetBool("isJumping", false);
     }
 }

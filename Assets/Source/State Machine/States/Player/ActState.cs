@@ -28,7 +28,7 @@ public abstract class ActState : BaseLocomotionState
                 return;
 
             //skjut ifrån kamera
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+            Ray ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
             Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, aimMask);
 
             base.Actor.Raise(ActorEvent.FireWeapon, hit.transform != null && hit.transform.root != base.Get<Actor>().transform ? hit.point : ray.GetPoint(300f), base.Actor.ActualInput.magnitude / 2f);
