@@ -14,7 +14,7 @@ public class SlideState : BaseState
     public override void Enter()
     {
         base.Enter();
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isSliding", true);
+        base.Animator.SetBool("isSliding", true);
 
         velocityOnEnter = base.Actor.Velocity;
         velocityOnEnter.y = Mathf.Clamp(velocityOnEnter.y, -Mathf.Infinity, 0f);
@@ -44,6 +44,6 @@ public class SlideState : BaseState
     }
     public override void Exit()
     {
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isSliding", false);
+        base.Animator.SetBool("isSliding", false);
     }
 }

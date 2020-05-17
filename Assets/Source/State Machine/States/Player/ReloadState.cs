@@ -16,8 +16,8 @@ public class ReloadState : BaseState
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 1f);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 0f);
 
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", true);
-        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "playspeedMultiplier", base.Get<Animator>().GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
+        base.Animator.SetBool("isReloading", true);
+        base.Animator.SetFloat("playspeedMultiplier", base.Animator.GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
 
         timer = 0f;
         reloadWasComplete = false;
@@ -49,7 +49,7 @@ public class ReloadState : BaseState
         if (reloadWasComplete)
             base.Actor.Raise(ActorEvent.ReloadWeapon);
 
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", false);
+        base.Animator.SetBool("isReloading", false);
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 0f);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 1f);
     }

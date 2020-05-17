@@ -103,7 +103,8 @@ public enum GlobalEvent
     AlertOthers,
 
     //scene management
-    OnSceneLoad,
+    OnSceneEnter,
+    OnSceneExit,
 
     //Skinned mesh renderer
     SetPlayerAlpha,
@@ -121,10 +122,7 @@ public enum ActorEvent
 
     PlayAudio,
 
-    //animator actor
-    SetAnimatorFloat,
-    SetAnimatorTrigger,
-    SetAnimatorBool,
+    //animator
     SetAnimatorLayer,
 
     UpdateGroundedStatus,

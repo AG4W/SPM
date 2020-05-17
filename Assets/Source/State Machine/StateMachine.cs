@@ -50,7 +50,6 @@ public class StateMachine
         if (this.debugStateMachine)
             Debug.Log(owner.name + ": " + Current.GetType() + " <-> " + next.GetType());
     }
-
     public void Tick()
     {
         this.Current.Tick();

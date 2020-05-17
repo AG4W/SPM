@@ -16,8 +16,8 @@ public class AIReloadState : AIBaseLocomotionState
         if(base.Pawn.Mode == AICombatMode.Defensive)
             base.Actor.Raise(ActorEvent.SetTargetStance, Stance.Crouched);
 
-        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "playspeedMultiplier", base.Get<Animator>().GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", true);
+        base.Animator.SetFloat("playspeedMultiplier", base.Animator.GetCurrentAnimatorClipInfo((int)AnimatorLayer.Reload)[0].clip.length / base.Get<WeaponController>().Weapon.ReloadTime);
+        base.Animator.SetBool("isReloading", true);
 
         timer = 0f;
         reloadWasComplete = false;
@@ -45,7 +45,7 @@ public class AIReloadState : AIBaseLocomotionState
         if (reloadWasComplete)
             base.Actor.Raise(ActorEvent.ReloadWeapon);
 
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isReloading", false);
+        base.Animator.SetBool("isReloading", false);
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Reload, 0f);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 1f);
         base.Actor.Raise(ActorEvent.SetTargetStance, Stance.Standing);

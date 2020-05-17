@@ -53,7 +53,7 @@ public class AIAttackState : AIBaseLocomotionState
 
         SetTargetPosition();
 
-        base.Actor.Raise(ActorEvent.SetLookAtPosition, lookAt);
+        base.Animator.SetLookAtPosition(lookAt);
         base.Actor.Raise(ActorEvent.SetTargetRotation, Quaternion.LookRotation(base.Actor.transform.position.DirectionTo(base.Pawn.LastKnownPositionOfTarget), Vector3.up));
 
         if (base.Get<WeaponController>().NeedsReload)

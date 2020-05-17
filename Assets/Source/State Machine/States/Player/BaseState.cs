@@ -18,10 +18,11 @@ public abstract class BaseState : State
     [SerializeField]CameraSettings settings = new CameraSettings(50f, new Vector3(.6f, .4f, -1.1f), Vector3.zero);
 
     LayerMask ikMask;
-    Camera camera;
+
     RaycastHit[] ikRaycastBuffer;
 
     protected PlayerActor Player => (PlayerActor)base.Actor;
+    protected Animator Animator { get; private set; }
 
     public float DistanceToGround
     {
@@ -48,8 +49,9 @@ public abstract class BaseState : State
 
         weights = new float[] { total, body, head, eyes, clamp };
         ikMask = LayerMask.NameToLayer("Default");
-        camera = Camera.main;
         ikRaycastBuffer = new RaycastHit[1];
+
+        this.Animator = base.Get<Animator>();
 
         UpdateIKTarget();
     }
@@ -78,7 +80,7 @@ public abstract class BaseState : State
         //blir glhf kul att tracea detta.
 
         //Look at
-        Ray ray = camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        Ray ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
 
         if(Physics.RaycastNonAlloc(ray, ikRaycastBuffer, Mathf.Infinity, ikMask) > 0)
             base.Actor.Raise(ActorEvent.SetLookAtPosition, ikRaycastBuffer[0].point);

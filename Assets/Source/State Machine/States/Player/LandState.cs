@@ -6,7 +6,7 @@ public class LandState : BaseState
     public override void Enter()
     {
         base.Enter();
-        base.Get<Animator>().SetBool("isLanding", true);
+        base.Animator.SetBool("isLanding", true);
     }
     public override void Tick()
     {
@@ -24,6 +24,6 @@ public class LandState : BaseState
     }
     public override void Exit()
     {
-        base.Get<Animator>().SetBool("isLanding", false);
+        base.Animator.SetBool("isLanding", false);
     }
 }

@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEngine.SceneManagement;
 
 public class PlayerActor : HumanoidActor
 {
@@ -75,7 +76,7 @@ public class PlayerActor : HumanoidActor
             this.Raise(ActorEvent.SetWeapon, args[0]);
         });
 
-        GlobalEvents.Subscribe(GlobalEvent.OnSceneLoad, (object[] args) =>
+        GlobalEvents.Subscribe(GlobalEvent.OnSceneExit, (object[] args) =>
         {
             Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
         });
@@ -128,6 +129,8 @@ public class PlayerActor : HumanoidActor
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, 1f);
         if(Input.GetKeyDown(KeyCode.Z))
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon == null ? Player.GetWeapon(WeaponSlot.Primary) : null);
+        if (Input.GetKeyDown(KeyCode.K))
+            base.Health.Update(-999999f);
     }
 
     protected override void CheckOverlap()
@@ -153,7 +156,6 @@ public class PlayerActor : HumanoidActor
             counter++;
         }
     }
-
     private void CheckOverlapPosition(ref Vector3 point, ref Vector3 pointA, ref Vector3 pointB)
     {
         if (Physics.OverlapSphereNonAlloc(point, base.CollisionRadius * overlapRadiusModifier, overlaps, base.CollisionMask) > 0)
@@ -189,11 +191,8 @@ public class PlayerActor : HumanoidActor
     }
     protected override void OnHealthZero()
     {
-        //teleportera till nämrsta checkpoint
-        this.transform.position = checkpoints.OrderBy(t => t.transform.position.DistanceTo(this.transform.position)).First().transform.position + Vector3.up;
-
-        base.Health.Reset();
-        this.Force.Reset();
+        GlobalEvents.Raise(GlobalEvent.OnSceneExit, SceneManager.GetActiveScene());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 public enum Stance
