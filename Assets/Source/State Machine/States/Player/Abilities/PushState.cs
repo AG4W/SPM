@@ -13,7 +13,7 @@ public class PushState : AbilityState
     {
         base.Tick();
 
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
+        Ray ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
         RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance);
 
         for (int i = 0; i < hits.Length; i++)

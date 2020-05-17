@@ -22,8 +22,8 @@ public abstract class AbilityState : ActState
         this.Timer = 0f;
 
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Force, 1f);
-        base.Actor.Raise(ActorEvent.SetAnimatorFloat, "castIndex", (float)this.animationIndex);
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isCasting", true);
+        base.Animator.SetFloat("castIndex", (float)this.animationIndex);
+        base.Animator.SetBool("isCasting", true);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 0f);
 
         GlobalEvents.Raise(GlobalEvent.OnAbilityActivated, this);
@@ -42,7 +42,7 @@ public abstract class AbilityState : ActState
     public override void Exit()
     {
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Force, 0f);
-        base.Actor.Raise(ActorEvent.SetAnimatorBool, "isCasting", false);
+        base.Animator.SetBool("isCasting", false);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 1f);
     }
 }

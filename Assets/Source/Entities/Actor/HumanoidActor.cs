@@ -62,10 +62,10 @@ public class HumanoidActor : Actor
         this.Subscribe(ActorEvent.SetTargetAimMode, SetTargetAimMode);
         this.Subscribe(ActorEvent.SetTargetWeaponIndex, SetTargetWeaponIndex);
 
-        //animator
-        this.Subscribe(ActorEvent.SetAnimatorFloat, SetAnimatorFloat);
-        this.Subscribe(ActorEvent.SetAnimatorTrigger, SetAnimatorTrigger);
-        this.Subscribe(ActorEvent.SetAnimatorBool, SetAnimatorBool);
+        //animator events yeeted
+        //this.Subscribe(ActorEvent.SetAnimatorFloat, SetAnimatorFloat);
+        //this.Subscribe(ActorEvent.SetAnimatorTrigger, SetAnimatorTrigger);
+        //this.Subscribe(ActorEvent.SetAnimatorBool, SetAnimatorBool);
         this.Subscribe(ActorEvent.SetAnimatorLayer, SetAnimatorLayer);
 
         //IK
@@ -165,9 +165,10 @@ public class HumanoidActor : Actor
     void SetTargetAimMode(object[] args) => aimMode = (AimMode)args[0];
     void SetTargetWeaponIndex(object[] args) => targetWeaponIndex = (WeaponIndex)args[0];
 
-    void SetAnimatorFloat(object[] args) => this.Animator.SetFloat((string)args[0], (float)args[1]);
-    void SetAnimatorTrigger(object[] args) => this.Animator.SetTrigger((string)args[0]);
-    void SetAnimatorBool(object[] args) => this.Animator.SetBool((string)args[0], (bool)args[1]);
+    //animator events yeeted
+    //void SetAnimatorFloat(object[] args) => this.Animator.SetFloat((string)args[0], (float)args[1]);
+    //void SetAnimatorTrigger(object[] args) => this.Animator.SetTrigger((string)args[0]);
+    //void SetAnimatorBool(object[] args) => this.Animator.SetBool((string)args[0], (bool)args[1]);
     void SetAnimatorLayer(object[] args) => targetLayerWeights[(int)(AnimatorLayer)args[0]] = (float)args[1];
 
     //IK

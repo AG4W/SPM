@@ -7,12 +7,15 @@ public abstract class State : ScriptableObject
 {
     Dictionary<Type, object> context;
 
+    protected Camera Camera { get; private set; }
+
     //lazy properties
     public Actor Actor { get; private set; }
     public Transform Transform { get { return this.Actor.transform; } }
 
     public StateMachine StateMachine { get; private set; }
     public bool IsActiveState { get { return this.StateMachine.Current == this; } }
+
 
     public void Initialize(StateMachine stateMachine, Dictionary<Type, object> context)
     {
@@ -27,7 +30,7 @@ public abstract class State : ScriptableObject
     }
     protected virtual void OnInitialize()
     {
-
+        this.Camera = Camera.main;
     }
 
     public virtual void Enter()
