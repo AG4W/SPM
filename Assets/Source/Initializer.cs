@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Initializer : MonoBehaviour
 {
     void Awake()
     {
         GlobalEvents.Initialize();
-
-        Player.Initialize(null);
+    }
+    void Start()
+    {
+        PersistentData.Initialize();
 
         GeneralAudioController.Initialize();
         DamageableController.Initialize();
+
+        GlobalEvents.Raise(GlobalEvent.OnSceneEnter, SceneManager.GetActiveScene());
     }
 }

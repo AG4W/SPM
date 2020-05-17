@@ -182,7 +182,7 @@ Transform:
   m_GameObject: {fileID: 3461224789217668378}
   m_LocalRotation: {x: 0.86602426, y: -0, z: -0, w: 0.5000021}
   m_LocalPosition: {x: -0, y: 2.354, z: -0.262}
-  m_LocalScale: {x: 3.5000024, y: 0.12500045, z: 0.009999997}
+  m_LocalScale: {x: 3.5000029, y: 0.12500054, z: 0.009999997}
   m_Children: []
   m_Father: {fileID: 3254456801940364116}
   m_RootOrder: 10
@@ -199,7 +199,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 18.18907
+  m_Intensity: 18.189053
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -240,7 +240,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 1
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 3.5000033, y: 0.12500045}
+  m_AreaSize: {x: 3.5000038, y: 0.12500054}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
@@ -279,8 +279,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 3.5000033
-  m_ShapeHeight: 0.12500045
+  m_ShapeWidth: 3.5000038
+  m_ShapeHeight: 0.12500054
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
@@ -752,6 +752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3254456801940364116}
   - component: {fileID: 2852482842892230721}
+  - component: {fileID: 3582625770259053342}
   m_Layer: 0
   m_Name: Wall D Double Door
   m_TagString: Untagged
@@ -799,8 +800,6 @@ MonoBehaviour:
   prompt: 
   interactionDistance: 4
   door: {fileID: 7747267723782974409}
-  closedPosition: {fileID: 7305609387790335754}
-  openPosition: {fileID: 6007106891435146261}
   state: 0
   panels:
   - {fileID: 8303971878527414002}
@@ -866,6 +865,26 @@ MonoBehaviour:
     blinkSFX: []
   animationTime: 2
   animationMode: 3
+  isPersistent: 0
+--- !u!95 &3582625770259053342
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5482531091180912880}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c7fc5c2bd32016e49a11fbb559d6c684, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5487870371399813757
 GameObject:
   m_ObjectHideFlags: 0
@@ -2019,6 +2038,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35aa029085992a048b5a430f33095de0, type: 3}
+--- !u!4 &8484432592734943556 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8232881567659462955}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8484432592734943552 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
@@ -2031,12 +2056,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1d30ba5577246a4bbd63283fc737330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &8484432592734943556 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
-    type: 3}
-  m_PrefabInstance: {fileID: 8232881567659462955}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8413412648405157529
 PrefabInstance:
   m_ObjectHideFlags: 0

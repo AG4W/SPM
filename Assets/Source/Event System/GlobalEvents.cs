@@ -103,7 +103,8 @@ public enum GlobalEvent
     AlertOthers,
 
     //scene management
-    OnSceneLoad,
+    OnSceneEnter,
+    OnSceneExit,
 
     //Skinned mesh renderer
     SetPlayerAlpha,
