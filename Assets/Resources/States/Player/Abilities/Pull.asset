@@ -34,6 +34,9 @@ MonoBehaviour:
   maxTrauma: 0.5
   activateSounds:
   - {fileID: 8300000, guid: 94064da778be66d4a8d5367d17ebf60b, type: 3}
+  affectableMask:
+    serializedVersion: 2
+    m_Bits: 536875008
   radius: 2
   distance: 15
   power: 25

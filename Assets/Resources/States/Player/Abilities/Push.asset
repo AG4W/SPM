@@ -22,7 +22,6 @@ MonoBehaviour:
   airResistance: 0.5
   settings:
     fov: 70
-    farClipDistance: 25
     position: {x: 0.6, y: 0.4, z: -1.1}
     rotation: {x: 0, y: 0, z: 0}
   minimumForceRequiredToEnterForceState: 0.2
@@ -35,6 +34,9 @@ MonoBehaviour:
   maxTrauma: 0.5
   activateSounds:
   - {fileID: 8300000, guid: dca47ca4c59079a4f98f9fccab7728e4, type: 3}
+  affectableMask:
+    serializedVersion: 2
+    m_Bits: 536875008
   radius: 4
   distance: 10
   power: 25

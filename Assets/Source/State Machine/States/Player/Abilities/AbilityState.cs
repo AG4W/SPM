@@ -10,6 +10,8 @@ public abstract class AbilityState : ActState
 
     [SerializeField]AudioClip[] activateSounds;
 
+    [SerializeField]protected LayerMask affectableMask;
+
     protected float Timer { get; set; }
 
     public AbilityAnimationIndex AnimationIndex { get { return animationIndex; } }
