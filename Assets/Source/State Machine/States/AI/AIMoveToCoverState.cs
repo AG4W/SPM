@@ -9,6 +9,9 @@ public class AIMoveToCoverState : AIBaseLocomotionState
 {
     [SerializeField]int samples = 8;
     [SerializeField]float sampleRadius = 8f;
+    [Tooltip("Lower is better, but harder to find.")]
+    [Range(-1f, 1f)]
+    [SerializeField]float minimumCoverQuality = -.5f;
 
     [SerializeField]bool debugMode = true;
 
@@ -25,7 +28,7 @@ public class AIMoveToCoverState : AIBaseLocomotionState
             Vector3 sp = new Vector3(sampleRadius * Mathf.Cos(Mathf.PI * (i * 45f) / 180f), 0f, sampleRadius * Mathf.Sin(Mathf.PI * (i * 45f) / 180f));
             sp += base.Actor.transform.position;
 
-            if(NavMesh.FindClosestEdge(sp, out NavMeshHit hit, -1) && Vector3.Dot(hit.normal, base.Pawn.Target.transform.position.DirectionTo(base.Actor.transform.position).normalized) < -.5f)
+            if(NavMesh.FindClosestEdge(sp, out NavMeshHit hit, -1) && Vector3.Dot(hit.normal, base.Pawn.Target.transform.position.DirectionTo(base.Actor.transform.position).normalized) <= minimumCoverQuality)
                 candidates.Add(hit.position);
         }
 

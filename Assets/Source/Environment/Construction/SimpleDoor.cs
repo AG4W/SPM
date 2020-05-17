@@ -25,10 +25,7 @@ public class SimpleDoor : MonoBehaviour, IPersistable
 
     PanelState[] states;
 
-    [Header("Animation Settings")]
-    [SerializeField]float animationTime = 2f;
-    [SerializeField]InterpolationMode animationMode = InterpolationMode.EaseIn;
-
+    float animationTime = 1f;
     Animator animator;
 
     [Header("Persistence")]
@@ -119,7 +116,7 @@ public class SimpleDoor : MonoBehaviour, IPersistable
 
             float t = 0f;
 
-            while (animator.GetCurrentAnimatorStateInfo(0).IsName("Baselayer.Closing") || animator.GetCurrentAnimatorStateInfo(0).IsName("Baselayer.Opening"))
+            while (t < animationTime)
             {
                 t += Time.deltaTime;
                 yield return null;
