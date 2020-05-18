@@ -34,18 +34,18 @@ public class AIMoveToCoverState : AIBaseLocomotionState
 
         candidates.OrderBy(v => v.DistanceTo(base.Actor.transform.position));
 
+        if (candidates.Count > 0)
+            coverPosition = candidates.First();
+        else
+            coverPosition = base.Actor.transform.position;
+
         if (debugMode)
         {
             for (int i = 0; i < candidates.Count; i++)
                 Debug.DrawLine(base.Actor.transform.position, candidates[i], Color.yellow, 1f);
 
-            Debug.DrawLine(base.Actor.transform.position, candidates.First(), Color.green, 1f);
+            Debug.DrawLine(base.Actor.transform.position, coverPosition, Color.green, 1f);
         }
-
-        if (candidates.Count > 0)
-            coverPosition = candidates.First();
-        else
-            coverPosition = base.Actor.transform.position;
 
         base.Actor.Raise(ActorEvent.SetTargetPosition, coverPosition);
         base.Actor.Raise(ActorEvent.SetInputModifier, 1f);
