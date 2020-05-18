@@ -179,6 +179,9 @@ public class CameraController : MonoBehaviour
 
         Vector3 CheckCollisionXaxis(Vector3 desiredPositionILS, Vector3 desiredPositionIWS)
         {
+            if (desiredPositionILS.x == 0f) // There's no need for X-axis collision
+                return desiredPositionILS;
+
             float desiredXpos = desiredPositionILS.x;
             Vector3 desiredPosOtherShoulderIWS = this.transform.TransformPoint(new Vector3(-desiredPositionILS.x, desiredPositionILS.y, desiredPositionILS.z));
             SetDistancesInArrayToInfinite(ref hitInfo);
@@ -200,12 +203,6 @@ public class CameraController : MonoBehaviour
                     Physics.Raycast(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point),
                         out RaycastHit DesPosRayHit2, Mathf.Infinity, collisionMask);
 
-                    if (drawGizmos)
-                    {
-                        Debug.DrawRay(cameraFocusPoint.transform.position, cameraFocusPoint.transform.position.DirectionTo(hitInfo[i].point), Color.yellow);
-                        Debug.DrawRay(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point), Color.yellow);
-                    }
-
                     if (CFPosRayHit.point == hitInfo[i].point && DesPosRayHit2.point == hitInfo[i].point && CFPosRayHit.normal == hitInfo[i].normal)
                     {
                         cameraIsColliding = true;
@@ -214,6 +211,12 @@ public class CameraController : MonoBehaviour
                         /// A positive desiredPositionILS.x subtracts xMove and a negative adds
                         desiredPositionILS.x = desiredPositionILS.x > 0f ? desiredPositionILS.x -= xMove : desiredPositionILS.x += xMove;
                         break;
+                    }
+
+                    if (drawGizmos)
+                    {
+                        Debug.DrawRay(cameraFocusPoint.transform.position, cameraFocusPoint.transform.position.DirectionTo(hitInfo[i].point), Color.yellow);
+                        Debug.DrawRay(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point), Color.yellow);
                     }
                 }
             }
@@ -229,7 +232,7 @@ public class CameraController : MonoBehaviour
             Vector3 desiredPosZeroYIWS = this.transform.TransformPoint(new Vector3(desiredPositionILS.x, 0f, desiredPositionILS.z));
 
             if (Physics.Raycast(desiredPosZeroYIWS, camera.transform.up, out RaycastHit hit, desiredYpos + cameraSkinWidth, collisionMask)
-                && Vector3.Dot(hit.normal, hit.transform.forward) > 0f)
+                && Vector3.Dot(hit.normal, hit.transform.forward) > 0f) // If dot is negative the hit is most likely behind a face
             {
                 desiredPositionILS.y -= (desiredYpos + cameraSkinWidth) - hit.distance;
             }
