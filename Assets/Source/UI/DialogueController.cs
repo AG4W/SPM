@@ -19,6 +19,8 @@ public class DialogueController : MonoBehaviour
         text = root.GetComponentInChildren<Text>();
 
         GlobalEvents.Subscribe(GlobalEvent.PlayDialogue, (object[] args) => PlayDialogue((Dialogue)args[0]));
+
+        root.SetActive(false);
     }
     void Update()
     {
