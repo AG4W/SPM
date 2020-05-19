@@ -49,7 +49,7 @@ public class CameraController : MonoBehaviour
     [Tooltip("Draw gizmos used for debugging (Programmers debugtool).")]
     [SerializeField]bool drawGizmos = false;
 
-    [SerializeField] CameraSettings settings;
+    [SerializeField]CameraSettings settings = new CameraSettings(60f, new Vector3(0f, 1.5f, -2f), new Vector3(0f, 0f, 0f));
 
     float jigRotationX;
     float jigRotationY;
