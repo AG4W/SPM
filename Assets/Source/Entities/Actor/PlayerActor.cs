@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
-
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using UnityEngine.SceneManagement;
 
-public class PlayerActor : HumanoidActor
+using System.Collections.Generic;
+using System;
+
+public class PlayerActor : HumanoidActor, IPersistable
 {
     [Header("Player Configuration")]
     [SerializeField]float maxForce = 200f;
     [SerializeField]float forceRegenerationAmount = .01f;
 
     Light[] torches;
-    Checkpoint[] checkpoints;
+    CheckpointData checkpointData;
 
     //animation setuff
-    Transform primaryAnchorPoint;
     Transform jig;
 
     [Header("Player Actor Collision Settings")]
@@ -28,18 +26,18 @@ public class PlayerActor : HumanoidActor
 
     public Vital Force { get; private set; }
 
+    //mhmmm... "unik" hash-generation osv...
+    string IPersistable.Hash => "PLAYER()!#¤%&/" + this.transform.position.ToString() + this.gameObject.activeSelf.ToString();
+    //player is always persistable, duh
+    bool IPersistable.IsPersistable => true;
+
     protected override void Initalize()
     {
         this.Force = new Vital(VitalType.Force, maxForce, forceRegenerationAmount, false);
         this.Force.OnCurrentChanged += OnForceChanged;
 
-        checkpoints = FindObjectsOfType<Checkpoint>();
-        Debug.Assert(checkpoints != null && checkpoints.Length > 0, "Could not find any checkpoints, did you forget to drag the prefab into your scene?", this.gameObject);
-        
         jig = FindObjectOfType<CameraController>().transform;
         Debug.Assert(jig != null, "LocomotionController could not find Camera Jig, did you forget to drag the prefab into your scene?");
-
-        primaryAnchorPoint = this.transform.FindRecursively("primaryAnchorPoint");
 
         torches = new Light[] {
             this.transform.FindRecursively("torch").GetComponentInChildren<Light>() 
@@ -54,32 +52,8 @@ public class PlayerActor : HumanoidActor
             for (int i = 0; i < torches.Length; i++)
                 torches[i].enabled = !torches[i].enabled;
         });
-        GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) => {
-            //rensa gammal modell
-            for (int i = 0; i < primaryAnchorPoint.childCount; i++)
-                Destroy(primaryAnchorPoint.GetChild(i).gameObject);
-
-            Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
-
-            if (Player.GetWeapon(WeaponSlot.Primary) != null)
-            {
-                GameObject g = Instantiate(Player.GetWeapon(WeaponSlot.Primary).Prefab, primaryAnchorPoint.position, primaryAnchorPoint.rotation, primaryAnchorPoint);
-
-                //disable stuff
-                g.transform.FindRecursively("muzzleFlash").gameObject.SetActive(false);
-                g.transform.FindRecursively("world UI").gameObject.SetActive(false);
-
-                //remove ui controller
-                Destroy(g.GetComponentInChildren<WeaponWorldUIController>());
-            }
-
-            this.Raise(ActorEvent.SetWeapon, args[0]);
-        });
-
-        GlobalEvents.Subscribe(GlobalEvent.OnSceneExit, (object[] args) =>
-        {
-            Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
-        });
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerWeapon, (object[] args) => this.Raise(ActorEvent.SetWeapon, args[0]));
+        GlobalEvents.Subscribe(GlobalEvent.SetPlayerCurrentCheckpoint, (object[] args) => checkpointData = (CheckpointData)args[0]);
 
         base.Initalize();
         base.StateMachine.Initialize(this,
@@ -92,10 +66,6 @@ public class PlayerActor : HumanoidActor
                 [typeof(WeaponController)] = base.WeaponController,
             },
             typeof(IdleState));
-
-        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, Player.GetWeapon(WeaponSlot.Primary));
-        //cache current weapon in savedata
-        //Player.SetWeapon(WeaponSlot.Primary, this.WeaponController.Weapon);
     }
 
     protected override void Update()
@@ -127,8 +97,6 @@ public class PlayerActor : HumanoidActor
             GlobalEvents.Raise(GlobalEvent.ToggleTorches);
         if (Input.GetKey(KeyCode.O))
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, 1f);
-        if(Input.GetKeyDown(KeyCode.Z))
-            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon == null ? Player.GetWeapon(WeaponSlot.Primary) : null);
         if (Input.GetKeyDown(KeyCode.K))
             base.Health.Update(-999999f);
     }
@@ -193,6 +161,25 @@ public class PlayerActor : HumanoidActor
     {
         GlobalEvents.Raise(GlobalEvent.OnSceneExit, SceneManager.GetActiveScene());
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void IPersistable.OnEnter(Context context)
+    {
+        this.checkpointData = (CheckpointData)context.data["checkpointData"];
+
+        this.transform.position = this.checkpointData.Position;
+        this.transform.rotation = this.checkpointData.Rotation;
+
+        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, (Weapon)context.data["weapon"] ?? this.WeaponController.Weapon);
+    }
+    Context IPersistable.GetContext()
+    {
+        Context c = new Context();
+
+        c.data.Add("checkpointData", checkpointData);
+        c.data.Add("weapon", this.WeaponController.Weapon);
+
+        return c;
     }
 }
 public enum Stance

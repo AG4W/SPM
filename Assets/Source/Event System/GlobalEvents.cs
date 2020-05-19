@@ -72,6 +72,7 @@ public enum GlobalEvent
     PlayerForceChanged,
     PlayerShotHit,
     PlayerShotMissed,
+    SetPlayerCurrentCheckpoint,
     ToggleTorches,
     OnAbilityActivated,
     UpdateForce,

@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
+using Boo.Lang;
 
 public static class PersistentData
 {
@@ -52,7 +53,7 @@ public static class PersistentData
         {
             IPersistable persistable = behaviours[i].GetComponent<IPersistable>();
 
-            if (persistable != null && persistable.IsPersistable)
+            if (persistable != null && persistable.IsPersistable && !data[sceneIndex].ContainsKey(persistable.Hash))
                 data[sceneIndex].Add(persistable.Hash, persistable.GetContext());
         }
     }
