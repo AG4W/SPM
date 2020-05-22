@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
     [Range(0, .4f)][SerializeField]float minDistBesidePlayer = .2f;
     [Tooltip("The distance out from the player, left and right, to check to see if the camera should switch shoulder to avoid walls (X-axis)")]
     [Range(.1f, 1f)][SerializeField]float switchShoulderDist = .5f;
-    [Tooltip("The translation speed of the camera while it's colliding. (Higher than normal to avoid being pushed behind walls)")]
+    [Tooltip("The translation speed of the camera while it's colliding. (Higher than normal to avoid being pushed behind walls resulting in noticeable culling)")]
     [SerializeField]float cameraTranslationSpeedOnCollision = 5f;
 
     bool cameraIsColliding = false;
@@ -69,7 +69,7 @@ public class CameraController : MonoBehaviour
         cameraFocusPoint = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
         if (cameraFocusPoint == null)
-            Debug.LogWarning("CameraController couldnt find Player object, did you forget to drag it into your scene?");
+            Debug.LogWarning("CameraController couldn't find Player object, did you forget to drag it into your scene?");
 
         GlobalEvents.Subscribe(GlobalEvent.SetCameraSettings, SetSettings);
         GlobalEvents.Subscribe(GlobalEvent.ModifyCameraTrauma, ModifyTrauma);
@@ -146,8 +146,8 @@ public class CameraController : MonoBehaviour
     {
         Vector3 desiredPosIWS = transform.TransformPoint(desiredPosILS);
 
-        // CheckShoulderPosition must be done first
-        desiredPosILS = CheckShoulderPosition(desiredPosILS);
+        // EvaluateShoulderPosition must be done first
+        desiredPosILS = EvaluateShoulderPosition(desiredPosILS);
         desiredPosILS = CheckCollisionZaxis(desiredPosILS, desiredPosIWS);
         desiredPosILS = CheckCollisionXaxis(desiredPosILS, desiredPosIWS);
         desiredPosILS = CheckCollisionYaxis(desiredPosILS);
@@ -158,7 +158,7 @@ public class CameraController : MonoBehaviour
         {
             float desiredZpos = desiredPositionILS.z;
             Vector3 dirToDesiredPosFromJigIWS = this.transform.position.DirectionTo(desiredPositionIWS);
-            SetDistancesInArrayToInfinite(ref hitInfo);
+            SetDistancesToInfinite(ref hitInfo);
 
             if (Physics.SphereCastNonAlloc(this.transform.position, cameraSkinWidth, dirToDesiredPosFromJigIWS.normalized,
                 hitInfo, dirToDesiredPosFromJigIWS.magnitude + cameraSkinWidth, collisionMask) > 0)
@@ -184,7 +184,7 @@ public class CameraController : MonoBehaviour
 
             float desiredXpos = desiredPositionILS.x;
             Vector3 desiredPosOtherShoulderIWS = this.transform.TransformPoint(new Vector3(-desiredPositionILS.x, desiredPositionILS.y, desiredPositionILS.z));
-            SetDistancesInArrayToInfinite(ref hitInfo);
+            SetDistancesToInfinite(ref hitInfo);
 
             int hits = Physics.SphereCastNonAlloc(
                 desiredPosOtherShoulderIWS, cameraSkinWidth, (camera.transform.right * desiredXpos).normalized,
@@ -192,6 +192,8 @@ public class CameraController : MonoBehaviour
 
             if (hits > 0)
                 hitInfo.SortByHitDistance();
+            else
+                return desiredPositionILS;
 
             for (int i = 0; i < hits; i++)
             {
@@ -248,16 +250,16 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="desiredPositionILS">The desired position, In Local Space, for the camera.</param>
     /// <returns></returns>
-    Vector3 CheckShoulderPosition(Vector3 desiredPositionILS)
+    Vector3 EvaluateShoulderPosition(Vector3 desiredPositionILS)
     {
         Vector3 desiredPosYaxisIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, 0f));
 
-        SetDistancesInArrayToInfinite(ref rightHitInfo);
+        SetDistancesToInfinite(ref rightHitInfo);
         int rightHit = Physics.SphereCastNonAlloc(desiredPosYaxisIWS, .1f, camera.transform.right, rightHitInfo, switchShoulderDist, collisionMask);
         if (rightHit > 0)
             rightHitInfo.SortByHitDistance();
 
-        SetDistancesInArrayToInfinite(ref leftHitInfo);
+        SetDistancesToInfinite(ref leftHitInfo);
         int leftHit = Physics.SphereCastNonAlloc(desiredPosYaxisIWS, .1f, -camera.transform.right, leftHitInfo, switchShoulderDist, collisionMask);
         if (leftHit > 0)
             leftHitInfo.SortByHitDistance();
@@ -281,7 +283,7 @@ public class CameraController : MonoBehaviour
     /// Dummies way of reseting an RaycastHit array. Makes every hit-distance in RaycastHit[] equal to Mathf.Infinity to make them irrelevant.
     /// </summary>
     /// <param name="hitInfo">Array to reset</param>
-    void SetDistancesInArrayToInfinite(ref RaycastHit[] hitInfo)
+    void SetDistancesToInfinite(ref RaycastHit[] hitInfo)
     {
         for (int i = 0; i < hitInfo.Length; i++)
             hitInfo[i].distance = Mathf.Infinity;
