@@ -43,13 +43,13 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Lazy way to stop redundant SetPlayerAlpha calls
     /// </summary>
-    bool playerAlphaIsZero = true;
+    bool playerAlphaIsZero = false;
 
     [Header("Debug Collision")]
     [Tooltip("Draw gizmos used for debugging (Programmers debugtool).")]
     [SerializeField]bool drawGizmos = false;
 
-    [SerializeField]CameraSettings settings = new CameraSettings(60f, new Vector3(0f, 1.5f, -2f), new Vector3(0f, 0f, 0f));
+    [SerializeField]CameraSettings settings = new CameraSettings(60f, new Vector3(.6f, .4f, -1.1f), new Vector3(0f, 0f, 0f));
 
     float jigRotationX;
     float jigRotationY;
@@ -184,8 +184,8 @@ public class CameraController : MonoBehaviour
 
             float desiredXpos = desiredPositionILS.x;
             Vector3 desiredPosOtherShoulderIWS = this.transform.TransformPoint(new Vector3(-desiredPositionILS.x, desiredPositionILS.y, desiredPositionILS.z));
-            SetDistancesToInfinite(ref hitInfo);
 
+            SetDistancesToInfinite(ref hitInfo);
             int hits = Physics.SphereCastNonAlloc(
                 desiredPosOtherShoulderIWS, cameraSkinWidth, (camera.transform.right * desiredXpos).normalized,
                 hitInfo, Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth, collisionMask);
