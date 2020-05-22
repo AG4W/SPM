@@ -46,8 +46,8 @@ public class CameraController : MonoBehaviour
     bool playerAlphaIsZero = false;
 
     [Header("Debug Collision")]
-    [Tooltip("Draw gizmos used for debugging (Programmers debugtool).")]
-    [SerializeField]bool drawGizmos = false;
+    [Tooltip("Draw gizmos and print debug log (Programmers debugtool).")]
+    [SerializeField]bool debugging = false;
 
     [SerializeField]CameraSettings settings = new CameraSettings(60f, new Vector3(.6f, .4f, -1.1f), new Vector3(0f, 0f, 0f));
 
@@ -144,10 +144,11 @@ public class CameraController : MonoBehaviour
     /// <returns></returns>
     Vector3 CorrectCameraPosition(Vector3 desiredPosILS)
     {
-        Vector3 desiredPosIWS = transform.TransformPoint(desiredPosILS);
-
         // EvaluateShoulderPosition must be done first
         desiredPosILS = EvaluateShoulderPosition(desiredPosILS);
+
+        Vector3 desiredPosIWS = transform.TransformPoint(desiredPosILS);
+
         desiredPosILS = CheckCollisionZaxis(desiredPosILS, desiredPosIWS);
         desiredPosILS = CheckCollisionXaxis(desiredPosILS, desiredPosIWS);
         desiredPosILS = CheckCollisionYaxis(desiredPosILS);
@@ -171,7 +172,7 @@ public class CameraController : MonoBehaviour
                 desiredPositionILS.z = Mathf.Clamp(desiredPositionILS.z, desiredZpos, -minDistBehindPlayer);
             }
 
-            if (drawGizmos)
+            if (debugging)
                 Debug.DrawRay(this.transform.position, dirToDesiredPosFromJigIWS, Color.blue);
 
             return desiredPositionILS;
@@ -190,40 +191,43 @@ public class CameraController : MonoBehaviour
                 desiredPosOtherShoulderIWS, cameraSkinWidth, (camera.transform.right * desiredXpos).normalized,
                 hitInfo, Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth, collisionMask);
 
+            if (debugging)
+                Debug.DrawRay(desiredPosOtherShoulderIWS, (camera.transform.right * desiredXpos).normalized * (Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth), Color.red);
+
             if (hits > 0)
                 hitInfo.SortByHitDistance();
             else
                 return desiredPositionILS;
 
-            for (int i = 0; i < hits; i++)
+            for (int i = 0; (i < hits) && (hitInfo[i].collider != null); i++)
             {
-                if (hitInfo[i].collider != null && Vector3.Dot(hitInfo[i].normal, hitInfo[i].transform.forward) > 0f) // If dot is negative the hit is most likely behind a face
+                // If dot is negative the hit is most likely on a back face  && Vector3.Dot(hitInfo[i].normal, hitInfo[i].transform.forward) > 0f
+
+                /// Extra casts to make sure the hitInfo[i] is relevant i.e. not behind a wall
+                Physics.Raycast(cameraFocusPoint.transform.position, cameraFocusPoint.transform.position.DirectionTo(hitInfo[i].point),
+                    out RaycastHit CFPosRayHit, Mathf.Infinity, collisionMask);
+                Physics.Raycast(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point),
+                    out RaycastHit DesPosRayHit, Mathf.Infinity, collisionMask);
+                if (debugging)
                 {
-                    /// Extra casts to make sure the hitInfo[i] is relevant i.e. not behind a wall
-                    Physics.Raycast(cameraFocusPoint.transform.position, cameraFocusPoint.transform.position.DirectionTo(hitInfo[i].point),
-                        out RaycastHit CFPosRayHit, Mathf.Infinity, collisionMask);
-                    Physics.Raycast(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point),
-                        out RaycastHit DesPosRayHit2, Mathf.Infinity, collisionMask);
+                    Debug.DrawRay(cameraFocusPoint.transform.position, cameraFocusPoint.transform.position.DirectionTo(hitInfo[i].point), Color.yellow);
+                    Debug.DrawRay(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point), Color.yellow);
+                }
 
-                    if (CFPosRayHit.point == hitInfo[i].point && DesPosRayHit2.point == hitInfo[i].point && CFPosRayHit.normal == hitInfo[i].normal)
-                    {
-                        cameraIsColliding = true;
+                if ((CFPosRayHit.point == hitInfo[i].point) && (CFPosRayHit.normal == hitInfo[i].normal) ||
+                    (DesPosRayHit.point == hitInfo[i].point) && (DesPosRayHit.normal == hitInfo[i].normal))
+                {
+                    if (debugging)
+                        Debug.Log("X-axis Hit nr " + i + " name: " + hitInfo[i].transform.name + " and hit.distance: " + hitInfo[i].distance);
 
-                        float xMove = (Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth) - hitInfo[i].distance;
-                        /// A positive desiredPositionILS.x subtracts xMove and a negative adds
-                        desiredPositionILS.x = desiredPositionILS.x > 0f ? desiredPositionILS.x -= xMove : desiredPositionILS.x += xMove;
-                        break;
-                    }
+                    cameraIsColliding = true;
 
-                    if (drawGizmos)
-                    {
-                        Debug.DrawRay(cameraFocusPoint.transform.position, cameraFocusPoint.transform.position.DirectionTo(hitInfo[i].point), Color.yellow);
-                        Debug.DrawRay(desiredPositionIWS, desiredPositionIWS.DirectionTo(hitInfo[i].point), Color.yellow);
-                    }
+                    float xMove = (Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth) - hitInfo[i].distance;
+                    /// A positive desiredPositionILS.x subtracts xMove and a negative adds
+                    desiredPositionILS.x = desiredPositionILS.x > 0f ? desiredPositionILS.x -= xMove : desiredPositionILS.x += xMove;
+                    break; // Only collide once...
                 }
             }
-            if (drawGizmos)
-                Debug.DrawRay(desiredPosOtherShoulderIWS, (camera.transform.right * desiredXpos).normalized * (Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth), Color.red);
 
             return desiredPositionILS;
         }
@@ -239,7 +243,7 @@ public class CameraController : MonoBehaviour
                 desiredPositionILS.y -= (desiredYpos + cameraSkinWidth) - hit.distance;
             }
 
-            if (drawGizmos)
+            if (debugging)
                 Debug.DrawRay(desiredPosZeroYIWS, camera.transform.up * (desiredYpos + cameraSkinWidth), Color.green);
             return desiredPositionILS;
         }
@@ -252,6 +256,9 @@ public class CameraController : MonoBehaviour
     /// <returns></returns>
     Vector3 EvaluateShoulderPosition(Vector3 desiredPositionILS)
     {
+        if (desiredPositionILS.x == 0f) // There's no need to evaluate shoulder pos
+            return desiredPositionILS;
+
         Vector3 desiredPosYaxisIWS = transform.TransformPoint(new Vector3(0f, desiredPositionILS.y, 0f));
 
         SetDistancesToInfinite(ref rightHitInfo);
@@ -264,13 +271,13 @@ public class CameraController : MonoBehaviour
         if (leftHit > 0)
             leftHitInfo.SortByHitDistance();
 
-        if (leftHit == 0 & rightHit != 0 & rightHitInfo[0].distance <= switchShoulderDist / 3f || // Left side is free and we hit the right with a certain distance
-            leftHit != 0 & rightHit != 0 & leftHitInfo[0].distance > rightHitInfo[0].distance) // OR both sides hit and left have more space
+        if ((leftHit == 0) & (rightHit != 0) & (rightHitInfo[0].distance <= switchShoulderDist / 3f) || // Left side is free and we hit the right with a certain distance
+            (leftHit != 0) & (rightHit != 0) & (leftHitInfo[0].distance > rightHitInfo[0].distance)) // OR both sides hit and left have more space
         {
             desiredPositionILS.x *= -1f; // Puts the camera on the left shoulder
         }
 
-        if (drawGizmos)
+        if (debugging)
         {
             Debug.DrawRay(desiredPosYaxisIWS, camera.transform.right * switchShoulderDist, Color.magenta);
             Debug.DrawRay(desiredPosYaxisIWS, -camera.transform.right * switchShoulderDist, Color.magenta);
