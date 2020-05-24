@@ -49,7 +49,7 @@ public static class Extensions
     //arrays
     public static T Random<T>(this T[] array)
     {
-        return array[UnityEngine.Random.Range(0, array.Length)];
+        return array[UnityEngine.Random.Range(0, array.Length)]; // Note (krulls): ändrade array.Lenght-1 till array.Lenght, tycktes inte fungera korrekt annars
     }
     public static T First<T>(this T[] array)
     {
