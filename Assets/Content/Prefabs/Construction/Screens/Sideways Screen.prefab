@@ -45,13 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b460cef0f18dd3747b47d8c6ba9017f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timePerScreen: 2
+  timePerScreen: 7
   screens:
-  - {fileID: 2800000, guid: 28cbd9d64de7eb24cbd74b55470599a4, type: 3}
-  - {fileID: 2800000, guid: 5eec5c6c2a38b554c9dd8c428a349106, type: 3}
-  - {fileID: 2800000, guid: ef258c8143b7f084bbb836e7d8e19cd1, type: 3}
-  - {fileID: 2800000, guid: ac2d12ea469e1d744a7ae23b571bca49, type: 3}
-  - {fileID: 2800000, guid: 7c34b2badd3936244b746a61beed1d79, type: 3}
+  - {fileID: 2800000, guid: 210b015aededc2448b9f87f0c0d7e7d9, type: 3}
+  - {fileID: 2800000, guid: 78fd4eeba7be6a44c81bd6f412bf9f73, type: 3}
+  - {fileID: 2800000, guid: f8c965e4f03d5474a8ef20d293cb1280, type: 3}
+  - {fileID: 2800000, guid: 910adc41933866c4596c8ff8a87be602, type: 3}
+  - {fileID: 2800000, guid: 84ca4a9430f398f429106740681dd68c, type: 3}
+  - {fileID: 2800000, guid: 84ca4a9430f398f429106740681dd68c, type: 3}
   randomizeOrder: 1
   lights:
   - {fileID: 8389004682224285083}
@@ -82,13 +83,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8389004681636809646}
-  m_LocalRotation: {x: 0.70710695, y: 0.7071067, z: 0.000000119209275, w: -0.000000059604638}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: -0, z: 0.007}
-  m_LocalScale: {x: 1.25, y: 2.5, z: 1}
+  m_LocalScale: {x: 2.5, y: 1.25, z: 1}
   m_Children: []
   m_Father: {fileID: 8389004681294289150}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 180, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &8389004681636809642
 MeshFilter:
   m_ObjectHideFlags: 0
