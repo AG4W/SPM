@@ -337,6 +337,7 @@ public class CameraController : MonoBehaviour
     void ModifyTrauma(params object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);
     void ModifyTraumaCapped(params object[] args) => trauma = Mathf.Clamp01(trauma + Mathf.Clamp01((float)args[0] - trauma));
 
+    // Work in progress
     public void SetLookAt(GameObject go)
     {
         //Override camera.settings rotation
