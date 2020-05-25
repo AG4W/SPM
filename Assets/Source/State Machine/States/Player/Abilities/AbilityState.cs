@@ -21,6 +21,8 @@ public abstract class AbilityState : ActState
     {
         base.Enter();
 
+        base.IsPerformingAction = true;
+
         this.Timer = 0f;
 
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Force, 1f);
@@ -46,6 +48,8 @@ public abstract class AbilityState : ActState
         base.Actor.Raise(ActorEvent.SetAnimatorLayer, AnimatorLayer.Force, 0f);
         base.Animator.SetBool("isCasting", false);
         base.Actor.Raise(ActorEvent.SetLeftHandWeight, 1f);
+
+        base.IsPerformingAction = false;
     }
 }
 public enum AbilityAnimationIndex
