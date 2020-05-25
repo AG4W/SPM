@@ -9,9 +9,9 @@ public class SkinnedMeshRendererController : MonoBehaviour
 
     void Start()
     {
+        // Cache all the SkinnedMeshRenderers in the components children
         SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
         materials = new Material[renderers.Length][];
-
         for (int i = 0; i < renderers.Length; i++)
         {
                 materials[i] = renderers[i].sharedMaterials;
