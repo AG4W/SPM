@@ -34,10 +34,12 @@ public class ReloadState : BaseState
             base.Return();
         }
 
+
         if (Input.GetKeyDown(KeyCode.Space))
-            base.TransitionTo<JumpState>();
-        if (Input.GetKeyDown(KeyCode.V))
+        {
+            base.Get<WeaponController>().StopAllSFX();
             base.TransitionTo<RollState>();
+        }
 
         base.Actor.Raise(ActorEvent.SetTargetStance, Input.GetKey(KeyCode.C) ? Stance.Crouched : Stance.Standing);
 

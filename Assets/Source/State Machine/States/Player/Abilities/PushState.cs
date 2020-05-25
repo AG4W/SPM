@@ -16,10 +16,9 @@ public class PushState : AbilityState
         base.Tick();
 
         Ray ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-        //RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance, affectableMask);
-
         Physics.SphereCastNonAlloc(ray, radius, hits, distance, affectableMask);
 
+        // Using the force
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].transform != null)
