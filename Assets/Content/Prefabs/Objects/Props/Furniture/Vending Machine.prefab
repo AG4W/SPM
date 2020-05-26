@@ -13,12 +13,12 @@ GameObject:
   - component: {fileID: 438290328}
   - component: {fileID: 438290327}
   - component: {fileID: 438290326}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Area Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967294
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &438290325
 Transform:
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 438290324}
   m_LocalRotation: {x: 0.6532815, y: 0.27059805, z: -0.6532815, w: 0.27059805}
   m_LocalPosition: {x: -0.5, y: 2.4, z: 0}
-  m_LocalScale: {x: 1.0000935, y: 0.12501946, z: 0.01}
+  m_LocalScale: {x: 1.0000954, y: 0.1250197, z: 0.01}
   m_Children: []
   m_Father: {fileID: 2267764142639332184}
   m_RootOrder: 2
@@ -46,7 +46,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 12.729228
+  m_Intensity: 12.729181
   m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -87,7 +87,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 2
   m_LightShadowCasterMode: 1
-  m_AreaSize: {x: 1.0000935, y: 0.12501946}
+  m_AreaSize: {x: 1.0000954, y: 0.1250197}
   m_BounceIntensity: 1
   m_ColorTemperature: 5018
   m_UseColorTemperature: 1
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 1
-  m_ShapeWidth: 1.0000935
-  m_ShapeHeight: 0.12501946
+  m_ShapeWidth: 1.0000954
+  m_ShapeHeight: 0.1250197
   m_AspectRatio: 1
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
@@ -257,7 +257,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2267764142639332184}
-  m_Layer: 0
+  - component: {fileID: -8926247978590470603}
+  - component: {fileID: -1362075316040926347}
+  m_Layer: 12
   m_Name: Vending Machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,6 +283,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8926247978590470603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893326125261862555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb154aa457c4804a8a71a61d8cec1d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &-1362075316040926347
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893326125261862555}
+  serializedVersion: 2
+  m_Mass: 250
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4434400946672473992
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,8 +322,7 @@ GameObject:
   - component: {fileID: 9037516663324431612}
   - component: {fileID: 3244843024773316725}
   - component: {fileID: 2550121635871452473}
-  - component: {fileID: 8272731091604739100}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,20 +390,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8272731091604739100
-MeshCollider:
+--- !u!65 &7688070427436946247
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4434400946672473992}
+  m_GameObject: {fileID: 9067278453989147851}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 1.0150868, y: 2.5, z: 1.5}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!1001 &1077658425340255682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -447,8 +475,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Vending Machine
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 19bbdae8e61f55f41a27ef2e6b80fce3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19bbdae8e61f55f41a27ef2e6b80fce3, type: 3}
+--- !u!1 &9067278453989147851 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 19bbdae8e61f55f41a27ef2e6b80fce3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1077658425340255682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5444333453758002904 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 19bbdae8e61f55f41a27ef2e6b80fce3,
