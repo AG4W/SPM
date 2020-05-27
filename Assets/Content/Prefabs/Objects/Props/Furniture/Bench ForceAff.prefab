@@ -11,8 +11,21 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.75, y: 0.9938443, z: 0.7510011}
-  m_Center: {x: 0, y: 0.49758464, z: 0}
+  m_Size: {x: 2.75, y: 0.55, z: 0.7510011}
+  m_Center: {x: 0, y: 0.26, z: 0}
+--- !u!65 &7185532183518414996
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4532987321183633712}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.75, y: 0.45, z: 0.25}
+  m_Center: {x: 0, y: 0.75, z: -0.25}
 --- !u!1 &6250302498650601667
 GameObject:
   m_ObjectHideFlags: 0
@@ -25,7 +38,7 @@ GameObject:
   - component: {fileID: 5672287073121690706}
   - component: {fileID: 8886601214957004173}
   m_Layer: 12
-  m_Name: Bench
+  m_Name: Bench ForceAff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +67,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6250302498650601667}
   serializedVersion: 2
-  m_Mass: 60
+  m_Mass: 80
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
