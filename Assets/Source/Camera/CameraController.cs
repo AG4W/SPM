@@ -57,6 +57,8 @@ public class CameraController : MonoBehaviour
     new Camera camera;
     GameObject cameraFocusPoint;
 
+    
+
     RaycastHit[] hitInfo = new RaycastHit[24];
     RaycastHit[] rightHitInfo = new RaycastHit[24];
     RaycastHit[] leftHitInfo = new RaycastHit[24];
@@ -87,7 +89,7 @@ public class CameraController : MonoBehaviour
         UpdateJig();
         UpdateCamera();
 
-        /// Make the player's character transparant when the camera gets too close
+        #region Make the player's character transparant when the camera gets too close
         if (camera.transform.localPosition.z >= -fullTransparancyDist && !playerAlphaIsZero)
         {
             GlobalEvents.Raise(GlobalEvent.SetPlayerAlpha, 0f);
@@ -97,7 +99,8 @@ public class CameraController : MonoBehaviour
         {
             GlobalEvents.Raise(GlobalEvent.SetPlayerAlpha, Mathf.InverseLerp(-fullTransparancyDist, -startTransparancyDist, camera.transform.localPosition.z));
             playerAlphaIsZero = false;
-        }
+        } 
+        #endregion
     }
 
     public void SetSettings(CameraSettings settings) => this.settings = settings;
@@ -121,6 +124,7 @@ public class CameraController : MonoBehaviour
         ApplyCameraShake();
 
         UpdateCameraPosition();
+        UpdateCameraRotation();
 
         UpdateFieldOfView();
         UpdateDepthOfField();
@@ -133,7 +137,11 @@ public class CameraController : MonoBehaviour
         float camTransSpeed = cameraIsColliding == true ? cameraTranslationSpeedOnCollision : cameraTranslationSpeed;
 
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, correctedCamPos, camTransSpeed * (Time.deltaTime / Time.timeScale));
-        camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, settings.Rotation, camTransSpeed * (Time.deltaTime / Time.timeScale));
+    }
+    
+    void UpdateCameraRotation()
+    {
+        camera.transform.localRotation = Quaternion.Slerp(camera.transform.localRotation, settings.Rotation, cameraTranslationSpeed * (Time.deltaTime / Time.timeScale));
     }
 
     #region Collision
@@ -323,8 +331,32 @@ public class CameraController : MonoBehaviour
                 0f//traumaSqRd * Mathf.PerlinNoise(s0, Time.deltaTime) * Random.Range(-1, 1)
             );
 
-        camera.transform.localRotation = Quaternion.Euler(offset.x, offset.y, offset.z);
+        // NOTE(krulls): denna var = förut. Tvungen att ändra till *= så den inte skriver över annan input till rotation. Men vet inte om det fungerar...
+        camera.transform.localRotation *= Quaternion.Euler(offset.x, offset.y, offset.z);
     }
     void ModifyTrauma(params object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);
     void ModifyTraumaCapped(params object[] args) => trauma = Mathf.Clamp01(trauma + Mathf.Clamp01((float)args[0] - trauma));
+
+    // Work in progress
+    public void SetLookAt(GameObject go)
+    {
+        //Override camera.settings rotation
+        //Get direction to "go"
+        //Slightly look at direction
+
+
+        if (go.transform != null)
+        {
+            Vector3 screenPoint = camera.WorldToViewportPoint(go.transform.position);
+            bool onScreen = screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
+            if(onScreen)
+                camera.transform.LookAt(go.transform);
+        }
+        Vector3 dirToGO = camera.transform.position.DirectionTo(go.transform.position);
+    }
+    bool IsVisible(Renderer renderer, Camera camera)
+    {
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+        return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+    }
 }

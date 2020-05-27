@@ -6,6 +6,8 @@ public abstract class ActState : BaseLocomotionState
     [Range(0.01f, 1f)][SerializeField]float minimumForceRequiredToEnterForceState = .2f;
     [SerializeField]LayerMask aimMask;
 
+    protected bool IsPerformingAction { get; set; }
+
     protected override void OnInitialize()
     {
         base.OnInitialize();
@@ -15,7 +17,7 @@ public abstract class ActState : BaseLocomotionState
     {
         base.Tick();
 
-        if (base.Actor.ActualInput.magnitude >= 1.4f)
+        if (base.Actor.ActualInput.magnitude >= 1.4f || IsPerformingAction)
             return;
 
         //weapon

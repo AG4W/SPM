@@ -18,10 +18,9 @@ public class PullState : AbilityState
         Ray ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
         Vector3 fp = ray.origin + (ray.direction.normalized * 2.5f);
         fp += Vector3.up;
-
-        //RaycastHit[] hits = Physics.SphereCastAll(ray, radius, distance, affectableMask);
         Physics.SphereCastNonAlloc(ray, radius, hits, distance, affectableMask);
 
+        // Using the force
         for (int i = 0; i < hits.Length; i++)
         {
             if(hits[i].transform != null)
