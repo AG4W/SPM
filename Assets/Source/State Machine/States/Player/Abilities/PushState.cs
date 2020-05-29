@@ -22,7 +22,7 @@ public class PushState : AbilityState
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].transform != null)
-                if (hits[i].transform.GetComponent<IForceAffectable>() != null)
+                if (hits[i].transform.GetComponent<IForceAffectable>() != null && Vector3.Dot(base.Actor.transform.forward, base.Actor.transform.position.DirectionTo(hits[i].transform.position)) >= -.25f)
                 hits[i].transform.GetComponent<IForceAffectable>().ModifyVelocity(ray.direction.normalized * (base.Timer >= 1f ? power : initialAcceleration.Evaluate(base.Timer) * power));
         }
     }
