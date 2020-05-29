@@ -84,12 +84,12 @@ public abstract class BaseState : State
         ray = base.Camera.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
 
         if(Physics.RaycastNonAlloc(ray, ikRaycastBuffer, Mathf.Infinity, ikMask) > 0)
-            base.Actor.Raise(ActorEvent.SetLookAtPosition, ikRaycastBuffer[0].point);
+            ((HumanoidActor)base.Actor).SetLookAtPosition(ikRaycastBuffer[0].point);
         else
-            base.Actor.Raise(ActorEvent.SetLookAtPosition, ray.GetPoint(10f));
+            ((HumanoidActor)base.Actor).SetLookAtPosition(ray.GetPoint(10f));
 
         //Debug.DrawLine(base.Actor.FocusPoint.position, hit.point == null ? ray.GetPoint(10f) : hit.point, Color.magenta);
-        base.Actor.Raise(ActorEvent.SetLookAtWeights, weights);
+        ((HumanoidActor)base.Actor).SetLookAtWeights(weights);
     }
     void UpdateIKTarget()
     {

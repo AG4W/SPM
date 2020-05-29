@@ -8,6 +8,7 @@ public static class PersistentData
     //använd en double dictionary så att vi kan göra en lookup per scen, per IPersistable-objekt.
     //en datafil per scen, basically, sen klumpar vi dem till en komplett sparfil tillsammans med annan ev. data som typ high scores etc
     static Dictionary<int, Dictionary<string, Context>> data;
+    static Dictionary<string, Context> scenePersistableData;
 
     public static void Initialize()
     {
@@ -21,6 +22,7 @@ public static class PersistentData
         //för komplett sparsystem, ingen data laddad i minne && ingen data på disk = ny sparfil
         //i framtiden, kolla ifall det finns data på disk vid någon angiven directory /shrug, och isåfall ladda den
         data = data ?? new Dictionary<int, Dictionary<string, Context>>();
+        scenePersistableData = scenePersistableData ?? new Dictionary<string, Context>();
     }
 
     static void OnSceneEnter(object[] args)
@@ -29,6 +31,14 @@ public static class PersistentData
 
         if (!data.ContainsKey(sceneIndex))
             data.Add(sceneIndex, new Dictionary<string, Context>());
+
+        foreach (var item in scenePersistableData)
+        {
+            if (data[sceneIndex].ContainsKey(item.Key))
+                data[sceneIndex][item.Key] = item.Value;
+            else
+                data[sceneIndex].Add(item.Key, item.Value);
+        }
 
         //hitta alla persistables, och sätt dem till rätt state
         MonoBehaviour[] behaviours = Object.FindObjectsOfType<MonoBehaviour>();
@@ -43,6 +53,7 @@ public static class PersistentData
     }
     static void OnSceneExit(object[] args)
     {
+        scenePersistableData.Clear();
         int sceneIndex = ((Scene)args[0]).buildIndex;
         data[sceneIndex].Clear();
 
@@ -53,7 +64,12 @@ public static class PersistentData
             IPersistable persistable = behaviours[i].GetComponent<IPersistable>();
 
             if (persistable != null && persistable.IsPersistable && !data[sceneIndex].ContainsKey(persistable.Hash))
+            {
                 data[sceneIndex].Add(persistable.Hash, persistable.GetContext());
+
+                if (persistable.PersistBetweenScenes)
+                    scenePersistableData.Add(persistable.Hash, persistable.GetContext());
+            }
         }
     }
 }

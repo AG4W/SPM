@@ -27,9 +27,10 @@ public class PlayerActor : HumanoidActor, IPersistable
     public Vital Force { get; private set; }
 
     //mhmmm... "unik" hash-generation osv...
-    string IPersistable.Hash => "PLAYER()!#¤%&/" + this.transform.position.ToString() + this.gameObject.activeSelf.ToString();
+    string IPersistable.Hash => "PLAYER()!#¤%&/" +  this.gameObject.activeSelf.ToString(); //this.transform.position.ToString() +
     //player is always persistable, duh
     bool IPersistable.IsPersistable => true;
+    bool IPersistable.PersistBetweenScenes => true;
 
     protected override void Initalize()
     {
@@ -99,6 +100,12 @@ public class PlayerActor : HumanoidActor, IPersistable
             GlobalEvents.Raise(GlobalEvent.ModifyCameraTrauma, 1f);
         if (Input.GetKeyDown(KeyCode.K))
             base.Health.Update(-999999f);
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            checkpointData = null;
+            GlobalEvents.Raise(GlobalEvent.OnSceneExit, SceneManager.GetActiveScene());
+            SceneManager.LoadScene(2);
+        }
     }
 
     protected override void CheckOverlap()
@@ -167,10 +174,18 @@ public class PlayerActor : HumanoidActor, IPersistable
     {
         this.checkpointData = (CheckpointData)context.data["checkpointData"];
 
+        if (this.checkpointData == null)
+            this.checkpointData = new CheckpointData(this.transform.position, this.transform.rotation);
+
         this.transform.position = this.checkpointData.Position;
         this.transform.rotation = this.checkpointData.Rotation;
 
-        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, (Weapon)context.data["weapon"] ?? this.WeaponController.Weapon);
+        if((Weapon)context.data["weapon"] == null)
+            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon);
+        else
+            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, (Weapon)context.data["weapon"]);
+
+        Debug.Log(context.data["weapon"]);
     }
     Context IPersistable.GetContext()
     {

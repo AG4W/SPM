@@ -142,8 +142,8 @@ public enum ActorEvent
     ModifyVelocity,
 
     //IK
-    SetLookAtPosition,
-    SetLookAtWeights,
+    //SetLookAtPosition,
+    //SetLookAtWeights,
     SetLeftHandTarget,
     SetLeftHandWeight,
 

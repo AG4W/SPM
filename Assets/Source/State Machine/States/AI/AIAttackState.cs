@@ -28,7 +28,7 @@ public class AIAttackState : AIBaseLocomotionState
         //kolla ifall vi kan se sittandes
         base.Actor.Raise(ActorEvent.SetTargetStance, Physics.Linecast(base.Actor.transform.position + Vector3.up, base.Pawn.Target.FocusPoint.position) ? Stance.Standing : Stance.Crouched);
         base.Actor.Raise(ActorEvent.SetTargetAimMode, AimMode.IronSight);
-        base.Actor.Raise(ActorEvent.SetLookAtWeights, base.Weights);
+        base.Pawn.SetLookAtWeights(base.Weights);
     }
     public override void Tick()
     {
@@ -53,7 +53,7 @@ public class AIAttackState : AIBaseLocomotionState
 
         SetTargetPosition();
 
-        base.Animator.SetLookAtPosition(lookAt);
+        base.Pawn.SetLookAtPosition(lookAt);
         base.Actor.Raise(ActorEvent.SetTargetRotation, Quaternion.LookRotation(base.Actor.transform.position.DirectionTo(base.Pawn.LastKnownPositionOfTarget), Vector3.up));
 
         if (base.Get<WeaponController>().NeedsReload)

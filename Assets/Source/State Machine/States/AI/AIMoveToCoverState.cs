@@ -54,7 +54,7 @@ public class AIMoveToCoverState : AIBaseLocomotionState
     {
         base.Tick();
         base.Actor.Raise(ActorEvent.SetTargetRotation, Quaternion.LookRotation(base.Actor.transform.position.DirectionTo(base.Pawn.Target.FocusPoint.position), Vector3.up));
-        base.Actor.Raise(ActorEvent.SetLookAtPosition, base.Pawn.Target.FocusPoint.position);
+        base.Pawn.SetLookAtPosition(base.Pawn.Target.FocusPoint.position);
 
         if (base.Actor.transform.position.DistanceTo(coverPosition) < 2f)
         {

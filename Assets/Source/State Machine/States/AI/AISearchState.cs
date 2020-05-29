@@ -18,8 +18,8 @@ public class AISearchState : AIBaseLocomotionState
 
         SetInputModifier();
 
-        base.Actor.Raise(ActorEvent.SetLookAtPosition, base.Actor.transform.position + lookAt);
-        base.Actor.Raise(ActorEvent.SetLookAtWeights, base.Weights);
+        base.Pawn.SetLookAtPosition(base.Actor.transform.position + lookAt);
+        base.Pawn.SetLookAtWeights(base.Weights);
     }
     public override void Tick()
     {
@@ -33,7 +33,7 @@ public class AISearchState : AIBaseLocomotionState
         if(lookAtTimer >= 3f)
         {
             lookAt = (base.Actor.transform.forward * Random.Range(5f, 10f)) + (base.Actor.transform.up * Random.Range(1f, 4f)) + (base.Actor.transform.right * Random.Range(-5f, 5f));
-            base.Actor.Raise(ActorEvent.SetLookAtPosition, base.Actor.transform.position + lookAt);
+            base.Pawn.SetLookAtPosition(base.Actor.transform.position + lookAt);
             lookAtTimer = 0f;
         }
 

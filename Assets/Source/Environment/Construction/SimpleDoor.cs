@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System;
+using System.Runtime.Remoting.Messaging;
 
 public class SimpleDoor : MonoBehaviour, IPersistable
 {
@@ -33,6 +34,7 @@ public class SimpleDoor : MonoBehaviour, IPersistable
                                            //aaaay lmao, time to get hit by murphy's law booooooois
     string IPersistable.Hash => this.name.ToString() + this.transform.position.ToString();
     bool IPersistable.IsPersistable => isPersistent;
+    bool IPersistable.PersistBetweenScenes => false;
     
     void Awake()
     {

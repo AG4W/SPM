@@ -43,7 +43,8 @@ public class WeaponController : MonoBehaviour
         owner.Subscribe(ActorEvent.SetWeapon, SetWeapon);
 
         //inita
-        owner.Raise(ActorEvent.SetWeapon, this.weapon);
+        if(this.weapon != null)
+            owner.Raise(ActorEvent.SetWeapon, this.weapon);
     }
     void Update()
     {

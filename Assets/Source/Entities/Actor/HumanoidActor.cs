@@ -69,8 +69,8 @@ public class HumanoidActor : Actor
         this.Subscribe(ActorEvent.SetAnimatorLayer, SetAnimatorLayer);
 
         //IK
-        this.Subscribe(ActorEvent.SetLookAtPosition, SetLookAtPosition);
-        this.Subscribe(ActorEvent.SetLookAtWeights, SetLookAtWeights);
+        //this.Subscribe(ActorEvent.SetLookAtPosition, SetLookAtPosition);
+        //this.Subscribe(ActorEvent.SetLookAtWeights, SetLookAtWeights);
         this.Subscribe(ActorEvent.SetLeftHandTarget, SetLeftHandTarget);
         this.Subscribe(ActorEvent.SetLeftHandWeight, SetLeftHandWeight);
 
@@ -172,8 +172,8 @@ public class HumanoidActor : Actor
     void SetAnimatorLayer(object[] args) => targetLayerWeights[(int)(AnimatorLayer)args[0]] = (float)args[1];
 
     //IK
-    void SetLookAtPosition(object[] args) => targetLookAtPosition = (Vector3)args[0];
-    void SetLookAtWeights(object[] args) => targetLookAtWeights = (float[])args[0];
+    public void SetLookAtPosition(Vector3 position) => targetLookAtPosition = position;
+    public void SetLookAtWeights(float[] weights) => targetLookAtWeights = weights;
 
     void SetLeftHandTarget(object[] args) => leftHandTarget = (Transform)args[0];
     void SetLeftHandWeight(object[] args) => targetLeftHandWeight = (float)args[0];
