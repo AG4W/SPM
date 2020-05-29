@@ -6,6 +6,8 @@ public class PushState : AbilityState
     [SerializeField]float radius = 4f;
     [SerializeField]float distance = 15f;
     [SerializeField]float power = 50f;
+    [Tooltip("Defines the cone infront of the player in which objects should be affected by the force")]
+    [SerializeField] [Range(-1f, 0f)] float angularThreshold = -.25f;
 
     [SerializeField]AnimationCurve initialAcceleration;
 
