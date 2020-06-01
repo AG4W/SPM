@@ -180,12 +180,13 @@ public class PlayerActor : HumanoidActor, IPersistable
         this.transform.position = this.checkpointData.Position;
         this.transform.rotation = this.checkpointData.Rotation;
 
-        if((Weapon)context.data["weapon"] == null)
+        // Saving the weapon on scene transition doesn't work currently. On death-respawn works
+        if ((Weapon)context.data["weapon"] == null)
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon);
         else
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, (Weapon)context.data["weapon"]);
 
-        Debug.Log(context.data["weapon"]);
+        //Debug.Log(context.data["weapon"]);
     }
     Context IPersistable.GetContext()
     {

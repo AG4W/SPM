@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/// <summary>
+/// This class handles the persistable items in the scene
+/// </summary>
+
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
@@ -27,11 +31,14 @@ public static class PersistentData
 
     static void OnSceneEnter(object[] args)
     {
+        // The input sceneIndex
         int sceneIndex = ((Scene)args[0]).buildIndex;
 
+        // Add this scene to data if it doesn't exist 
         if (!data.ContainsKey(sceneIndex))
             data.Add(sceneIndex, new Dictionary<string, Context>());
 
+        // Add the scenePersistables to data
         foreach (var item in scenePersistableData)
         {
             if (data[sceneIndex].ContainsKey(item.Key))
@@ -40,7 +47,7 @@ public static class PersistentData
                 data[sceneIndex].Add(item.Key, item.Value);
         }
 
-        //hitta alla persistables, och sätt dem till rätt state
+        // Find all the persistables and set them to their correct state
         MonoBehaviour[] behaviours = Object.FindObjectsOfType<MonoBehaviour>();
 
         for (int i = 0; i < behaviours.Length; i++)
@@ -59,6 +66,7 @@ public static class PersistentData
 
         MonoBehaviour[] behaviours = Object.FindObjectsOfType<MonoBehaviour>();
 
+        // Saves all the persistable and scenePersistable stuff in containers
         for (int i = 0; i < behaviours.Length; i++)
         {
             IPersistable persistable = behaviours[i].GetComponent<IPersistable>();
