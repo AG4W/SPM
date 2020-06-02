@@ -180,7 +180,7 @@ public class PlayerActor : HumanoidActor, IPersistable
         this.transform.position = this.checkpointData.Position;
         this.transform.rotation = this.checkpointData.Rotation;
 
-        // Saving the weapon on scene transition doesn't work currently. On death-respawn works
+        // NOTE(Krulls): Currently, keeping the weapon on scene transition doesn't work. Respawn on checkpoint keeps the weapon sometimes? verkar bugga... 
         if ((Weapon)context.data["weapon"] == null)
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon);
         else

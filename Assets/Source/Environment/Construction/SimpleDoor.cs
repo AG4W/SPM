@@ -2,7 +2,7 @@
 
 using System.Collections;
 using System;
-using System.Runtime.Remoting.Messaging;
+//using System.Runtime.Remoting.Messaging;
 
 public class SimpleDoor : MonoBehaviour, IPersistable
 {
