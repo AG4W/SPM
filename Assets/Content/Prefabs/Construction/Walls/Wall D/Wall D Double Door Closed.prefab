@@ -1203,7 +1203,7 @@ PrefabInstance:
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: lights.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
@@ -1215,6 +1215,11 @@ PrefabInstance:
       propertyPath: lights.Array.data[2]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 576408349885753451, guid: 35aa029085992a048b5a430f33095de0,
+        type: 3}
+      propertyPath: lights.Array.data[0]
+      value: 
+      objectReference: {fileID: 3461224790712709592}
     - target: {fileID: 576408349885753455, guid: 35aa029085992a048b5a430f33095de0,
         type: 3}
       propertyPath: m_LocalPosition.x
