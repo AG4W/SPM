@@ -1151,6 +1151,7 @@ Transform:
   - {fileID: 1020102711532169892}
   - {fileID: 6864787839649716950}
   - {fileID: 584113099021842984}
+  - {fileID: 3031922133812991124}
   m_Father: {fileID: 4643900751138090615}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2935,6 +2936,36 @@ Transform:
   m_Father: {fileID: 9159382293129509887}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8759456405345473217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3031922133812991124}
+  m_Layer: 0
+  m_Name: WeaponPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3031922133812991124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8759456405345473217}
+  m_LocalRotation: {x: -0.49012327, y: -0.5211307, z: 0.55867904, w: 0.41961858}
+  m_LocalPosition: {x: 0.004, y: 0.047, z: 0.005}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8467909530715019755}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 9.844001, y: -91.372, z: 96.09901}
 --- !u!1 &8921468619574736673
 GameObject:
   m_ObjectHideFlags: 0
