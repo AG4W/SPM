@@ -51,8 +51,9 @@ public abstract class ActState : BaseLocomotionState
                 base.TransitionTo<PushState>();
             if (Input.GetKey(KeyCode.Alpha2))
                 base.TransitionTo<PullState>();
-            if (Input.GetKey(KeyCode.Alpha3))
-                base.TransitionTo<TimeDilationState>();
+            // Note(krulls): Not in use!
+            //if (Input.GetKey(KeyCode.Alpha3))
+            //    base.TransitionTo<TimeDilationState>();
         }
     }
 }
