@@ -66,6 +66,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         camera = this.GetComponentInChildren<Camera>();
         cameraFocusPoint = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
@@ -153,7 +154,14 @@ public class CameraController : MonoBehaviour
     Vector3 CorrectCameraPosition(Vector3 desiredPosILS)
     {
         // EvaluateShoulderPosition must be done first
-        desiredPosILS = EvaluateShoulderPosition(desiredPosILS);
+        if (Input.GetKey(KeyCode.Q))
+            desiredPosILS.x *= -1f;
+        else
+            desiredPosILS = EvaluateShoulderPosition(desiredPosILS);
+
+        // Lazy way of getting camera pos when crouching
+        if (Input.GetKey(KeyCode.C))
+            desiredPosILS.y = 0f;
 
         Vector3 desiredPosIWS = transform.TransformPoint(desiredPosILS);
 
@@ -331,7 +339,7 @@ public class CameraController : MonoBehaviour
                 0f//traumaSqRd * Mathf.PerlinNoise(s0, Time.deltaTime) * Random.Range(-1, 1)
             );
 
-        // NOTE(krulls): denna var = förut. Tvungen att ändra till *= så den inte skriver över annan input till rotation. Men vet inte om det fungerar...
+        // NOTE(krulls): denna var = förut. Tvungen att ändra till *= så den inte skriver över annan input till rotation. Men vet inte om det fungerar... (krulls):verkar fungera
         camera.transform.localRotation *= Quaternion.Euler(offset.x, offset.y, offset.z);
     }
     void ModifyTrauma(params object[] args) => trauma = Mathf.Clamp01(trauma + (float)args[0]);

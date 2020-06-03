@@ -524,7 +524,7 @@ MonoBehaviour:
 
     WASD: Movement
 
-    Space: Jump
+    Space: Roll / Slide
 
     C: Crouch
 
@@ -533,22 +533,22 @@ MonoBehaviour:
 
     R: Reload
 
-    V: Roll
 
     F: Toggle Flashlight
 
-    Z: Draw/Holster
-    Weapon
+    Q: Peek left
 
 
-    LEFT SHIFT (hold): Sprint
+    LEFT
+    SHIFT (hold): Sprint
 
     CAPS LOCK (toggle): Walk
 
-    LEFT
-    CLICK: Shoot
 
-    RIGHT CLICK: Aim
+    LEFT Mouse: Shoot
+
+    RIGHT
+    Mouse: Aim
 
 
     1: Force Push
@@ -556,8 +556,8 @@ MonoBehaviour:
     2: Force Pull
 
 
-    ESCAPE:
-    Open/Close this menu.'
+    ESCAPE: Open/Close this
+    menu.'
 --- !u!114 &907381375
 MonoBehaviour:
   m_ObjectHideFlags: 0
