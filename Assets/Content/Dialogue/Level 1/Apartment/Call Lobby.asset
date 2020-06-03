@@ -15,8 +15,8 @@ MonoBehaviour:
   text: '[<color=teal>Unknown</color>] > <color=gray><i>Oh no. They''re already in
     the building looking for you! Use the maintenance corridor to your right to sneak
     around them. </i></color>'
-  time: 4
-  clip: {fileID: 0}
+  time: 0
+  clip: {fileID: 8300000, guid: 3268a6ab3909c08489669125d0ce5e74, type: 3}
   next: {fileID: 0}
   events:
     m_PersistentCalls:
