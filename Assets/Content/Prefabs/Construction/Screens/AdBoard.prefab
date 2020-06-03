@@ -149,6 +149,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8476020701528270136}
     m_Modifications:
+    - target: {fileID: 2997166123622443840, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_AreaSize.x
+      value: 1.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443840, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 30.180492
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443840, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_AreaSize.y
+      value: 1.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443841, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_ShapeWidth
+      value: 1.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443841, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_ShapeHeight
+      value: 1.875
+      objectReference: {fileID: 0}
     - target: {fileID: 2997166124839863845, guid: 59a879d974716bc42a9fb20864b03704,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -234,6 +259,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8476020701528270136}
     m_Modifications:
+    - target: {fileID: 2997166123622443840, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_AreaSize.x
+      value: 1.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443840, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 30.180492
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443840, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_AreaSize.y
+      value: 1.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443841, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_ShapeWidth
+      value: 1.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997166123622443841, guid: 59a879d974716bc42a9fb20864b03704,
+        type: 3}
+      propertyPath: m_ShapeHeight
+      value: 1.875
+      objectReference: {fileID: 0}
     - target: {fileID: 2997166124839863845, guid: 59a879d974716bc42a9fb20864b03704,
         type: 3}
       propertyPath: m_LocalPosition.x
