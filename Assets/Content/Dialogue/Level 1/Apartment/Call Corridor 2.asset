@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: '[<color=teal>Unknown</color>] > <color=gray><i>Expect some heavy resistence
     though, so be careful!</i></color>'
-  time: 3
-  clip: {fileID: 0}
+  time: 0
+  clip: {fileID: 8300000, guid: c714f66c37cb17441ae1f4e2559f2822, type: 3}
   next: {fileID: 0}
   events:
     m_PersistentCalls:
