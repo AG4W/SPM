@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb8fe1a1694391489b35e5ab0dfa791, type: 3}
   m_Name: Call Station 1
   m_EditorClassIdentifier: 
-  text: '[<color=teal>Unknown</color>] > <color=gray><i>I''ve stopped a train at
-    the station for you, make your way there and quick!</i></color>.'
-  time: 4
-  clip: {fileID: 0}
+  text: '[<color=teal>Unknown</color>] > <color=gray><i>Never the less, I''ve stopped
+    a train at the station for you, make your way there and quick!</i></color>.'
+  time: 0
+  clip: {fileID: 8300000, guid: 9e25622f3954b8a429191b7567fa6866, type: 3}
   next: {fileID: 0}
   events:
     m_PersistentCalls:

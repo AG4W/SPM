@@ -15,7 +15,7 @@ public class DialogueController : MonoBehaviour
     {
         root = this.transform.FindRecursively("Dialogue").Find("Root").gameObject;
 
-        source = root.GetComponentInChildren<AudioSource>();
+        source = this.transform.FindRecursively("Dialogue").GetComponentInChildren<AudioSource>();
         text = root.GetComponentInChildren<Text>();
 
         GlobalEvents.Subscribe(GlobalEvent.PlayDialogue, (object[] args) => PlayDialogue((Dialogue)args[0]));

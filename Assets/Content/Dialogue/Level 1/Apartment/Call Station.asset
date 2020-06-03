@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: '[<color=teal>Unknown</color>] > <color=gray><i>Is that gunfire?! I told
     you to be careful!</i></color>.'
-  time: 4
-  clip: {fileID: 0}
+  time: 0
+  clip: {fileID: 8300000, guid: 8619bdacb95e094469e7d1ddae74de8a, type: 3}
   next: {fileID: 11400000, guid: 76745ed9ea68c634abc6003a45b2f5e1, type: 2}
   events:
     m_PersistentCalls:

@@ -15,8 +15,8 @@ MonoBehaviour:
   text: "[<color=teal>Unknown</color>] > <color=gray><i>If you keep moving the direction
     you are now you'll soon aproach a monorail station. Make your way there and take
     the train to Stockholms \xD6stra and I'll tell you where to go from there. </i></color>"
-  time: 6
-  clip: {fileID: 0}
+  time: 0
+  clip: {fileID: 8300000, guid: 099d72d6d9ea44e4da8b49e7eb3bb442, type: 3}
   next: {fileID: 11400000, guid: 25056d780d89888449c3e4f6195d606b, type: 2}
   events:
     m_PersistentCalls:

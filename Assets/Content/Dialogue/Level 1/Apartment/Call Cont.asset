@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb8fe1a1694391489b35e5ab0dfa791, type: 3}
   m_Name: Call Cont
   m_EditorClassIdentifier: 
-  text: '[<color=teal>Unknown</color>] > <color=gray><i>You''ve got the entire Police
-    force inbound and ready to take you in, you''ve got to get out of there!</i></color>.'
-  time: 6
-  clip: {fileID: 0}
+  text: '[<color=teal>Unknown</color>] > <color=gray><i>You''ve got the entire police
+    force inbound and they''re ready to take you down, you''ve got to get out of
+    there!</i></color>'
+  time: 0
+  clip: {fileID: 8300000, guid: f170099288132d8439b8ef7973d7b373, type: 3}
   next: {fileID: 0}
   events:
     m_PersistentCalls:
