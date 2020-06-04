@@ -94,6 +94,10 @@ public class PlayerActor : HumanoidActor, IPersistable
             Gizmos.DrawSphere(this.transform.position + (Vector3.up * (base.CurrentFeetOffset + base.CollisionRadius * overlapRadiusModifier)), base.CollisionRadius);
         }
     }
+    public void clearCheckPoint()
+    {
+        this.checkpointData = null;
+    }
     void DispatchInput()
     {
         if (Input.GetKeyDown(KeyCode.F))
