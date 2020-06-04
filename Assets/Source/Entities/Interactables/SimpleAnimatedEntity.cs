@@ -22,11 +22,6 @@ public class SimpleAnimatedEntity : SwitchEntity, IInteractable
     {
         base.Initalize();
 
-        if (start == null)
-            Debug.LogWarning(this.name + " is missing a start transform, did you forget to assign it?", this.gameObject);
-        if(end == null)
-            Debug.LogWarning(this.name + " is missing an end transform, did you forget to assign it?", this.gameObject);
-
         for (int i = 0; i < base.ConnectedEntities.Length; i++)
         {
             base.ConnectedEntities[i].transform.position = start.position;

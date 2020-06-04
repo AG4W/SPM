@@ -186,7 +186,6 @@ public class PlayerActor : HumanoidActor, IPersistable
         else
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, (Weapon)context.data["weapon"]);
 
-        //Debug.Log(context.data["weapon"]);
     }
     Context IPersistable.GetContext()
     {

@@ -28,8 +28,6 @@ public class FlickerEffect : MonoBehaviour
 
     void Awake()
     {
-        if (objects.Length == 0)
-            Debug.LogError(this.name + " with light flicker effect does not have lights assigned, did you forget to assign them?", this.gameObject);
         if (randomizeStart)
             flickerTimer += Random.Range(0f, currentFlickerInterval);
     }
