@@ -199,11 +199,10 @@ public class PlayerActor : HumanoidActor, IPersistable
         c.data.Add("checkpointData", checkpointData);
         c.data.Add("weapon", this.WeaponController.Template);
 
-        Debug.Log(c.data["weapon"]);
-
         return c;
     }
 
+    // Best hotfix ever
     IEnumerator SetWeaponDelayed(Weapon weapon)
     {
         yield return new WaitForSeconds(.1f);
