@@ -45,6 +45,8 @@ public class CameraController : MonoBehaviour
     /// </summary>
     bool playerAlphaIsZero = false;
 
+    bool leftShoulder = false;
+
     [Header("Debug Collision")]
     [Tooltip("Draw gizmos and print debug log (Programmers debugtool).")]
     [SerializeField]bool debugging = false;
@@ -81,6 +83,11 @@ public class CameraController : MonoBehaviour
             if (v.LatestChange < 0f)
                 this.ModifyTrauma(Mathf.Abs(v.LatestChange) / v.Current);
         });
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+            leftShoulder = !leftShoulder;
     }
     void LateUpdate()
     {
@@ -151,10 +158,10 @@ public class CameraController : MonoBehaviour
     Vector3 CorrectCameraPosition(Vector3 desiredPosILS)
     {
         // EvaluateShoulderPosition must be done first
-        if (Input.GetKey(KeyCode.Q))
+        if (leftShoulder)
             desiredPosILS.x *= -1f;
-        else
-            desiredPosILS = EvaluateShoulderPosition(desiredPosILS);
+        //else
+        //    desiredPosILS = EvaluateShoulderPosition(desiredPosILS);
 
         // Lazy way of getting camera pos when crouching
         if (Input.GetKey(KeyCode.C))

@@ -536,7 +536,7 @@ MonoBehaviour:
 
     F: Toggle Flashlight
 
-    Q: Peek left
+    Q: Toggle Shoulder Camera
 
 
     LEFT
@@ -551,13 +551,13 @@ MonoBehaviour:
     Mouse: Aim
 
 
-    1: Force Push
+    Hold 1: Force Push
 
-    2: Force Pull
+    Hold 2: Force Pull
 
 
-    ESCAPE: Open/Close this
-    menu.'
+    ESCAPE: Open/Close
+    this menu.'
 --- !u!114 &907381375
 MonoBehaviour:
   m_ObjectHideFlags: 0
