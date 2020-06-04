@@ -38,17 +38,11 @@ public class StateMachine
     public void TransitionTo<T>() where T : State // T måste vara ett State
     {
         next = states[typeof(T)];
-
-        if (this.debugStateMachine)
-            Debug.Log(owner.name + ": " + Current.GetType() + " -> " + next.GetType());
     }
     public void Return()
     {
         if (queue.Count > 0)
             next = queue.Pop();
-
-        if (this.debugStateMachine)
-            Debug.Log(owner.name + ": " + Current.GetType() + " <-> " + next.GetType());
     }
     public void Tick()
     {

@@ -68,14 +68,12 @@ public class Actor : Entity
 
         if (this.FocusPoint == null)
         {
-            Debug.LogWarning(this.name + " is missing a focusPoint, using position of transform");
             this.FocusPoint = new GameObject("focusPoint").transform;
             this.FocusPoint.SetParent(this.transform);
             this.FocusPoint.position = this.transform.position;
         }
         if (this.EyePoint == null)
         {
-            Debug.LogWarning(this.name + " is missing an eyePoint, using position of transform");
             this.EyePoint = new GameObject("eyePoint").transform;
             this.EyePoint.SetParent(this.transform);
             this.EyePoint.position = this.transform.position;

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ecb371d79b20e24ca8a9d3c82142539, type: 3}
+  m_Name: Sniper
+  m_EditorClassIdentifier: 
+  clipSize: 4
+  damage: 66.666664
+  fireRate: 1.25
+  stoppingPower: 50
+  spread: 0
+  reloadTime: 3
+  noiseValue: 100
+  traumaValue: 0.75
+  prefab: {fileID: 2780065071727271769, guid: 7ed53edba2aa92a4ba0c9749f3029314, type: 3}
+  shots:
+  - {fileID: 9094273866560750014, guid: f273ece59218e114b86bbfb39dd6ae6b, type: 3}
+  impacts:
+  - {fileID: 6167790376833598370, guid: eee0f87ca35bbc242b7bcb688daa087e, type: 3}
+  hits:
+  - {fileID: 6711929911472907694, guid: 562f5f4e42daa7349be3d292f39f7a24, type: 3}
+  shotSFX:
+  - {fileID: 8300000, guid: ab61210295c246c4ebfb04739416f89f, type: 3}
+  minPitch: 0.7
+  maxPitch: 0.8
+  reloadSFX:
+  - {fileID: 8300000, guid: c0f5ef0292cc98a4e8e6cf5a58f21585, type: 3}

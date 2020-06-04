@@ -71,9 +71,6 @@ public class CameraController : MonoBehaviour
         camera = this.GetComponentInChildren<Camera>();
         cameraFocusPoint = FindObjectOfType<PlayerActor>().transform.FindRecursively("cameraFocusPoint").gameObject;
 
-        if (cameraFocusPoint == null)
-            Debug.LogWarning("CameraController couldn't find Player object, did you forget to drag it into your scene?");
-
         GlobalEvents.Subscribe(GlobalEvent.SetCameraSettings, SetSettings);
         GlobalEvents.Subscribe(GlobalEvent.ModifyCameraTrauma, ModifyTrauma);
         GlobalEvents.Subscribe(GlobalEvent.ModifyCameraTraumaCapped, ModifyTraumaCapped);
@@ -233,9 +230,6 @@ public class CameraController : MonoBehaviour
                 if ((CFPosRayHit.point == hitInfo[i].point) && (CFPosRayHit.normal == hitInfo[i].normal) ||
                     (DesPosRayHit.point == hitInfo[i].point) && (DesPosRayHit.normal == hitInfo[i].normal))
                 {
-                    if (debugging)
-                        Debug.Log("X-axis Hit nr " + i + " name: " + hitInfo[i].transform.name + " and hit.distance: " + hitInfo[i].distance);
-
                     cameraIsColliding = true;
 
                     float xMove = (Mathf.Abs(desiredXpos) * 2f + cameraSkinWidth) - hitInfo[i].distance;
