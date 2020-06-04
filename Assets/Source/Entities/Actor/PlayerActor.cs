@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 public class PlayerActor : HumanoidActor, IPersistable
 {
@@ -57,6 +58,7 @@ public class PlayerActor : HumanoidActor, IPersistable
         GlobalEvents.Subscribe(GlobalEvent.SetPlayerCurrentCheckpoint, (object[] args) => checkpointData = (CheckpointData)args[0]);
 
         base.Initalize();
+
         base.StateMachine.Initialize(this,
             Resources.LoadAll<State>(base.Path),
             new Dictionary<Type, object>
@@ -181,21 +183,29 @@ public class PlayerActor : HumanoidActor, IPersistable
         this.transform.rotation = this.checkpointData.Rotation;
 
         // NOTE(Krulls): Currently, keeping the weapon on scene transition doesn't work. Respawn on checkpoint keeps the weapon sometimes? verkar bugga... 
-        if ((Weapon)context.data["weapon"] == null)
+        if (!context.data.ContainsKey("weapon"))
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon);
         else
-            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, (Weapon)context.data["weapon"]);
+            GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.StartCoroutine(SetWeaponDelayed((Weapon)context.data["weapon"])));
 
-        //Debug.Log(context.data["weapon"]);
+        Debug.Log(context.data["weapon"]);
     }
     Context IPersistable.GetContext()
     {
         Context c = new Context();
 
         c.data.Add("checkpointData", checkpointData);
-        c.data.Add("weapon", this.WeaponController.Weapon);
+        c.data.Add("weapon", this.WeaponController.Template);
+
+        Debug.Log(c.data["weapon"]);
 
         return c;
+    }
+
+    IEnumerator SetWeaponDelayed(Weapon weapon)
+    {
+        yield return new WaitForSeconds(.1f);
+        GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, weapon);
     }
 }
 public enum Stance
