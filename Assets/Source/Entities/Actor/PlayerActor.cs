@@ -187,8 +187,6 @@ public class PlayerActor : HumanoidActor, IPersistable
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.WeaponController.Weapon);
         else
             GlobalEvents.Raise(GlobalEvent.SetPlayerWeapon, this.StartCoroutine(SetWeaponDelayed((Weapon)context.data["weapon"])));
-
-        Debug.Log(context.data["weapon"]);
     }
     Context IPersistable.GetContext()
     {

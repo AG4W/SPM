@@ -27,18 +27,11 @@ public class ConnectedEntity : Entity, IInteractable
     {
         base.Initalize();
 
-        if(connectedObjects.Length == 0)
-            Debug.LogError(this.name + " does not have any connected entities, did you forget to assign them?", this.gameObject);
-        if (this.GetComponent<Collider>() == null)
-            Debug.LogError(this.name + " is missing a collider or trigger and will not be interactable.", this.gameObject);
 
         //om efterbliven designer glömt dragndroppa audiosource
         //sök igenom hierarkin efter en
         if(source == null)
             this.GetComponentInChildren<AudioSource>();
-        //ifall det fortfarande inte finns någon, skicka argt meddelande.
-        if(source == null)
-            Debug.LogWarning(this.name + " is missing an audiosource and will not play any sound!", this.gameObject);
 
         this.onLinkedStart += OnLinkedStart;
         this.onLinkedAnimate += OnLinkedAnimate;
@@ -101,9 +94,6 @@ public class ConnectedEntity : Entity, IInteractable
     {
         if (interactionSoundEffects != null && interactionSoundEffects.Length > 0)
         {
-            if(source == null)
-                Debug.LogError(this.name + " is attempting to play a sound without an audio source assigned, did you forget to assign it?", this.gameObject);
-            else
                 source.PlayOneShot(interactionSoundEffects.Random());
         }
     }
