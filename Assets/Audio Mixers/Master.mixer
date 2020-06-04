@@ -51,6 +51,25 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &-6459950922680924717
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OST
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 1c41f056782ac37479727a6ef7dd8ee1
+  m_Children: []
+  m_Volume: 5ba0b06cc557e644abcb348b0d4d0d44
+  m_Pitch: 689af4e01fb7d884bb91df5d8d389b0f
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -4665696132627252464}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!243 &-5081153522249964128
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -70,6 +89,20 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!244 &-4665696132627252464
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 523a7caa8efdbd84ca9c25b7d46a75a7
+  m_EffectName: Attenuation
+  m_MixLevel: 30692429af8e677419083c8c98d93a81
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-4021077014269554176
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -207,6 +240,7 @@ AudioMixerController:
     - 8cb7804b3c12c1f448f66e435550f4eb
     - 47d52ce7b253ba1439450e39cef510c0
     - c84bb8e01bcdd684f8e397f1220c9bfe
+    - 1c41f056782ac37479727a6ef7dd8ee1
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -227,6 +261,7 @@ AudioMixerGroupController:
   - {fileID: 6231015939359883038}
   - {fileID: 5010857592209395774}
   - {fileID: -1250577117516337068}
+  - {fileID: -6459950922680924717}
   m_Volume: 4094ad144a51a7b43b156699de271203
   m_Pitch: b78054b4316a4f54ba693a02df56a712
   m_Send: 00000000000000000000000000000000
@@ -289,6 +324,7 @@ AudioMixerSnapshotController:
     9a69b19b15c998b47b79d708e62d4d9d: 2
     832f99ebcab6bf84f9c133ac90dda653: -15
     27eba24c33754294b9dedc6a8c45f8a5: 10
+    5ba0b06cc557e644abcb348b0d4d0d44: -30.320126
     ef73b87c26f82694596a9fe79e70bda5: 1
     a3b73b8cf0c55f94e846c8a4550b1c6b: 0.4
     240a7aed1f0e94f49bac7583e2e327b9: 2038
