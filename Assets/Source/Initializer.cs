@@ -9,6 +9,7 @@ public class Initializer : MonoBehaviour
     }
     void Start()
     {
+        WeaponDatabase.Initialize();
         PersistentData.Initialize();
 
         GeneralAudioController.Initialize();

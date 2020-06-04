@@ -24,27 +24,31 @@ public class WeaponController : MonoBehaviour
     AudioSource source;
     WeaponWorldUIController uiController;
 
+    bool hasInitialized = false;
+
     protected LayerMask Mask { get { return mask; } }
 
     public Transform LeftHandIKTarget { get; private set; }
     public Transform ExitPoint { get; private set; }
 
     public Weapon Weapon { get { return weapon; } }
+    public Weapon Template { get; private set; } = null;
 
     public bool CanFire { get; private set; }
     public bool NeedsReload { get { return shotsLeftInCurrentClip == 0; } }
 
     public void Initialize(Actor owner)
     {
+        if (hasInitialized)
+            return;
+
         this.owner = owner;
 
         owner.Subscribe(ActorEvent.FireWeapon, FireWeapon);
         owner.Subscribe(ActorEvent.ReloadWeapon, ReloadWeapon);
         owner.Subscribe(ActorEvent.SetWeapon, SetWeapon);
 
-        //inita
-        if(this.weapon != null)
-            owner.Raise(ActorEvent.SetWeapon, this.weapon);
+        hasInitialized = true;
     }
     void Update()
     {
@@ -134,9 +138,13 @@ public class WeaponController : MonoBehaviour
             Destroy(model);
 
         if (args[0] == null)
+        {
             this.weapon = null;
+            this.Template = null;
+        }
         else
         {
+            this.Template = (Weapon)args[0];
             //create copy to avoid collision with multiple controllers pointing to the same weapon
             this.weapon = Instantiate((Weapon)args[0]);
 

@@ -62,6 +62,8 @@ public class HumanoidPawn : HumanoidActor, IForceAffectable, IAICombatMode
 
         this.Target = FindObjectOfType<PlayerActor>();
 
+        this.Raise(ActorEvent.SetWeapon, base.WeaponController.Weapon);
+
         base.StateMachine.Initialize(this,
             Resources.LoadAll<State>(base.Path),
             new Dictionary<Type, object>
