@@ -100,7 +100,7 @@ public class CameraController : MonoBehaviour
             GlobalEvents.Raise(GlobalEvent.SetPlayerAlpha, 0f);
             playerAlphaIsZero = true;
         }
-        else
+        else if(camera.transform.localPosition.z > -startTransparancyDist)
         {
             GlobalEvents.Raise(GlobalEvent.SetPlayerAlpha, Mathf.InverseLerp(-fullTransparancyDist, -startTransparancyDist, camera.transform.localPosition.z));
             playerAlphaIsZero = false;
