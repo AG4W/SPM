@@ -15,7 +15,7 @@ public class SkinnedMeshRendererController : MonoBehaviour
         for (int i = 0; i < renderers.Length; i++)
         {
             materials[i] = renderers[i].sharedMaterials;
-            //Debug.Log(materials[i].ToString());
+            ///Debug.Log(materials[i].ToString());
         }
 
         GlobalEvents.Subscribe(GlobalEvent.SetPlayerAlpha, (object[] args) => SetAlpha((float)args[0]));
