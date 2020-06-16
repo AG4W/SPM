@@ -23,7 +23,7 @@ public class PlayerActor : HumanoidActor, IPersistable
     [Header("Debug Collision")]
     [SerializeField]bool drawCollisionSpheres = false;
 
-    Collider[] overlaps;
+    Collider[] overlaps = new Collider[24];
 
     public Vital Force { get; private set; }
 
@@ -139,6 +139,7 @@ public class PlayerActor : HumanoidActor, IPersistable
     }
     private void CheckOverlapPosition(ref Vector3 point, ref Vector3 pointA, ref Vector3 pointB)
     {
+        overlaps = new Collider[24];
         if (Physics.OverlapSphereNonAlloc(point, base.CollisionRadius * overlapRadiusModifier, overlaps, base.CollisionMask) > 0)
         {
             Vector3 closestPoint;
