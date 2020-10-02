@@ -1137,7 +1137,7 @@ MonoBehaviour:
         mode: 0
         aspect: 1
         farClipPlane: 1000
-        nearClipPlane: 0.3
+        nearClipPlane: 0.1
         fieldOfView: 90
         projectionMatrix:
           e00: 1
@@ -1563,7 +1563,7 @@ MonoBehaviour:
         mode: 0
         aspect: 1
         farClipPlane: 1000
-        nearClipPlane: 0.3
+        nearClipPlane: 0.1
         fieldOfView: 90
         projectionMatrix:
           e00: 1
